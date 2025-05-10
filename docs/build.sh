@@ -1,0 +1,1 @@
+pdoc ../server '!server.run' -o ./server
