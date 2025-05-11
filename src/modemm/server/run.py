@@ -1,43 +1,20 @@
 import argparse
 
-from fastapi import FastAPI, Request
+import uvicorn
 
-from .config import ModemmConfigDynamic, ModemmConfigStatic
-from .errors import ModelNotFound
+from .app import build
 
 
-def main():
-    """
-    Runs the Modemm server
-    """
+def run():
     parser = argparse.ArgumentParser(description='Run time config for Modemm')
-    parser.add_argument("-c", "--config_file", type=str, help="Server config file path", default="./config.json")
-    parser.add_argument("-d", "--dynamic-config", type=bool, help="Use the dynamic config loader", default=True)
+    parser.add_argument("-c", "--config_file", type=str, help="Server config file path", default="config.json")
+    parser.add_argument("-d", "--dynamic_config", help="Use the dynamic config loader", action='store_true')
+    parser.add_argument("-p", "--port", type=int, help="Port to run the server on", default=14145)
 
     args = parser.parse_args()
-
-    config = ModemmConfigDynamic(args.config_file) if args.dynamic_config else ModemmConfigStatic(args.config_file)
-    app = FastAPI(title="Modemm Server")
-
-    @app.get("/")
-    def root():
-        # By default, lets return the sub paths for different features
-        return {"config": "/server/config", "models": "/server/models"}  # placeholder
-
-    @app.get("/server/config")
-    def get_config():
-        return config.get()
-
-    @app.get("/server/models")
-    def get_models():
-        return config.get()["models"]
-
-    @app.get("/server/request/{model_id}")
-    def make_request(model_id: str, request: Request):
-        models = get_models()
-        if model_id not in models:
-            return ModelNotFound(model_id).get_error()
+    app = build(args)
+    uvicorn.run(app, host="0.0.0.0", port=args.port, reload=False)
 
 
 if __name__ == "__main__":
-    main()
+    run()

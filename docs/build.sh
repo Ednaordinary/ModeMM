@@ -1,1 +1,1 @@
-pdoc ../src/modemm/server -o ./
+pdoc ../src/modemm/server '!modemm.server.run' -o ./
