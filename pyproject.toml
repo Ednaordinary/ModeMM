@@ -11,6 +11,8 @@ dependencies = [
     "diffusers>=0.33.1",
     "fastapi[standard]>=0.115.12",
     "pdoc>=15.0.3",
+    "pillow>=11.2.1",
+    "transformers>=4.51.3",
 ]
 license = "MIT"
 license-files = ["LICEN[CS]E*"]

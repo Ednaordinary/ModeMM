@@ -39,6 +39,12 @@
                         <li>
                                 <a class="variable" href="#ModemmRequest.model">model</a>
                         </li>
+                        <li>
+                                <a class="variable" href="#ModemmRequest.kwargs">kwargs</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#ModemmRequest.handle">handle</a>
+                        </li>
                 </ul>
 
             </li>
@@ -63,9 +69,16 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.request    </h1>
 
                         <label class="view-source-button" for="mod-request-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">1</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModemmRequest</span><span class="p">:</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos">2</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-</span><span id="L-3"><a href="#L-3"><span class="linenos">3</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModemmRequest</span><span class="p">:</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="sd">    A request made by a client.</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -81,26 +94,36 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.request    </h1>
 
     </div>
     <a class="headerlink" href="#ModemmRequest"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ModemmRequest-2"><a href="#ModemmRequest-2"><span class="linenos">2</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModemmRequest</span><span class="p">:</span>
-</span><span id="ModemmRequest-3"><a href="#ModemmRequest-3"><span class="linenos">3</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-</span><span id="ModemmRequest-4"><a href="#ModemmRequest-4"><span class="linenos">4</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModemmRequest-2"><a href="#ModemmRequest-2"><span class="linenos"> 2</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModemmRequest</span><span class="p">:</span>
+</span><span id="ModemmRequest-3"><a href="#ModemmRequest-3"><span class="linenos"> 3</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModemmRequest-4"><a href="#ModemmRequest-4"><span class="linenos"> 4</span></a><span class="sd">    A request made by a client.</span>
+</span><span id="ModemmRequest-5"><a href="#ModemmRequest-5"><span class="linenos"> 5</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="ModemmRequest-6"><a href="#ModemmRequest-6"><span class="linenos"> 6</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="ModemmRequest-7"><a href="#ModemmRequest-7"><span class="linenos"> 7</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+</span><span id="ModemmRequest-8"><a href="#ModemmRequest-8"><span class="linenos"> 8</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+</span><span id="ModemmRequest-9"><a href="#ModemmRequest-9"><span class="linenos"> 9</span></a>
+</span><span id="ModemmRequest-10"><a href="#ModemmRequest-10"><span class="linenos">10</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="ModemmRequest-11"><a href="#ModemmRequest-11"><span class="linenos">11</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
 </span></pre></div>
 
 
-    
+            <div class="docstring"><p>A request made by a client.</p>
+</div>
+
 
                             <div id="ModemmRequest.__init__" class="classattr">
                                         <input id="ModemmRequest.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
             
-        <span class="name">ModemmRequest</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">model</span>, </span><span class="param"><span class="o">*</span><span class="n">args</span></span>)</span>
+        <span class="name">ModemmRequest</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">model</span>, </span><span class="param"><span class="o">**</span><span class="n">kwargs</span></span>)</span>
 
                 <label class="view-source-button" for="ModemmRequest.__init__-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#ModemmRequest.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ModemmRequest.__init__-3"><a href="#ModemmRequest.__init__-3"><span class="linenos">3</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-</span><span id="ModemmRequest.__init__-4"><a href="#ModemmRequest.__init__-4"><span class="linenos">4</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModemmRequest.__init__-6"><a href="#ModemmRequest.__init__-6"><span class="linenos">6</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="ModemmRequest.__init__-7"><a href="#ModemmRequest.__init__-7"><span class="linenos">7</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+</span><span id="ModemmRequest.__init__-8"><a href="#ModemmRequest.__init__-8"><span class="linenos">8</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
 </span></pre></div>
 
 
@@ -115,6 +138,36 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.request    </h1>
     </div>
     <a class="headerlink" href="#ModemmRequest.model"></a>
     
+    
+
+                            </div>
+                            <div id="ModemmRequest.kwargs" class="classattr">
+                                <div class="attr variable">
+            <span class="name">kwargs</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModemmRequest.kwargs"></a>
+    
+    
+
+                            </div>
+                            <div id="ModemmRequest.handle" class="classattr">
+                                        <input id="ModemmRequest.handle-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">handle</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="ModemmRequest.handle-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ModemmRequest.handle"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModemmRequest.handle-10"><a href="#ModemmRequest.handle-10"><span class="linenos">10</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="ModemmRequest.handle-11"><a href="#ModemmRequest.handle-11"><span class="linenos">11</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+</span></pre></div>
+
+
     
 
                             </div>

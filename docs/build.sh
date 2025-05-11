@@ -1,1 +1,1 @@
-pdoc ../docs/modemm/server -o ./
+pdoc ../src/modemm/server -o ./

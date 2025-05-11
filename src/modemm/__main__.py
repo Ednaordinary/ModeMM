@@ -1,1 +1,4 @@
-import modemm.server.run
+from modemm.server.run import main
+
+if __name__ == "__main__":
+    main()

@@ -17,10 +17,12 @@ class LimiterBase:
         """
         return False
 
+
 class IPLimiter(LimiterBase):
     """
     Limits requests based on an amount allowed per a scrolling 24-hour window.
     """
+
     def __init__(self, max_rate):
         super().__init__()
         self.max_rate = max_rate

@@ -1,7 +1,9 @@
 import argparse
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+
 from .config import ModemmConfigDynamic, ModemmConfigStatic
+from .errors import ModelNotFound
 
 
 def main():
@@ -30,7 +32,12 @@ def main():
     def get_models():
         return config.get()["models"]
 
+    @app.get("/server/request/{model_id}")
+    def make_request(model_id: str, request: Request):
+        models = get_models()
+        if model_id not in models:
+            return ModelNotFound(model_id).get_error()
 
-if __name__ == "__main__" or __name__ == "modemm.server.run":
+
+if __name__ == "__main__":
     main()
-print(__name__)
