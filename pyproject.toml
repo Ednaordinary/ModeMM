@@ -1,6 +1,9 @@
 [project]
 name = "modemm"
 version = "0.0.1"
+authors = [
+  { name="Ednaordinary", email="imnotednamode+git@gmail.com" },
+]
 description = "Explorative node based generative interface"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -9,6 +12,16 @@ dependencies = [
     "fastapi[standard]>=0.115.12",
     "pdoc>=15.0.3",
 ]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+
+[project.urls]
+Homepage = "https://github.com/Ednaordinary/ModeMM"
+Issues = "https://github.com/Ednaordinary/ModeMM/issues"
+
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
 
 # Default ruff config
 [tool.ruff]

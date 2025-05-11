@@ -17,7 +17,11 @@ class ModemmConfigBase:
             return json.load(config_file)
 
     def get(self, arg: str = None):
-        """Get the config or variable from the config."""
+        """
+        Get the config or variable from the config.
+        :param arg: The specific item to return from the config. If None, returns the config. (defaults to None)
+        :return: ModemmConfig, Config item
+        """
         return None
 
     def save(self, config: dict):
