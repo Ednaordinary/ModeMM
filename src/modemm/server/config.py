@@ -1,6 +1,8 @@
+import importlib
 import json
 
-from typing import Dict
+from typing import Dict, Any, Union
+
 
 class ModemmConfigBase:
     """
@@ -16,18 +18,32 @@ class ModemmConfigBase:
         with open(self.path, "r") as config_file:
             return json.load(config_file)
 
-    def get(self, arg: str = None):
+    def get(self, arg: str = None) -> Union[Dict, Any]:
         """
         Get the config or variable from the config.
         :param arg: The specific item to return from the config. If None, returns the config. (defaults to None)
         :return: ModemmConfig, Config item
         """
-        return None
+        return {}
 
     def save(self, config: dict):
         """Saves the config to initialized path"""
         with open(self.path, "w") as config_file:
             json.dump(config, config_file, indent=4)
+
+    def register(self):
+        config = self.get()
+        registered = {}
+        registrable = ["models"]
+        config_keys = config.keys()
+        for i in registrable:
+            if i in config_keys:
+                registered[i] = []
+        if "models" in registered.keys():
+            for i in self.get()["models"]:
+                model = i["module"]
+                module = importlib.import_module("models." + model)
+                registered["models"].append(module.__dict__[i["class"]](i["init_kwargs"]))
 
 
 class ModemmConfigDynamic(ModemmConfigBase):
@@ -47,6 +63,7 @@ class ModemmConfigStatic(ModemmConfigBase):
     A Modemm config that loads once.
     """
     _config: dict
+
     def __init__(self, path: str):
         super().__init__(path=path)
         self._config = self._load()

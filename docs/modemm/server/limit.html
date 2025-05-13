@@ -31,10 +31,31 @@
             <h2>API Documentation</h2>
                 <ul class="memberlist">
             <li>
+                    <a class="variable" href="#logger">logger</a>
+            </li>
+            <li>
                     <a class="class" href="#LimiterBase">LimiterBase</a>
                             <ul class="memberlist">
                         <li>
                                 <a class="function" href="#LimiterBase.limit">limit</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#IPRequests">IPRequests</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#IPRequests.__init__">IPRequests</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#IPRequests.request_times">request_times</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#IPRequests.add">add</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#IPRequests.scroll_limits">scroll_limits</a>
                         </li>
                 </ul>
 
@@ -49,10 +70,28 @@
                                 <a class="variable" href="#IPLimiter.max_rate">max_rate</a>
                         </li>
                         <li>
-                                <a class="variable" href="#IPLimiter.limits">limits</a>
+                                <a class="variable" href="#IPLimiter.scroll_rate">scroll_rate</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#IPLimiter.ips">ips</a>
                         </li>
                         <li>
                                 <a class="function" href="#IPLimiter.limit">limit</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#StackedLimiter">StackedLimiter</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#StackedLimiter.__init__">StackedLimiter</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#StackedLimiter.limiters">limiters</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#StackedLimiter.limit">limit</a>
                         </li>
                 </ul>
 
@@ -78,42 +117,122 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.limit    </h1>
 
                         <label class="view-source-button" for="mod-limit-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="k">class</span><span class="w"> </span><span class="nc">LimiterBase</span><span class="p">:</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="sd">    Basis for limiting requests. By default, does not limit anything.</span>
-</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>        <span class="k">pass</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>    <span class="nd">@staticmethod</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">        Called on every request. If true, the request should be dropped.</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="sd">        :param self:</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">        :param args: Args passed to the limiter function</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="sd">        :param kwargs: Kwargs passed to the limiter function</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">        :return: bool</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>        <span class="k">return</span> <span class="kc">False</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="k">class</span><span class="w"> </span><span class="nc">IPLimiter</span><span class="p">(</span><span class="n">LimiterBase</span><span class="p">):</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="sd">    Limits requests based on an amount allowed per a scrolling 24-hour window.</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_rate</span><span class="p">):</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">max_rate</span> <span class="o">=</span> <span class="n">max_rate</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">limits</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>        <span class="k">return</span> <span class="kc">False</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">  1</span></a><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos">  2</span></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos">  3</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos">  4</span></a>
+</span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a>
+</span><span id="L-6"><a href="#L-6"><span class="linenos">  6</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">Request</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a>
+</span><span id="L-8"><a href="#L-8"><span class="linenos">  8</span></a><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a>
+</span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a>
+</span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a><span class="k">class</span><span class="w"> </span><span class="nc">LimiterBase</span><span class="p">:</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a><span class="sd">    Basis for limiting requests. By default, does not limit anything.</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a>
+</span><span id="L-16"><a href="#L-16"><span class="linenos"> 16</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos"> 17</span></a>        <span class="k">pass</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos"> 18</span></a>
+</span><span id="L-19"><a href="#L-19"><span class="linenos"> 19</span></a>    <span class="nd">@staticmethod</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos"> 20</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a><span class="sd">        Called on every request. If true, the request should be dropped.</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a><span class="sd">        :param self:</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a><span class="sd">        :param kwargs: Kwargs passed to the limiter function</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a><span class="sd">        :return: bool stating whether to limit the function</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a>        <span class="k">return</span> <span class="kc">False</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a>
+</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a><span class="k">class</span><span class="w"> </span><span class="nc">IPRequests</span><span class="p">:</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a><span class="sd">    Represents a number of requests made by an IP</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a>
+</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_times</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>        <span class="k">if</span> <span class="n">request_times</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>            <span class="n">request_times</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">request_times</span> <span class="o">=</span> <span class="n">request_times</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a><span class="sd">        Add a time at which a request was successfully made</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a><span class="sd">        :param request_time:</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a><span class="sd">        :return:</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">request_times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">request_time</span><span class="p">)</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">scroll_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scroll_rate</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a>        <span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_times</span><span class="p">:</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a>            <span class="k">if</span> <span class="n">request</span> <span class="o">&lt;</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="p">(</span><span class="n">scroll_rate</span> <span class="o">*</span> <span class="mi">60</span><span class="p">):</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a>                <span class="k">try</span><span class="p">:</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>                    <span class="bp">self</span><span class="o">.</span><span class="n">request_times</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a>                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Failed to remove a request from the scrolling window (IPLimiter)&quot;</span><span class="p">)</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a><span class="k">class</span><span class="w"> </span><span class="nc">IPLimiter</span><span class="p">(</span><span class="n">LimiterBase</span><span class="p">):</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a><span class="sd">    Limits requests based on an amount allowed per a scrolling window.</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a>
+</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">scroll_rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span><span class="p">):</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a><span class="sd">        Constructs an IP based rate limiter</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a><span class="sd">        :param max_rate: The maximum amount of requests that can happen within the scrolling window per IP</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a><span class="sd">        :param scroll_rate: The length of the scrolling window in minutes</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">max_rate</span> <span class="o">=</span> <span class="n">max_rate</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">scroll_rate</span> <span class="o">=</span> <span class="n">scroll_rate</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">IPRequests</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>        <span class="n">client</span><span class="p">:</span> <span class="n">Request</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">]</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)]</span><span class="o">.</span><span class="n">scroll_limits</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scroll_rate</span><span class="p">)</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_rate</span><span class="p">:</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a>                <span class="k">return</span> <span class="kc">True</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)]</span> <span class="o">=</span> <span class="n">IPRequests</span><span class="p">()</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>        <span class="k">return</span> <span class="kc">False</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a><span class="k">class</span><span class="w"> </span><span class="nc">StackedLimiter</span><span class="p">(</span><span class="n">LimiterBase</span><span class="p">):</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="sd">    Stacks multiple limiters on top of each-other</span>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limiters</span><span class="p">):</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">limiters</span> <span class="o">=</span> <span class="n">limiters</span>
+</span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a>        <span class="k">for</span> <span class="n">limiter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">limiters</span><span class="p">:</span>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a>            <span class="k">if</span> <span class="n">limiter</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a>                <span class="k">return</span> <span class="kc">True</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>        <span class="k">return</span> <span class="kc">False</span>
 </span></pre></div>
 
 
             </section>
+                <section id="logger">
+                    <div class="attr variable">
+            <span class="name">logger</span>        =
+<span class="default_value">&lt;Logger <a href="">modemm.server.limit</a> (WARNING)&gt;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#logger"></a>
+    
+    
+
+                </section>
                 <section id="LimiterBase">
                             <input id="LimiterBase-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
@@ -125,24 +244,23 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.limit    </h1>
 
     </div>
     <a class="headerlink" href="#LimiterBase"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="LimiterBase-2"><a href="#LimiterBase-2"><span class="linenos"> 2</span></a><span class="k">class</span><span class="w"> </span><span class="nc">LimiterBase</span><span class="p">:</span>
-</span><span id="LimiterBase-3"><a href="#LimiterBase-3"><span class="linenos"> 3</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="LimiterBase-4"><a href="#LimiterBase-4"><span class="linenos"> 4</span></a><span class="sd">    Basis for limiting requests. By default, does not limit anything.</span>
-</span><span id="LimiterBase-5"><a href="#LimiterBase-5"><span class="linenos"> 5</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="LimiterBase-6"><a href="#LimiterBase-6"><span class="linenos"> 6</span></a>
-</span><span id="LimiterBase-7"><a href="#LimiterBase-7"><span class="linenos"> 7</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="LimiterBase-8"><a href="#LimiterBase-8"><span class="linenos"> 8</span></a>        <span class="k">pass</span>
-</span><span id="LimiterBase-9"><a href="#LimiterBase-9"><span class="linenos"> 9</span></a>
-</span><span id="LimiterBase-10"><a href="#LimiterBase-10"><span class="linenos">10</span></a>    <span class="nd">@staticmethod</span>
-</span><span id="LimiterBase-11"><a href="#LimiterBase-11"><span class="linenos">11</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="LimiterBase-12"><a href="#LimiterBase-12"><span class="linenos">12</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="LimiterBase-13"><a href="#LimiterBase-13"><span class="linenos">13</span></a><span class="sd">        Called on every request. If true, the request should be dropped.</span>
-</span><span id="LimiterBase-14"><a href="#LimiterBase-14"><span class="linenos">14</span></a><span class="sd">        :param self:</span>
-</span><span id="LimiterBase-15"><a href="#LimiterBase-15"><span class="linenos">15</span></a><span class="sd">        :param args: Args passed to the limiter function</span>
-</span><span id="LimiterBase-16"><a href="#LimiterBase-16"><span class="linenos">16</span></a><span class="sd">        :param kwargs: Kwargs passed to the limiter function</span>
-</span><span id="LimiterBase-17"><a href="#LimiterBase-17"><span class="linenos">17</span></a><span class="sd">        :return: bool</span>
-</span><span id="LimiterBase-18"><a href="#LimiterBase-18"><span class="linenos">18</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="LimiterBase-19"><a href="#LimiterBase-19"><span class="linenos">19</span></a>        <span class="k">return</span> <span class="kc">False</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="LimiterBase-12"><a href="#LimiterBase-12"><span class="linenos">12</span></a><span class="k">class</span><span class="w"> </span><span class="nc">LimiterBase</span><span class="p">:</span>
+</span><span id="LimiterBase-13"><a href="#LimiterBase-13"><span class="linenos">13</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="LimiterBase-14"><a href="#LimiterBase-14"><span class="linenos">14</span></a><span class="sd">    Basis for limiting requests. By default, does not limit anything.</span>
+</span><span id="LimiterBase-15"><a href="#LimiterBase-15"><span class="linenos">15</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="LimiterBase-16"><a href="#LimiterBase-16"><span class="linenos">16</span></a>
+</span><span id="LimiterBase-17"><a href="#LimiterBase-17"><span class="linenos">17</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="LimiterBase-18"><a href="#LimiterBase-18"><span class="linenos">18</span></a>        <span class="k">pass</span>
+</span><span id="LimiterBase-19"><a href="#LimiterBase-19"><span class="linenos">19</span></a>
+</span><span id="LimiterBase-20"><a href="#LimiterBase-20"><span class="linenos">20</span></a>    <span class="nd">@staticmethod</span>
+</span><span id="LimiterBase-21"><a href="#LimiterBase-21"><span class="linenos">21</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="LimiterBase-22"><a href="#LimiterBase-22"><span class="linenos">22</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="LimiterBase-23"><a href="#LimiterBase-23"><span class="linenos">23</span></a><span class="sd">        Called on every request. If true, the request should be dropped.</span>
+</span><span id="LimiterBase-24"><a href="#LimiterBase-24"><span class="linenos">24</span></a><span class="sd">        :param self:</span>
+</span><span id="LimiterBase-25"><a href="#LimiterBase-25"><span class="linenos">25</span></a><span class="sd">        :param kwargs: Kwargs passed to the limiter function</span>
+</span><span id="LimiterBase-26"><a href="#LimiterBase-26"><span class="linenos">26</span></a><span class="sd">        :return: bool stating whether to limit the function</span>
+</span><span id="LimiterBase-27"><a href="#LimiterBase-27"><span class="linenos">27</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="LimiterBase-28"><a href="#LimiterBase-28"><span class="linenos">28</span></a>        <span class="k">return</span> <span class="kc">False</span>
 </span></pre></div>
 
 
@@ -156,22 +274,21 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.limit    </h1>
                     <div class="decorator decorator-staticmethod">@staticmethod</div>
 
         <span class="def">def</span>
-        <span class="name">limit</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="o">*</span><span class="n">args</span>, </span><span class="param"><span class="o">**</span><span class="n">kwargs</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
+        <span class="name">limit</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="o">**</span><span class="n">kwargs</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
 
                 <label class="view-source-button" for="LimiterBase.limit-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#LimiterBase.limit"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="LimiterBase.limit-10"><a href="#LimiterBase.limit-10"><span class="linenos">10</span></a>    <span class="nd">@staticmethod</span>
-</span><span id="LimiterBase.limit-11"><a href="#LimiterBase.limit-11"><span class="linenos">11</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="LimiterBase.limit-12"><a href="#LimiterBase.limit-12"><span class="linenos">12</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="LimiterBase.limit-13"><a href="#LimiterBase.limit-13"><span class="linenos">13</span></a><span class="sd">        Called on every request. If true, the request should be dropped.</span>
-</span><span id="LimiterBase.limit-14"><a href="#LimiterBase.limit-14"><span class="linenos">14</span></a><span class="sd">        :param self:</span>
-</span><span id="LimiterBase.limit-15"><a href="#LimiterBase.limit-15"><span class="linenos">15</span></a><span class="sd">        :param args: Args passed to the limiter function</span>
-</span><span id="LimiterBase.limit-16"><a href="#LimiterBase.limit-16"><span class="linenos">16</span></a><span class="sd">        :param kwargs: Kwargs passed to the limiter function</span>
-</span><span id="LimiterBase.limit-17"><a href="#LimiterBase.limit-17"><span class="linenos">17</span></a><span class="sd">        :return: bool</span>
-</span><span id="LimiterBase.limit-18"><a href="#LimiterBase.limit-18"><span class="linenos">18</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="LimiterBase.limit-19"><a href="#LimiterBase.limit-19"><span class="linenos">19</span></a>        <span class="k">return</span> <span class="kc">False</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="LimiterBase.limit-20"><a href="#LimiterBase.limit-20"><span class="linenos">20</span></a>    <span class="nd">@staticmethod</span>
+</span><span id="LimiterBase.limit-21"><a href="#LimiterBase.limit-21"><span class="linenos">21</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="LimiterBase.limit-22"><a href="#LimiterBase.limit-22"><span class="linenos">22</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="LimiterBase.limit-23"><a href="#LimiterBase.limit-23"><span class="linenos">23</span></a><span class="sd">        Called on every request. If true, the request should be dropped.</span>
+</span><span id="LimiterBase.limit-24"><a href="#LimiterBase.limit-24"><span class="linenos">24</span></a><span class="sd">        :param self:</span>
+</span><span id="LimiterBase.limit-25"><a href="#LimiterBase.limit-25"><span class="linenos">25</span></a><span class="sd">        :param kwargs: Kwargs passed to the limiter function</span>
+</span><span id="LimiterBase.limit-26"><a href="#LimiterBase.limit-26"><span class="linenos">26</span></a><span class="sd">        :return: bool stating whether to limit the function</span>
+</span><span id="LimiterBase.limit-27"><a href="#LimiterBase.limit-27"><span class="linenos">27</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="LimiterBase.limit-28"><a href="#LimiterBase.limit-28"><span class="linenos">28</span></a>        <span class="k">return</span> <span class="kc">False</span>
 </span></pre></div>
 
 
@@ -181,17 +298,149 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.limit    </h1>
 
 <ul>
 <li><strong>self</strong>: </li>
-<li><strong>args</strong>:  Args passed to the limiter function</li>
 <li><strong>kwargs</strong>:  Kwargs passed to the limiter function</li>
 </ul>
 
 <h6 id="returns">Returns</h6>
 
 <blockquote>
-  <p>bool</p>
+  <p>bool stating whether to limit the function</p>
 </blockquote>
 </div>
 
+
+                            </div>
+                </section>
+                <section id="IPRequests">
+                            <input id="IPRequests-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">IPRequests</span>:
+
+                <label class="view-source-button" for="IPRequests-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#IPRequests"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="IPRequests-31"><a href="#IPRequests-31"><span class="linenos">31</span></a><span class="k">class</span><span class="w"> </span><span class="nc">IPRequests</span><span class="p">:</span>
+</span><span id="IPRequests-32"><a href="#IPRequests-32"><span class="linenos">32</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="IPRequests-33"><a href="#IPRequests-33"><span class="linenos">33</span></a><span class="sd">    Represents a number of requests made by an IP</span>
+</span><span id="IPRequests-34"><a href="#IPRequests-34"><span class="linenos">34</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="IPRequests-35"><a href="#IPRequests-35"><span class="linenos">35</span></a>
+</span><span id="IPRequests-36"><a href="#IPRequests-36"><span class="linenos">36</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_times</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="IPRequests-37"><a href="#IPRequests-37"><span class="linenos">37</span></a>        <span class="k">if</span> <span class="n">request_times</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="IPRequests-38"><a href="#IPRequests-38"><span class="linenos">38</span></a>            <span class="n">request_times</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="IPRequests-39"><a href="#IPRequests-39"><span class="linenos">39</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">request_times</span> <span class="o">=</span> <span class="n">request_times</span>
+</span><span id="IPRequests-40"><a href="#IPRequests-40"><span class="linenos">40</span></a>
+</span><span id="IPRequests-41"><a href="#IPRequests-41"><span class="linenos">41</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+</span><span id="IPRequests-42"><a href="#IPRequests-42"><span class="linenos">42</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="IPRequests-43"><a href="#IPRequests-43"><span class="linenos">43</span></a><span class="sd">        Add a time at which a request was successfully made</span>
+</span><span id="IPRequests-44"><a href="#IPRequests-44"><span class="linenos">44</span></a><span class="sd">        :param request_time:</span>
+</span><span id="IPRequests-45"><a href="#IPRequests-45"><span class="linenos">45</span></a><span class="sd">        :return:</span>
+</span><span id="IPRequests-46"><a href="#IPRequests-46"><span class="linenos">46</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="IPRequests-47"><a href="#IPRequests-47"><span class="linenos">47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">request_times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">request_time</span><span class="p">)</span>
+</span><span id="IPRequests-48"><a href="#IPRequests-48"><span class="linenos">48</span></a>
+</span><span id="IPRequests-49"><a href="#IPRequests-49"><span class="linenos">49</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">scroll_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scroll_rate</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+</span><span id="IPRequests-50"><a href="#IPRequests-50"><span class="linenos">50</span></a>        <span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_times</span><span class="p">:</span>
+</span><span id="IPRequests-51"><a href="#IPRequests-51"><span class="linenos">51</span></a>            <span class="k">if</span> <span class="n">request</span> <span class="o">&lt;</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="p">(</span><span class="n">scroll_rate</span> <span class="o">*</span> <span class="mi">60</span><span class="p">):</span>
+</span><span id="IPRequests-52"><a href="#IPRequests-52"><span class="linenos">52</span></a>                <span class="k">try</span><span class="p">:</span>
+</span><span id="IPRequests-53"><a href="#IPRequests-53"><span class="linenos">53</span></a>                    <span class="bp">self</span><span class="o">.</span><span class="n">request_times</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+</span><span id="IPRequests-54"><a href="#IPRequests-54"><span class="linenos">54</span></a>                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</span><span id="IPRequests-55"><a href="#IPRequests-55"><span class="linenos">55</span></a>                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Failed to remove a request from the scrolling window (IPLimiter)&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Represents a number of requests made by an IP</p>
+</div>
+
+
+                            <div id="IPRequests.__init__" class="classattr">
+                                        <input id="IPRequests.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">IPRequests</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">request_times</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span></span>)</span>
+
+                <label class="view-source-button" for="IPRequests.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#IPRequests.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="IPRequests.__init__-36"><a href="#IPRequests.__init__-36"><span class="linenos">36</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_times</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+</span><span id="IPRequests.__init__-37"><a href="#IPRequests.__init__-37"><span class="linenos">37</span></a>        <span class="k">if</span> <span class="n">request_times</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="IPRequests.__init__-38"><a href="#IPRequests.__init__-38"><span class="linenos">38</span></a>            <span class="n">request_times</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="IPRequests.__init__-39"><a href="#IPRequests.__init__-39"><span class="linenos">39</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">request_times</span> <span class="o">=</span> <span class="n">request_times</span>
+</span></pre></div>
+
+
+    
+
+                            </div>
+                            <div id="IPRequests.request_times" class="classattr">
+                                <div class="attr variable">
+            <span class="name">request_times</span>
+
+        
+    </div>
+    <a class="headerlink" href="#IPRequests.request_times"></a>
+    
+    
+
+                            </div>
+                            <div id="IPRequests.add" class="classattr">
+                                        <input id="IPRequests.add-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">add</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">request_time</span><span class="p">:</span> <span class="nb">float</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="IPRequests.add-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#IPRequests.add"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="IPRequests.add-41"><a href="#IPRequests.add-41"><span class="linenos">41</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+</span><span id="IPRequests.add-42"><a href="#IPRequests.add-42"><span class="linenos">42</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="IPRequests.add-43"><a href="#IPRequests.add-43"><span class="linenos">43</span></a><span class="sd">        Add a time at which a request was successfully made</span>
+</span><span id="IPRequests.add-44"><a href="#IPRequests.add-44"><span class="linenos">44</span></a><span class="sd">        :param request_time:</span>
+</span><span id="IPRequests.add-45"><a href="#IPRequests.add-45"><span class="linenos">45</span></a><span class="sd">        :return:</span>
+</span><span id="IPRequests.add-46"><a href="#IPRequests.add-46"><span class="linenos">46</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="IPRequests.add-47"><a href="#IPRequests.add-47"><span class="linenos">47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">request_times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">request_time</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Add a time at which a request was successfully made</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>request_time</strong>: </li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+</div>
+
+
+                            </div>
+                            <div id="IPRequests.scroll_limits" class="classattr">
+                                        <input id="IPRequests.scroll_limits-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">scroll_limits</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">scroll_rate</span><span class="p">:</span> <span class="nb">int</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="IPRequests.scroll_limits-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#IPRequests.scroll_limits"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="IPRequests.scroll_limits-49"><a href="#IPRequests.scroll_limits-49"><span class="linenos">49</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">scroll_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scroll_rate</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+</span><span id="IPRequests.scroll_limits-50"><a href="#IPRequests.scroll_limits-50"><span class="linenos">50</span></a>        <span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_times</span><span class="p">:</span>
+</span><span id="IPRequests.scroll_limits-51"><a href="#IPRequests.scroll_limits-51"><span class="linenos">51</span></a>            <span class="k">if</span> <span class="n">request</span> <span class="o">&lt;</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="p">(</span><span class="n">scroll_rate</span> <span class="o">*</span> <span class="mi">60</span><span class="p">):</span>
+</span><span id="IPRequests.scroll_limits-52"><a href="#IPRequests.scroll_limits-52"><span class="linenos">52</span></a>                <span class="k">try</span><span class="p">:</span>
+</span><span id="IPRequests.scroll_limits-53"><a href="#IPRequests.scroll_limits-53"><span class="linenos">53</span></a>                    <span class="bp">self</span><span class="o">.</span><span class="n">request_times</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+</span><span id="IPRequests.scroll_limits-54"><a href="#IPRequests.scroll_limits-54"><span class="linenos">54</span></a>                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</span><span id="IPRequests.scroll_limits-55"><a href="#IPRequests.scroll_limits-55"><span class="linenos">55</span></a>                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Failed to remove a request from the scrolling window (IPLimiter)&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+    
 
                             </div>
                 </section>
@@ -206,22 +455,38 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.limit    </h1>
 
     </div>
     <a class="headerlink" href="#IPLimiter"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="IPLimiter-22"><a href="#IPLimiter-22"><span class="linenos">22</span></a><span class="k">class</span><span class="w"> </span><span class="nc">IPLimiter</span><span class="p">(</span><span class="n">LimiterBase</span><span class="p">):</span>
-</span><span id="IPLimiter-23"><a href="#IPLimiter-23"><span class="linenos">23</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="IPLimiter-24"><a href="#IPLimiter-24"><span class="linenos">24</span></a><span class="sd">    Limits requests based on an amount allowed per a scrolling 24-hour window.</span>
-</span><span id="IPLimiter-25"><a href="#IPLimiter-25"><span class="linenos">25</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="IPLimiter-26"><a href="#IPLimiter-26"><span class="linenos">26</span></a>
-</span><span id="IPLimiter-27"><a href="#IPLimiter-27"><span class="linenos">27</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_rate</span><span class="p">):</span>
-</span><span id="IPLimiter-28"><a href="#IPLimiter-28"><span class="linenos">28</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-</span><span id="IPLimiter-29"><a href="#IPLimiter-29"><span class="linenos">29</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">max_rate</span> <span class="o">=</span> <span class="n">max_rate</span>
-</span><span id="IPLimiter-30"><a href="#IPLimiter-30"><span class="linenos">30</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">limits</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="IPLimiter-31"><a href="#IPLimiter-31"><span class="linenos">31</span></a>
-</span><span id="IPLimiter-32"><a href="#IPLimiter-32"><span class="linenos">32</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="IPLimiter-33"><a href="#IPLimiter-33"><span class="linenos">33</span></a>        <span class="k">return</span> <span class="kc">False</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="IPLimiter-58"><a href="#IPLimiter-58"><span class="linenos">58</span></a><span class="k">class</span><span class="w"> </span><span class="nc">IPLimiter</span><span class="p">(</span><span class="n">LimiterBase</span><span class="p">):</span>
+</span><span id="IPLimiter-59"><a href="#IPLimiter-59"><span class="linenos">59</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="IPLimiter-60"><a href="#IPLimiter-60"><span class="linenos">60</span></a><span class="sd">    Limits requests based on an amount allowed per a scrolling window.</span>
+</span><span id="IPLimiter-61"><a href="#IPLimiter-61"><span class="linenos">61</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="IPLimiter-62"><a href="#IPLimiter-62"><span class="linenos">62</span></a>
+</span><span id="IPLimiter-63"><a href="#IPLimiter-63"><span class="linenos">63</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">scroll_rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span><span class="p">):</span>
+</span><span id="IPLimiter-64"><a href="#IPLimiter-64"><span class="linenos">64</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="IPLimiter-65"><a href="#IPLimiter-65"><span class="linenos">65</span></a><span class="sd">        Constructs an IP based rate limiter</span>
+</span><span id="IPLimiter-66"><a href="#IPLimiter-66"><span class="linenos">66</span></a><span class="sd">        :param max_rate: The maximum amount of requests that can happen within the scrolling window per IP</span>
+</span><span id="IPLimiter-67"><a href="#IPLimiter-67"><span class="linenos">67</span></a><span class="sd">        :param scroll_rate: The length of the scrolling window in minutes</span>
+</span><span id="IPLimiter-68"><a href="#IPLimiter-68"><span class="linenos">68</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="IPLimiter-69"><a href="#IPLimiter-69"><span class="linenos">69</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="IPLimiter-70"><a href="#IPLimiter-70"><span class="linenos">70</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">max_rate</span> <span class="o">=</span> <span class="n">max_rate</span>
+</span><span id="IPLimiter-71"><a href="#IPLimiter-71"><span class="linenos">71</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">scroll_rate</span> <span class="o">=</span> <span class="n">scroll_rate</span>
+</span><span id="IPLimiter-72"><a href="#IPLimiter-72"><span class="linenos">72</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">IPRequests</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="IPLimiter-73"><a href="#IPLimiter-73"><span class="linenos">73</span></a>
+</span><span id="IPLimiter-74"><a href="#IPLimiter-74"><span class="linenos">74</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="IPLimiter-75"><a href="#IPLimiter-75"><span class="linenos">75</span></a>        <span class="n">client</span><span class="p">:</span> <span class="n">Request</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">]</span>
+</span><span id="IPLimiter-76"><a href="#IPLimiter-76"><span class="linenos">76</span></a>        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</span><span id="IPLimiter-77"><a href="#IPLimiter-77"><span class="linenos">77</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)]</span><span class="o">.</span><span class="n">scroll_limits</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scroll_rate</span><span class="p">)</span>
+</span><span id="IPLimiter-78"><a href="#IPLimiter-78"><span class="linenos">78</span></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_rate</span><span class="p">:</span>
+</span><span id="IPLimiter-79"><a href="#IPLimiter-79"><span class="linenos">79</span></a>                <span class="k">return</span> <span class="kc">True</span>
+</span><span id="IPLimiter-80"><a href="#IPLimiter-80"><span class="linenos">80</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="IPLimiter-81"><a href="#IPLimiter-81"><span class="linenos">81</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+</span><span id="IPLimiter-82"><a href="#IPLimiter-82"><span class="linenos">82</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="IPLimiter-83"><a href="#IPLimiter-83"><span class="linenos">83</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)]</span> <span class="o">=</span> <span class="n">IPRequests</span><span class="p">()</span>
+</span><span id="IPLimiter-84"><a href="#IPLimiter-84"><span class="linenos">84</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+</span><span id="IPLimiter-85"><a href="#IPLimiter-85"><span class="linenos">85</span></a>        <span class="k">return</span> <span class="kc">False</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Limits requests based on an amount allowed per a scrolling 24-hour window.</p>
+            <div class="docstring"><p>Limits requests based on an amount allowed per a scrolling window.</p>
 </div>
 
 
@@ -229,20 +494,35 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.limit    </h1>
                                         <input id="IPLimiter.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
             
-        <span class="name">IPLimiter</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">max_rate</span></span>)</span>
+        <span class="name">IPLimiter</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">max_rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>, </span><span class="param"><span class="n">scroll_rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1440</span></span>)</span>
 
                 <label class="view-source-button" for="IPLimiter.__init__-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#IPLimiter.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="IPLimiter.__init__-27"><a href="#IPLimiter.__init__-27"><span class="linenos">27</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_rate</span><span class="p">):</span>
-</span><span id="IPLimiter.__init__-28"><a href="#IPLimiter.__init__-28"><span class="linenos">28</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-</span><span id="IPLimiter.__init__-29"><a href="#IPLimiter.__init__-29"><span class="linenos">29</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">max_rate</span> <span class="o">=</span> <span class="n">max_rate</span>
-</span><span id="IPLimiter.__init__-30"><a href="#IPLimiter.__init__-30"><span class="linenos">30</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">limits</span> <span class="o">=</span> <span class="p">[]</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="IPLimiter.__init__-63"><a href="#IPLimiter.__init__-63"><span class="linenos">63</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">scroll_rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span><span class="p">):</span>
+</span><span id="IPLimiter.__init__-64"><a href="#IPLimiter.__init__-64"><span class="linenos">64</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="IPLimiter.__init__-65"><a href="#IPLimiter.__init__-65"><span class="linenos">65</span></a><span class="sd">        Constructs an IP based rate limiter</span>
+</span><span id="IPLimiter.__init__-66"><a href="#IPLimiter.__init__-66"><span class="linenos">66</span></a><span class="sd">        :param max_rate: The maximum amount of requests that can happen within the scrolling window per IP</span>
+</span><span id="IPLimiter.__init__-67"><a href="#IPLimiter.__init__-67"><span class="linenos">67</span></a><span class="sd">        :param scroll_rate: The length of the scrolling window in minutes</span>
+</span><span id="IPLimiter.__init__-68"><a href="#IPLimiter.__init__-68"><span class="linenos">68</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="IPLimiter.__init__-69"><a href="#IPLimiter.__init__-69"><span class="linenos">69</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="IPLimiter.__init__-70"><a href="#IPLimiter.__init__-70"><span class="linenos">70</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">max_rate</span> <span class="o">=</span> <span class="n">max_rate</span>
+</span><span id="IPLimiter.__init__-71"><a href="#IPLimiter.__init__-71"><span class="linenos">71</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">scroll_rate</span> <span class="o">=</span> <span class="n">scroll_rate</span>
+</span><span id="IPLimiter.__init__-72"><a href="#IPLimiter.__init__-72"><span class="linenos">72</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">IPRequests</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 </span></pre></div>
 
 
-    
+            <div class="docstring"><p>Constructs an IP based rate limiter</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>max_rate</strong>:  The maximum amount of requests that can happen within the scrolling window per IP</li>
+<li><strong>scroll_rate</strong>:  The length of the scrolling window in minutes</li>
+</ul>
+</div>
+
 
                             </div>
                             <div id="IPLimiter.max_rate" class="classattr">
@@ -256,13 +536,24 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.limit    </h1>
     
 
                             </div>
-                            <div id="IPLimiter.limits" class="classattr">
+                            <div id="IPLimiter.scroll_rate" class="classattr">
                                 <div class="attr variable">
-            <span class="name">limits</span>
+            <span class="name">scroll_rate</span>
 
         
     </div>
-    <a class="headerlink" href="#IPLimiter.limits"></a>
+    <a class="headerlink" href="#IPLimiter.scroll_rate"></a>
+    
+    
+
+                            </div>
+                            <div id="IPLimiter.ips" class="classattr">
+                                <div class="attr variable">
+            <span class="name">ips</span><span class="annotation">: Dict[str, <a href="#IPRequests">IPRequests</a>]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#IPLimiter.ips"></a>
     
     
 
@@ -272,14 +563,24 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.limit    </h1>
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">limit</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="o">*</span><span class="n">args</span>, </span><span class="param"><span class="o">**</span><span class="n">kwargs</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
+        <span class="name">limit</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="o">**</span><span class="n">kwargs</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
 
                 <label class="view-source-button" for="IPLimiter.limit-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#IPLimiter.limit"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="IPLimiter.limit-32"><a href="#IPLimiter.limit-32"><span class="linenos">32</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="IPLimiter.limit-33"><a href="#IPLimiter.limit-33"><span class="linenos">33</span></a>        <span class="k">return</span> <span class="kc">False</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="IPLimiter.limit-74"><a href="#IPLimiter.limit-74"><span class="linenos">74</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="IPLimiter.limit-75"><a href="#IPLimiter.limit-75"><span class="linenos">75</span></a>        <span class="n">client</span><span class="p">:</span> <span class="n">Request</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;request&quot;</span><span class="p">]</span>
+</span><span id="IPLimiter.limit-76"><a href="#IPLimiter.limit-76"><span class="linenos">76</span></a>        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</span><span id="IPLimiter.limit-77"><a href="#IPLimiter.limit-77"><span class="linenos">77</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)]</span><span class="o">.</span><span class="n">scroll_limits</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scroll_rate</span><span class="p">)</span>
+</span><span id="IPLimiter.limit-78"><a href="#IPLimiter.limit-78"><span class="linenos">78</span></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_rate</span><span class="p">:</span>
+</span><span id="IPLimiter.limit-79"><a href="#IPLimiter.limit-79"><span class="linenos">79</span></a>                <span class="k">return</span> <span class="kc">True</span>
+</span><span id="IPLimiter.limit-80"><a href="#IPLimiter.limit-80"><span class="linenos">80</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="IPLimiter.limit-81"><a href="#IPLimiter.limit-81"><span class="linenos">81</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+</span><span id="IPLimiter.limit-82"><a href="#IPLimiter.limit-82"><span class="linenos">82</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="IPLimiter.limit-83"><a href="#IPLimiter.limit-83"><span class="linenos">83</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)]</span> <span class="o">=</span> <span class="n">IPRequests</span><span class="p">()</span>
+</span><span id="IPLimiter.limit-84"><a href="#IPLimiter.limit-84"><span class="linenos">84</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">ips</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">client</span><span class="p">)]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span>
+</span><span id="IPLimiter.limit-85"><a href="#IPLimiter.limit-85"><span class="linenos">85</span></a>        <span class="k">return</span> <span class="kc">False</span>
 </span></pre></div>
 
 
@@ -289,14 +590,113 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.limit    </h1>
 
 <ul>
 <li><strong>self</strong>: </li>
-<li><strong>args</strong>:  Args passed to the limiter function</li>
 <li><strong>kwargs</strong>:  Kwargs passed to the limiter function</li>
 </ul>
 
 <h6 id="returns">Returns</h6>
 
 <blockquote>
-  <p>bool</p>
+  <p>bool stating whether to limit the function</p>
+</blockquote>
+</div>
+
+
+                            </div>
+                </section>
+                <section id="StackedLimiter">
+                            <input id="StackedLimiter-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">StackedLimiter</span><wbr>(<span class="base"><a href="#LimiterBase">LimiterBase</a></span>):
+
+                <label class="view-source-button" for="StackedLimiter-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#StackedLimiter"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="StackedLimiter-88"><a href="#StackedLimiter-88"><span class="linenos"> 88</span></a><span class="k">class</span><span class="w"> </span><span class="nc">StackedLimiter</span><span class="p">(</span><span class="n">LimiterBase</span><span class="p">):</span>
+</span><span id="StackedLimiter-89"><a href="#StackedLimiter-89"><span class="linenos"> 89</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="StackedLimiter-90"><a href="#StackedLimiter-90"><span class="linenos"> 90</span></a><span class="sd">    Stacks multiple limiters on top of each-other</span>
+</span><span id="StackedLimiter-91"><a href="#StackedLimiter-91"><span class="linenos"> 91</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="StackedLimiter-92"><a href="#StackedLimiter-92"><span class="linenos"> 92</span></a>
+</span><span id="StackedLimiter-93"><a href="#StackedLimiter-93"><span class="linenos"> 93</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limiters</span><span class="p">):</span>
+</span><span id="StackedLimiter-94"><a href="#StackedLimiter-94"><span class="linenos"> 94</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="StackedLimiter-95"><a href="#StackedLimiter-95"><span class="linenos"> 95</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">limiters</span> <span class="o">=</span> <span class="n">limiters</span>
+</span><span id="StackedLimiter-96"><a href="#StackedLimiter-96"><span class="linenos"> 96</span></a>
+</span><span id="StackedLimiter-97"><a href="#StackedLimiter-97"><span class="linenos"> 97</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="StackedLimiter-98"><a href="#StackedLimiter-98"><span class="linenos"> 98</span></a>        <span class="k">for</span> <span class="n">limiter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">limiters</span><span class="p">:</span>
+</span><span id="StackedLimiter-99"><a href="#StackedLimiter-99"><span class="linenos"> 99</span></a>            <span class="k">if</span> <span class="n">limiter</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="StackedLimiter-100"><a href="#StackedLimiter-100"><span class="linenos">100</span></a>                <span class="k">return</span> <span class="kc">True</span>
+</span><span id="StackedLimiter-101"><a href="#StackedLimiter-101"><span class="linenos">101</span></a>        <span class="k">return</span> <span class="kc">False</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Stacks multiple limiters on top of each-other</p>
+</div>
+
+
+                            <div id="StackedLimiter.__init__" class="classattr">
+                                        <input id="StackedLimiter.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">StackedLimiter</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">limiters</span></span>)</span>
+
+                <label class="view-source-button" for="StackedLimiter.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#StackedLimiter.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="StackedLimiter.__init__-93"><a href="#StackedLimiter.__init__-93"><span class="linenos">93</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limiters</span><span class="p">):</span>
+</span><span id="StackedLimiter.__init__-94"><a href="#StackedLimiter.__init__-94"><span class="linenos">94</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span><span id="StackedLimiter.__init__-95"><a href="#StackedLimiter.__init__-95"><span class="linenos">95</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">limiters</span> <span class="o">=</span> <span class="n">limiters</span>
+</span></pre></div>
+
+
+    
+
+                            </div>
+                            <div id="StackedLimiter.limiters" class="classattr">
+                                <div class="attr variable">
+            <span class="name">limiters</span>
+
+        
+    </div>
+    <a class="headerlink" href="#StackedLimiter.limiters"></a>
+    
+    
+
+                            </div>
+                            <div id="StackedLimiter.limit" class="classattr">
+                                        <input id="StackedLimiter.limit-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">limit</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="o">**</span><span class="n">kwargs</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="StackedLimiter.limit-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#StackedLimiter.limit"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="StackedLimiter.limit-97"><a href="#StackedLimiter.limit-97"><span class="linenos"> 97</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="StackedLimiter.limit-98"><a href="#StackedLimiter.limit-98"><span class="linenos"> 98</span></a>        <span class="k">for</span> <span class="n">limiter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">limiters</span><span class="p">:</span>
+</span><span id="StackedLimiter.limit-99"><a href="#StackedLimiter.limit-99"><span class="linenos"> 99</span></a>            <span class="k">if</span> <span class="n">limiter</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="StackedLimiter.limit-100"><a href="#StackedLimiter.limit-100"><span class="linenos">100</span></a>                <span class="k">return</span> <span class="kc">True</span>
+</span><span id="StackedLimiter.limit-101"><a href="#StackedLimiter.limit-101"><span class="linenos">101</span></a>        <span class="k">return</span> <span class="kc">False</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Called on every request. If true, the request should be dropped.</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>self</strong>: </li>
+<li><strong>kwargs</strong>:  Kwargs passed to the limiter function</li>
+</ul>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>bool stating whether to limit the function</p>
 </blockquote>
 </div>
 

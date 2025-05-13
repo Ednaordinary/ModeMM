@@ -25,17 +25,20 @@ To configure which models are served through the server, edit config.json with t
 ```json
 {
   ...
-  "models": ["name", "type", "path"],
+  "models": [{"name":  "base", "module":  "base", "class":  "ModemmModel", "init_kwargs":  {}}, ...],
   ...
 }
 ```
 
 `name` is what will be shown to the user being served.
 
-`type` is the model type implemented by Modemm.
+`module` is an underlying module containing the class, depending on how the model is laid out. For example, this could be `diffusers`, `flux` or even `diffusers.flux`
 
-`path` is a relative or absolute path to the needed model files. For diffusers or transformers backend models, this can also be a huggingface repo.
+`class` is the class inside the module to declare the model as
 
-The current types implemented are:
+`init_kwargs` are keyword arguments passed to the models init function. This could be used to pass paths, runtime parameters, or more.
 
-- absolutely nothing
+The current modules and classes implemented are:
+
+- base
+  - ModemmModel: A placeholder that return the text "meow"
