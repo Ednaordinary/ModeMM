@@ -1,5 +1,6 @@
 from typing import Dict, Any, Union, List
 from PIL import Image
+import time
 
 from ..errors import ModemmError, ArgumentError, ArgValueError
 
@@ -9,16 +10,22 @@ class FakeModel:
         pass
 
     @staticmethod
-    def __call__(self, **kwargs):
+    def __call__(**kwargs):
         return "meow"
 
     @staticmethod
-    def load(self):
+    def load():
         return True
 
     @staticmethod
-    def unload(self):
+    def unload():
         return True
+
+    @staticmethod
+    def stream(**kwargs) -> str:
+        for i in range(10):
+            time.sleep(1)
+            yield "meow\n"
 
 
 class ModemmModel:
@@ -29,8 +36,9 @@ class ModemmModel:
 
     def __init__(self):
         self._model = FakeModel()  # Underlying model from a different library
-        self.accept_kwargs: Dict[str, Any] = {}
-        self.default_kwargs: Dict[str, Any] = {}
+        self.accept_kwargs: Dict[str, Any] = {"stream": bool}
+        self.default_kwargs: Dict[str, Any] = {"stream": True}
+        self.streamable: int = True
 
     def load(self) -> bool:
         """
@@ -51,7 +59,10 @@ class ModemmModel:
         if errors:
             return errors
         kwargs = write_default_kwargs(self, kwargs)
-        return self._model(**kwargs)
+        if self.streamable and kwargs["stream"]:
+            return self._model.stream(**kwargs)
+        else:
+            return self._model(**kwargs)
 
 
 def write_default_kwargs(model: ModemmModel, kwargs: dict) -> dict:

@@ -87,7 +87,21 @@ class ModelNotFound(ModemmError):
 
     def __init__(self, model: str):
         """
-        Construct a value Modemm Error
+        Construct a Model Not Found Error
         :param model: The model that could not be found
+        """
+        super().__init__(model)
+
+
+class ModelNotLoaded(ModemmError):
+    """
+    An error from the Modemm server specifying the model failed to load
+    """
+    error_type = "Model Didn't Load"
+
+    def __init__(self, model: str):
+        """
+        Construct a Model Loading Error
+        :param model: The model that could not be loaded
         """
         super().__init__(model)

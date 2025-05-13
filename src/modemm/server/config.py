@@ -13,6 +13,7 @@ class ModemmConfigBase:
 
     def __init__(self, path: str):
         self.path = path
+        self.registered = {}
 
     def _load(self) -> Dict:
         with open(self.path, "r") as config_file:
@@ -33,17 +34,17 @@ class ModemmConfigBase:
 
     def register(self):
         config = self.get()
-        registered = {}
+        self.registered = {}
         registrable = ["models"]
         config_keys = config.keys()
         for i in registrable:
             if i in config_keys:
-                registered[i] = []
-        if "models" in registered.keys():
+                self.registered[i] = []
+        if "models" in self.registered.keys():
             for i in self.get()["models"]:
                 model = i["module"]
                 module = importlib.import_module("models." + model)
-                registered["models"].append(module.__dict__[i["class"]](i["init_kwargs"]))
+                self.registered["models"].append(module.__dict__[i["class"]](i["init_kwargs"]))
 
 
 class ModemmConfigDynamic(ModemmConfigBase):
