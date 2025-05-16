@@ -1,27 +1,21 @@
-from typing import Dict, Tuple, List, Any
-from queue import Queue
+from typing import Dict, Any
+import threading
+import asyncio
 
 from .config import ModemmConfigBase
 from .models.base import ModemmModel
+from .response import QueuedResponse
 
+class ModelExecutor:
+    """
+    A loop to execute model requests in
+    """
 
-class QueuedResponse:
     def __init__(self):
-        self.queue = Queue()
+        self.loop = asyncio.new_event_loop()
 
-    def wait(self) -> List[Any]:
-        response = []
-        obj = self.queue.get()
-        while obj is not None:
-            response.append(obj)
-            obj = self.queue.get()
-        return response
-
-    def wait_stream(self) -> Any:
-        obj = self.queue.get()
-        while obj is not None:
-            yield obj
-            obj = self.queue.get()
+    def run_loop(self):
+        self.loop.run_forever()
 
 
 class ModelHandlerBase:
@@ -31,12 +25,15 @@ class ModelHandlerBase:
     and loads the model when requested and unloads it when there are no users, which may not be a good idea.
     """
 
-    def __init__(self, config: ModemmConfigBase):
+    def __init__(self, config: ModemmConfigBase, executor: ModelExecutor):
         self.config = config
         self.configured_models: Dict[str, ModemmModel] = {}
         self.loaded_models: Dict[str, int] = {}
+        self.executor = executor
+        self.runner_thread = threading.Thread(target=self.executor.run_loop)
+        self.runner_thread.start()
 
-    def allocate(self, model: str) -> Tuple[ModemmModel, bool]:
+    def allocate(self, model: str) -> bool:
         """
         Waits for a requests model to be loaded
         :param model: The model to allocate
@@ -44,14 +41,14 @@ class ModelHandlerBase:
         """
         if model in self.loaded_models.keys():
             self.loaded_models[model] += 1
-            return self.configured_models[model], True
+            return True
         else:
             if "models" not in self.config.registered.keys():
                 self.config.register()
             self.configured_models[model] = self.config.registered["models"][model]
             self.loaded_models[model] = 1
             loaded = self.configured_models[model].load()
-            return self.configured_models[model], loaded
+            return loaded
 
     def deallocate(self, model: str) -> bool:
         """
@@ -70,6 +67,12 @@ class ModelHandlerBase:
         else:
             return True
 
-    # current issue: how to run this in as few threads as possible
-    def run(self, model: str) -> QueuedResponse:
-        pass
+    def run(self, model: str, stream, kwargs) -> Any:
+        model = self.configured_models[model]
+        if stream and model.streamable:
+            streamer = QueuedResponse()
+            asyncio.run_coroutine_threadsafe(model(**kwargs, streamer=streamer), loop=self.executor.loop)
+            for i in streamer.wait():
+                yield i
+        else:
+            return asyncio.run_coroutine_threadsafe(model(**kwargs), loop=self.executor.loop).result()

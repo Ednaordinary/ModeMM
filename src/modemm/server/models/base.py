@@ -2,8 +2,8 @@ from typing import Dict, Any, Union, List
 from PIL import Image
 import time
 
+from ..response import QueuedResponse
 from ..errors import ModemmError, ArgumentError, ArgValueError
-
 
 class FakeModel:
     def __init__(self):
@@ -54,13 +54,15 @@ class ModemmModel:
         """
         return self._model.unload()
 
-    def __call__(self, **kwargs) -> Union[str, Image, ModemmError]:
+    async def __call__(self, streamer: Union[QueuedResponse, None] = None, **kwargs) -> Union[str, Image, ModemmError]:
         errors = validate_kwargs(self, kwargs)
         if errors:
             return errors
         kwargs = write_default_kwargs(self, kwargs)
-        if self.streamable and kwargs["stream"]:
-            return self._model.stream(**kwargs)
+        if self.streamable and streamer is not None:
+            for i in self._model.stream(**kwargs):
+                streamer.queue.put(i)
+            streamer.queue.put(None)
         else:
             return self._model(**kwargs)
 

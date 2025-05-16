@@ -31,16 +31,13 @@
             <h2>API Documentation</h2>
                 <ul class="memberlist">
             <li>
-                    <a class="class" href="#QueuedResponse">QueuedResponse</a>
+                    <a class="class" href="#ModelExecutor">ModelExecutor</a>
                             <ul class="memberlist">
                         <li>
-                                <a class="variable" href="#QueuedResponse.queue">queue</a>
+                                <a class="variable" href="#ModelExecutor.loop">loop</a>
                         </li>
                         <li>
-                                <a class="function" href="#QueuedResponse.wait">wait</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#QueuedResponse.wait_stream">wait_stream</a>
+                                <a class="function" href="#ModelExecutor.run_loop">run_loop</a>
                         </li>
                 </ul>
 
@@ -59,6 +56,12 @@
                         </li>
                         <li>
                                 <a class="variable" href="#ModelHandlerBase.loaded_models">loaded_models</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelHandlerBase.executor">executor</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ModelHandlerBase.runner_thread">runner_thread</a>
                         </li>
                         <li>
                                 <a class="function" href="#ModelHandlerBase.allocate">allocate</a>
@@ -93,169 +96,140 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.model_handler    </h1>
 
                         <label class="view-source-button" for="mod-model_handler-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">queue</span><span class="w"> </span><span class="kn">import</span> <span class="n">Queue</span>
-</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a>
-</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModemmConfigBase</span>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModemmModel</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="k">class</span><span class="w"> </span><span class="nc">QueuedResponse</span><span class="p">:</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>        <span class="k">while</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>            <span class="n">response</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>        <span class="k">return</span> <span class="n">response</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModemmConfigBase</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.models.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModemmModel</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.response</span><span class="w"> </span><span class="kn">import</span> <span class="n">QueuedResponse</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelExecutor</span><span class="p">:</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="sd">    A loop to execute model requests in</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">run_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="o">.</span><span class="n">run_forever</span><span class="p">()</span>
 </span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">wait_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>        <span class="k">while</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>            <span class="k">yield</span> <span class="n">obj</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelHandlerBase</span><span class="p">:</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="sd">    The ModelHandler classes define how a model is loaded when a request is made. For instance, a model loader could</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="sd">    choose to only load at request time or could stay loaded all the time. This base class ignores everything else</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="sd">    and loads the model when requested and unloads it when there are no users, which may not be a good idea.</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ModemmConfigBase</span><span class="p">):</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModemmModel</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">allocate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ModemmModel</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a><span class="sd">        Waits for a requests model to be loaded</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a><span class="sd">        :param model: The model to allocate</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a><span class="sd">        :return: Whether the model loaded successfully</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">],</span> <span class="kc">True</span>
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>            <span class="k">if</span> <span class="s2">&quot;models&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">registered</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">registered</span><span class="p">[</span><span class="s2">&quot;models&quot;</span><span class="p">][</span><span class="n">model</span><span class="p">]</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>            <span class="n">loaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">],</span> <span class="n">loaded</span>
-</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>
-</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">deallocate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a><span class="sd">        Waits for a requests model to be unloaded</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a><span class="sd">        :param model: The model to deallocate</span>
-</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a><span class="sd">        :return: Whether the model unloaded successfully</span>
-</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a>        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
-</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a>                <span class="n">unloaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span><span class="o">.</span><span class="n">unload</span><span class="p">()</span>
-</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a>                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span>
-</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a>                <span class="k">return</span> <span class="n">unloaded</span>
-</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a>                <span class="k">return</span> <span class="kc">True</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>            <span class="k">return</span> <span class="kc">True</span>
-</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a>
-</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>    <span class="c1"># current issue: how to run this in as few threads as possible</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QueuedResponse</span><span class="p">:</span>
-</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>        <span class="k">pass</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelHandlerBase</span><span class="p">:</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="sd">    The ModelHandler classes define how a model is loaded when a request is made. For instance, a model loader could</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="sd">    choose to only load at request time or could stay loaded all the time. This base class ignores everything else</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="sd">    and loads the model when requested and unloads it when there are no users, which may not be a good idea.</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ModemmConfigBase</span><span class="p">,</span> <span class="n">executor</span><span class="p">:</span> <span class="n">ModelExecutor</span><span class="p">):</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModemmModel</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">executor</span> <span class="o">=</span> <span class="n">executor</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">runner_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">run_loop</span><span class="p">)</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">runner_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">allocate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a><span class="sd">        Waits for a requests model to be loaded</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a><span class="sd">        :param model: The model to allocate</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="sd">        :return: Whether the model loaded successfully</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>            <span class="k">return</span> <span class="kc">True</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>            <span class="k">if</span> <span class="s2">&quot;models&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">registered</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">registered</span><span class="p">[</span><span class="s2">&quot;models&quot;</span><span class="p">][</span><span class="n">model</span><span class="p">]</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>            <span class="n">loaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>            <span class="k">return</span> <span class="n">loaded</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">deallocate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a><span class="sd">        Waits for a requests model to be unloaded</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a><span class="sd">        :param model: The model to deallocate</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a><span class="sd">        :return: Whether the model unloaded successfully</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a>                <span class="n">unloaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span><span class="o">.</span><span class="n">unload</span><span class="p">()</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a>                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span>
+</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a>                <span class="k">return</span> <span class="n">unloaded</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a>                <span class="k">return</span> <span class="kc">True</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a>            <span class="k">return</span> <span class="kc">True</span>
+</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a>
+</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a>        <span class="k">if</span> <span class="n">stream</span> <span class="ow">and</span> <span class="n">model</span><span class="o">.</span><span class="n">streamable</span><span class="p">:</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>            <span class="n">streamer</span> <span class="o">=</span> <span class="n">QueuedResponse</span><span class="p">()</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>            <span class="n">asyncio</span><span class="o">.</span><span class="n">run_coroutine_threadsafe</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">streamer</span><span class="o">=</span><span class="n">streamer</span><span class="p">),</span> <span class="n">loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">loop</span><span class="p">)</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">streamer</span><span class="o">.</span><span class="n">wait</span><span class="p">():</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>                <span class="k">yield</span> <span class="n">i</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a>            <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run_coroutine_threadsafe</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">loop</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
 </span></pre></div>
 
 
             </section>
-                <section id="QueuedResponse">
-                            <input id="QueuedResponse-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+                <section id="ModelExecutor">
+                            <input id="ModelExecutor-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
             
     <span class="def">class</span>
-    <span class="name">QueuedResponse</span>:
+    <span class="name">ModelExecutor</span>:
 
-                <label class="view-source-button" for="QueuedResponse-view-source"><span>View Source</span></label>
+                <label class="view-source-button" for="ModelExecutor-view-source"><span>View Source</span></label>
 
     </div>
-    <a class="headerlink" href="#QueuedResponse"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="QueuedResponse-9"><a href="#QueuedResponse-9"><span class="linenos"> 9</span></a><span class="k">class</span><span class="w"> </span><span class="nc">QueuedResponse</span><span class="p">:</span>
-</span><span id="QueuedResponse-10"><a href="#QueuedResponse-10"><span class="linenos">10</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="QueuedResponse-11"><a href="#QueuedResponse-11"><span class="linenos">11</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
-</span><span id="QueuedResponse-12"><a href="#QueuedResponse-12"><span class="linenos">12</span></a>
-</span><span id="QueuedResponse-13"><a href="#QueuedResponse-13"><span class="linenos">13</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-</span><span id="QueuedResponse-14"><a href="#QueuedResponse-14"><span class="linenos">14</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="QueuedResponse-15"><a href="#QueuedResponse-15"><span class="linenos">15</span></a>        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="QueuedResponse-16"><a href="#QueuedResponse-16"><span class="linenos">16</span></a>        <span class="k">while</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="QueuedResponse-17"><a href="#QueuedResponse-17"><span class="linenos">17</span></a>            <span class="n">response</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-</span><span id="QueuedResponse-18"><a href="#QueuedResponse-18"><span class="linenos">18</span></a>            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="QueuedResponse-19"><a href="#QueuedResponse-19"><span class="linenos">19</span></a>        <span class="k">return</span> <span class="n">response</span>
-</span><span id="QueuedResponse-20"><a href="#QueuedResponse-20"><span class="linenos">20</span></a>
-</span><span id="QueuedResponse-21"><a href="#QueuedResponse-21"><span class="linenos">21</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">wait_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-</span><span id="QueuedResponse-22"><a href="#QueuedResponse-22"><span class="linenos">22</span></a>        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="QueuedResponse-23"><a href="#QueuedResponse-23"><span class="linenos">23</span></a>        <span class="k">while</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="QueuedResponse-24"><a href="#QueuedResponse-24"><span class="linenos">24</span></a>            <span class="k">yield</span> <span class="n">obj</span>
-</span><span id="QueuedResponse-25"><a href="#QueuedResponse-25"><span class="linenos">25</span></a>            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+    <a class="headerlink" href="#ModelExecutor"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelExecutor-10"><a href="#ModelExecutor-10"><span class="linenos">10</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelExecutor</span><span class="p">:</span>
+</span><span id="ModelExecutor-11"><a href="#ModelExecutor-11"><span class="linenos">11</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelExecutor-12"><a href="#ModelExecutor-12"><span class="linenos">12</span></a><span class="sd">    A loop to execute model requests in</span>
+</span><span id="ModelExecutor-13"><a href="#ModelExecutor-13"><span class="linenos">13</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="ModelExecutor-14"><a href="#ModelExecutor-14"><span class="linenos">14</span></a>
+</span><span id="ModelExecutor-15"><a href="#ModelExecutor-15"><span class="linenos">15</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="ModelExecutor-16"><a href="#ModelExecutor-16"><span class="linenos">16</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">new_event_loop</span><span class="p">()</span>
+</span><span id="ModelExecutor-17"><a href="#ModelExecutor-17"><span class="linenos">17</span></a>
+</span><span id="ModelExecutor-18"><a href="#ModelExecutor-18"><span class="linenos">18</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">run_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="ModelExecutor-19"><a href="#ModelExecutor-19"><span class="linenos">19</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="o">.</span><span class="n">run_forever</span><span class="p">()</span>
 </span></pre></div>
 
 
-    
+            <div class="docstring"><p>A loop to execute model requests in</p>
+</div>
 
-                            <div id="QueuedResponse.queue" class="classattr">
+
+                            <div id="ModelExecutor.loop" class="classattr">
                                 <div class="attr variable">
-            <span class="name">queue</span>
+            <span class="name">loop</span>
 
         
     </div>
-    <a class="headerlink" href="#QueuedResponse.queue"></a>
+    <a class="headerlink" href="#ModelExecutor.loop"></a>
     
     
 
                             </div>
-                            <div id="QueuedResponse.wait" class="classattr">
-                                        <input id="QueuedResponse.wait-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+                            <div id="ModelExecutor.run_loop" class="classattr">
+                                        <input id="ModelExecutor.run_loop-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">wait</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span>:</span></span>
+        <span class="name">run_loop</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">):</span></span>
 
-                <label class="view-source-button" for="QueuedResponse.wait-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#QueuedResponse.wait"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="QueuedResponse.wait-13"><a href="#QueuedResponse.wait-13"><span class="linenos">13</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">wait</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-</span><span id="QueuedResponse.wait-14"><a href="#QueuedResponse.wait-14"><span class="linenos">14</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="QueuedResponse.wait-15"><a href="#QueuedResponse.wait-15"><span class="linenos">15</span></a>        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="QueuedResponse.wait-16"><a href="#QueuedResponse.wait-16"><span class="linenos">16</span></a>        <span class="k">while</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="QueuedResponse.wait-17"><a href="#QueuedResponse.wait-17"><span class="linenos">17</span></a>            <span class="n">response</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-</span><span id="QueuedResponse.wait-18"><a href="#QueuedResponse.wait-18"><span class="linenos">18</span></a>            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="QueuedResponse.wait-19"><a href="#QueuedResponse.wait-19"><span class="linenos">19</span></a>        <span class="k">return</span> <span class="n">response</span>
-</span></pre></div>
-
-
-    
-
-                            </div>
-                            <div id="QueuedResponse.wait_stream" class="classattr">
-                                        <input id="QueuedResponse.wait_stream-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">wait_stream</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="n">Any</span>:</span></span>
-
-                <label class="view-source-button" for="QueuedResponse.wait_stream-view-source"><span>View Source</span></label>
+                <label class="view-source-button" for="ModelExecutor.run_loop-view-source"><span>View Source</span></label>
 
     </div>
-    <a class="headerlink" href="#QueuedResponse.wait_stream"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="QueuedResponse.wait_stream-21"><a href="#QueuedResponse.wait_stream-21"><span class="linenos">21</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">wait_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-</span><span id="QueuedResponse.wait_stream-22"><a href="#QueuedResponse.wait_stream-22"><span class="linenos">22</span></a>        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</span><span id="QueuedResponse.wait_stream-23"><a href="#QueuedResponse.wait_stream-23"><span class="linenos">23</span></a>        <span class="k">while</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="QueuedResponse.wait_stream-24"><a href="#QueuedResponse.wait_stream-24"><span class="linenos">24</span></a>            <span class="k">yield</span> <span class="n">obj</span>
-</span><span id="QueuedResponse.wait_stream-25"><a href="#QueuedResponse.wait_stream-25"><span class="linenos">25</span></a>            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+    <a class="headerlink" href="#ModelExecutor.run_loop"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelExecutor.run_loop-18"><a href="#ModelExecutor.run_loop-18"><span class="linenos">18</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">run_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="ModelExecutor.run_loop-19"><a href="#ModelExecutor.run_loop-19"><span class="linenos">19</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">loop</span><span class="o">.</span><span class="n">run_forever</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -274,55 +248,64 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.model_handler    </h1>
 
     </div>
     <a class="headerlink" href="#ModelHandlerBase"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelHandlerBase-28"><a href="#ModelHandlerBase-28"><span class="linenos">28</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelHandlerBase</span><span class="p">:</span>
-</span><span id="ModelHandlerBase-29"><a href="#ModelHandlerBase-29"><span class="linenos">29</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ModelHandlerBase-30"><a href="#ModelHandlerBase-30"><span class="linenos">30</span></a><span class="sd">    The ModelHandler classes define how a model is loaded when a request is made. For instance, a model loader could</span>
-</span><span id="ModelHandlerBase-31"><a href="#ModelHandlerBase-31"><span class="linenos">31</span></a><span class="sd">    choose to only load at request time or could stay loaded all the time. This base class ignores everything else</span>
-</span><span id="ModelHandlerBase-32"><a href="#ModelHandlerBase-32"><span class="linenos">32</span></a><span class="sd">    and loads the model when requested and unloads it when there are no users, which may not be a good idea.</span>
-</span><span id="ModelHandlerBase-33"><a href="#ModelHandlerBase-33"><span class="linenos">33</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="ModelHandlerBase-34"><a href="#ModelHandlerBase-34"><span class="linenos">34</span></a>
-</span><span id="ModelHandlerBase-35"><a href="#ModelHandlerBase-35"><span class="linenos">35</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ModemmConfigBase</span><span class="p">):</span>
-</span><span id="ModelHandlerBase-36"><a href="#ModelHandlerBase-36"><span class="linenos">36</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
-</span><span id="ModelHandlerBase-37"><a href="#ModelHandlerBase-37"><span class="linenos">37</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModemmModel</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span id="ModelHandlerBase-38"><a href="#ModelHandlerBase-38"><span class="linenos">38</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span id="ModelHandlerBase-39"><a href="#ModelHandlerBase-39"><span class="linenos">39</span></a>
-</span><span id="ModelHandlerBase-40"><a href="#ModelHandlerBase-40"><span class="linenos">40</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">allocate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ModemmModel</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-</span><span id="ModelHandlerBase-41"><a href="#ModelHandlerBase-41"><span class="linenos">41</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ModelHandlerBase-42"><a href="#ModelHandlerBase-42"><span class="linenos">42</span></a><span class="sd">        Waits for a requests model to be loaded</span>
-</span><span id="ModelHandlerBase-43"><a href="#ModelHandlerBase-43"><span class="linenos">43</span></a><span class="sd">        :param model: The model to allocate</span>
-</span><span id="ModelHandlerBase-44"><a href="#ModelHandlerBase-44"><span class="linenos">44</span></a><span class="sd">        :return: Whether the model loaded successfully</span>
-</span><span id="ModelHandlerBase-45"><a href="#ModelHandlerBase-45"><span class="linenos">45</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ModelHandlerBase-46"><a href="#ModelHandlerBase-46"><span class="linenos">46</span></a>        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-</span><span id="ModelHandlerBase-47"><a href="#ModelHandlerBase-47"><span class="linenos">47</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span id="ModelHandlerBase-48"><a href="#ModelHandlerBase-48"><span class="linenos">48</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">],</span> <span class="kc">True</span>
-</span><span id="ModelHandlerBase-49"><a href="#ModelHandlerBase-49"><span class="linenos">49</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="ModelHandlerBase-50"><a href="#ModelHandlerBase-50"><span class="linenos">50</span></a>            <span class="k">if</span> <span class="s2">&quot;models&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">registered</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-</span><span id="ModelHandlerBase-51"><a href="#ModelHandlerBase-51"><span class="linenos">51</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
-</span><span id="ModelHandlerBase-52"><a href="#ModelHandlerBase-52"><span class="linenos">52</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">registered</span><span class="p">[</span><span class="s2">&quot;models&quot;</span><span class="p">][</span><span class="n">model</span><span class="p">]</span>
-</span><span id="ModelHandlerBase-53"><a href="#ModelHandlerBase-53"><span class="linenos">53</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span id="ModelHandlerBase-54"><a href="#ModelHandlerBase-54"><span class="linenos">54</span></a>            <span class="n">loaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-</span><span id="ModelHandlerBase-55"><a href="#ModelHandlerBase-55"><span class="linenos">55</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">],</span> <span class="n">loaded</span>
-</span><span id="ModelHandlerBase-56"><a href="#ModelHandlerBase-56"><span class="linenos">56</span></a>
-</span><span id="ModelHandlerBase-57"><a href="#ModelHandlerBase-57"><span class="linenos">57</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">deallocate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="ModelHandlerBase-58"><a href="#ModelHandlerBase-58"><span class="linenos">58</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ModelHandlerBase-59"><a href="#ModelHandlerBase-59"><span class="linenos">59</span></a><span class="sd">        Waits for a requests model to be unloaded</span>
-</span><span id="ModelHandlerBase-60"><a href="#ModelHandlerBase-60"><span class="linenos">60</span></a><span class="sd">        :param model: The model to deallocate</span>
-</span><span id="ModelHandlerBase-61"><a href="#ModelHandlerBase-61"><span class="linenos">61</span></a><span class="sd">        :return: Whether the model unloaded successfully</span>
-</span><span id="ModelHandlerBase-62"><a href="#ModelHandlerBase-62"><span class="linenos">62</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ModelHandlerBase-63"><a href="#ModelHandlerBase-63"><span class="linenos">63</span></a>        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-</span><span id="ModelHandlerBase-64"><a href="#ModelHandlerBase-64"><span class="linenos">64</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
-</span><span id="ModelHandlerBase-65"><a href="#ModelHandlerBase-65"><span class="linenos">65</span></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="ModelHandlerBase-66"><a href="#ModelHandlerBase-66"><span class="linenos">66</span></a>                <span class="n">unloaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span><span class="o">.</span><span class="n">unload</span><span class="p">()</span>
-</span><span id="ModelHandlerBase-67"><a href="#ModelHandlerBase-67"><span class="linenos">67</span></a>                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span>
-</span><span id="ModelHandlerBase-68"><a href="#ModelHandlerBase-68"><span class="linenos">68</span></a>                <span class="k">return</span> <span class="n">unloaded</span>
-</span><span id="ModelHandlerBase-69"><a href="#ModelHandlerBase-69"><span class="linenos">69</span></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="ModelHandlerBase-70"><a href="#ModelHandlerBase-70"><span class="linenos">70</span></a>                <span class="k">return</span> <span class="kc">True</span>
-</span><span id="ModelHandlerBase-71"><a href="#ModelHandlerBase-71"><span class="linenos">71</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="ModelHandlerBase-72"><a href="#ModelHandlerBase-72"><span class="linenos">72</span></a>            <span class="k">return</span> <span class="kc">True</span>
-</span><span id="ModelHandlerBase-73"><a href="#ModelHandlerBase-73"><span class="linenos">73</span></a>
-</span><span id="ModelHandlerBase-74"><a href="#ModelHandlerBase-74"><span class="linenos">74</span></a>    <span class="c1"># current issue: how to run this in as few threads as possible</span>
-</span><span id="ModelHandlerBase-75"><a href="#ModelHandlerBase-75"><span class="linenos">75</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QueuedResponse</span><span class="p">:</span>
-</span><span id="ModelHandlerBase-76"><a href="#ModelHandlerBase-76"><span class="linenos">76</span></a>        <span class="k">pass</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelHandlerBase-22"><a href="#ModelHandlerBase-22"><span class="linenos">22</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelHandlerBase</span><span class="p">:</span>
+</span><span id="ModelHandlerBase-23"><a href="#ModelHandlerBase-23"><span class="linenos">23</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelHandlerBase-24"><a href="#ModelHandlerBase-24"><span class="linenos">24</span></a><span class="sd">    The ModelHandler classes define how a model is loaded when a request is made. For instance, a model loader could</span>
+</span><span id="ModelHandlerBase-25"><a href="#ModelHandlerBase-25"><span class="linenos">25</span></a><span class="sd">    choose to only load at request time or could stay loaded all the time. This base class ignores everything else</span>
+</span><span id="ModelHandlerBase-26"><a href="#ModelHandlerBase-26"><span class="linenos">26</span></a><span class="sd">    and loads the model when requested and unloads it when there are no users, which may not be a good idea.</span>
+</span><span id="ModelHandlerBase-27"><a href="#ModelHandlerBase-27"><span class="linenos">27</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="ModelHandlerBase-28"><a href="#ModelHandlerBase-28"><span class="linenos">28</span></a>
+</span><span id="ModelHandlerBase-29"><a href="#ModelHandlerBase-29"><span class="linenos">29</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ModemmConfigBase</span><span class="p">,</span> <span class="n">executor</span><span class="p">:</span> <span class="n">ModelExecutor</span><span class="p">):</span>
+</span><span id="ModelHandlerBase-30"><a href="#ModelHandlerBase-30"><span class="linenos">30</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+</span><span id="ModelHandlerBase-31"><a href="#ModelHandlerBase-31"><span class="linenos">31</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModemmModel</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="ModelHandlerBase-32"><a href="#ModelHandlerBase-32"><span class="linenos">32</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="ModelHandlerBase-33"><a href="#ModelHandlerBase-33"><span class="linenos">33</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">executor</span> <span class="o">=</span> <span class="n">executor</span>
+</span><span id="ModelHandlerBase-34"><a href="#ModelHandlerBase-34"><span class="linenos">34</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">runner_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">run_loop</span><span class="p">)</span>
+</span><span id="ModelHandlerBase-35"><a href="#ModelHandlerBase-35"><span class="linenos">35</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">runner_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</span><span id="ModelHandlerBase-36"><a href="#ModelHandlerBase-36"><span class="linenos">36</span></a>
+</span><span id="ModelHandlerBase-37"><a href="#ModelHandlerBase-37"><span class="linenos">37</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">allocate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="ModelHandlerBase-38"><a href="#ModelHandlerBase-38"><span class="linenos">38</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelHandlerBase-39"><a href="#ModelHandlerBase-39"><span class="linenos">39</span></a><span class="sd">        Waits for a requests model to be loaded</span>
+</span><span id="ModelHandlerBase-40"><a href="#ModelHandlerBase-40"><span class="linenos">40</span></a><span class="sd">        :param model: The model to allocate</span>
+</span><span id="ModelHandlerBase-41"><a href="#ModelHandlerBase-41"><span class="linenos">41</span></a><span class="sd">        :return: Whether the model loaded successfully</span>
+</span><span id="ModelHandlerBase-42"><a href="#ModelHandlerBase-42"><span class="linenos">42</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ModelHandlerBase-43"><a href="#ModelHandlerBase-43"><span class="linenos">43</span></a>        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</span><span id="ModelHandlerBase-44"><a href="#ModelHandlerBase-44"><span class="linenos">44</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="ModelHandlerBase-45"><a href="#ModelHandlerBase-45"><span class="linenos">45</span></a>            <span class="k">return</span> <span class="kc">True</span>
+</span><span id="ModelHandlerBase-46"><a href="#ModelHandlerBase-46"><span class="linenos">46</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="ModelHandlerBase-47"><a href="#ModelHandlerBase-47"><span class="linenos">47</span></a>            <span class="k">if</span> <span class="s2">&quot;models&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">registered</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</span><span id="ModelHandlerBase-48"><a href="#ModelHandlerBase-48"><span class="linenos">48</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+</span><span id="ModelHandlerBase-49"><a href="#ModelHandlerBase-49"><span class="linenos">49</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">registered</span><span class="p">[</span><span class="s2">&quot;models&quot;</span><span class="p">][</span><span class="n">model</span><span class="p">]</span>
+</span><span id="ModelHandlerBase-50"><a href="#ModelHandlerBase-50"><span class="linenos">50</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span id="ModelHandlerBase-51"><a href="#ModelHandlerBase-51"><span class="linenos">51</span></a>            <span class="n">loaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+</span><span id="ModelHandlerBase-52"><a href="#ModelHandlerBase-52"><span class="linenos">52</span></a>            <span class="k">return</span> <span class="n">loaded</span>
+</span><span id="ModelHandlerBase-53"><a href="#ModelHandlerBase-53"><span class="linenos">53</span></a>
+</span><span id="ModelHandlerBase-54"><a href="#ModelHandlerBase-54"><span class="linenos">54</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">deallocate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="ModelHandlerBase-55"><a href="#ModelHandlerBase-55"><span class="linenos">55</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelHandlerBase-56"><a href="#ModelHandlerBase-56"><span class="linenos">56</span></a><span class="sd">        Waits for a requests model to be unloaded</span>
+</span><span id="ModelHandlerBase-57"><a href="#ModelHandlerBase-57"><span class="linenos">57</span></a><span class="sd">        :param model: The model to deallocate</span>
+</span><span id="ModelHandlerBase-58"><a href="#ModelHandlerBase-58"><span class="linenos">58</span></a><span class="sd">        :return: Whether the model unloaded successfully</span>
+</span><span id="ModelHandlerBase-59"><a href="#ModelHandlerBase-59"><span class="linenos">59</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ModelHandlerBase-60"><a href="#ModelHandlerBase-60"><span class="linenos">60</span></a>        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</span><span id="ModelHandlerBase-61"><a href="#ModelHandlerBase-61"><span class="linenos">61</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+</span><span id="ModelHandlerBase-62"><a href="#ModelHandlerBase-62"><span class="linenos">62</span></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="ModelHandlerBase-63"><a href="#ModelHandlerBase-63"><span class="linenos">63</span></a>                <span class="n">unloaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span><span class="o">.</span><span class="n">unload</span><span class="p">()</span>
+</span><span id="ModelHandlerBase-64"><a href="#ModelHandlerBase-64"><span class="linenos">64</span></a>                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span>
+</span><span id="ModelHandlerBase-65"><a href="#ModelHandlerBase-65"><span class="linenos">65</span></a>                <span class="k">return</span> <span class="n">unloaded</span>
+</span><span id="ModelHandlerBase-66"><a href="#ModelHandlerBase-66"><span class="linenos">66</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="ModelHandlerBase-67"><a href="#ModelHandlerBase-67"><span class="linenos">67</span></a>                <span class="k">return</span> <span class="kc">True</span>
+</span><span id="ModelHandlerBase-68"><a href="#ModelHandlerBase-68"><span class="linenos">68</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="ModelHandlerBase-69"><a href="#ModelHandlerBase-69"><span class="linenos">69</span></a>            <span class="k">return</span> <span class="kc">True</span>
+</span><span id="ModelHandlerBase-70"><a href="#ModelHandlerBase-70"><span class="linenos">70</span></a>
+</span><span id="ModelHandlerBase-71"><a href="#ModelHandlerBase-71"><span class="linenos">71</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span id="ModelHandlerBase-72"><a href="#ModelHandlerBase-72"><span class="linenos">72</span></a>        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span>
+</span><span id="ModelHandlerBase-73"><a href="#ModelHandlerBase-73"><span class="linenos">73</span></a>        <span class="k">if</span> <span class="n">stream</span> <span class="ow">and</span> <span class="n">model</span><span class="o">.</span><span class="n">streamable</span><span class="p">:</span>
+</span><span id="ModelHandlerBase-74"><a href="#ModelHandlerBase-74"><span class="linenos">74</span></a>            <span class="n">streamer</span> <span class="o">=</span> <span class="n">QueuedResponse</span><span class="p">()</span>
+</span><span id="ModelHandlerBase-75"><a href="#ModelHandlerBase-75"><span class="linenos">75</span></a>            <span class="n">asyncio</span><span class="o">.</span><span class="n">run_coroutine_threadsafe</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">streamer</span><span class="o">=</span><span class="n">streamer</span><span class="p">),</span> <span class="n">loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">loop</span><span class="p">)</span>
+</span><span id="ModelHandlerBase-76"><a href="#ModelHandlerBase-76"><span class="linenos">76</span></a>            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">streamer</span><span class="o">.</span><span class="n">wait</span><span class="p">():</span>
+</span><span id="ModelHandlerBase-77"><a href="#ModelHandlerBase-77"><span class="linenos">77</span></a>                <span class="k">yield</span> <span class="n">i</span>
+</span><span id="ModelHandlerBase-78"><a href="#ModelHandlerBase-78"><span class="linenos">78</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="ModelHandlerBase-79"><a href="#ModelHandlerBase-79"><span class="linenos">79</span></a>            <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run_coroutine_threadsafe</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">loop</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -336,16 +319,19 @@ and loads the model when requested and unloads it when there are no users, which
                                         <input id="ModelHandlerBase.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
             
-        <span class="name">ModelHandlerBase</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">config</span><span class="p">:</span> <span class="n"><a href="config.html#ModemmConfigBase">modemm.server.config.ModemmConfigBase</a></span></span>)</span>
+        <span class="name">ModelHandlerBase</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">config</span><span class="p">:</span> <span class="n"><a href="config.html#ModemmConfigBase">modemm.server.config.ModemmConfigBase</a></span>,</span><span class="param">	<span class="n">executor</span><span class="p">:</span> <span class="n"><a href="#ModelExecutor">ModelExecutor</a></span></span>)</span>
 
                 <label class="view-source-button" for="ModelHandlerBase.__init__-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#ModelHandlerBase.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelHandlerBase.__init__-35"><a href="#ModelHandlerBase.__init__-35"><span class="linenos">35</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ModemmConfigBase</span><span class="p">):</span>
-</span><span id="ModelHandlerBase.__init__-36"><a href="#ModelHandlerBase.__init__-36"><span class="linenos">36</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
-</span><span id="ModelHandlerBase.__init__-37"><a href="#ModelHandlerBase.__init__-37"><span class="linenos">37</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModemmModel</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span id="ModelHandlerBase.__init__-38"><a href="#ModelHandlerBase.__init__-38"><span class="linenos">38</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelHandlerBase.__init__-29"><a href="#ModelHandlerBase.__init__-29"><span class="linenos">29</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ModemmConfigBase</span><span class="p">,</span> <span class="n">executor</span><span class="p">:</span> <span class="n">ModelExecutor</span><span class="p">):</span>
+</span><span id="ModelHandlerBase.__init__-30"><a href="#ModelHandlerBase.__init__-30"><span class="linenos">30</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+</span><span id="ModelHandlerBase.__init__-31"><a href="#ModelHandlerBase.__init__-31"><span class="linenos">31</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ModemmModel</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="ModelHandlerBase.__init__-32"><a href="#ModelHandlerBase.__init__-32"><span class="linenos">32</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="ModelHandlerBase.__init__-33"><a href="#ModelHandlerBase.__init__-33"><span class="linenos">33</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">executor</span> <span class="o">=</span> <span class="n">executor</span>
+</span><span id="ModelHandlerBase.__init__-34"><a href="#ModelHandlerBase.__init__-34"><span class="linenos">34</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">runner_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">run_loop</span><span class="p">)</span>
+</span><span id="ModelHandlerBase.__init__-35"><a href="#ModelHandlerBase.__init__-35"><span class="linenos">35</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">runner_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 </span></pre></div>
 
 
@@ -385,33 +371,55 @@ and loads the model when requested and unloads it when there are no users, which
     
 
                             </div>
+                            <div id="ModelHandlerBase.executor" class="classattr">
+                                <div class="attr variable">
+            <span class="name">executor</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelHandlerBase.executor"></a>
+    
+    
+
+                            </div>
+                            <div id="ModelHandlerBase.runner_thread" class="classattr">
+                                <div class="attr variable">
+            <span class="name">runner_thread</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ModelHandlerBase.runner_thread"></a>
+    
+    
+
+                            </div>
                             <div id="ModelHandlerBase.allocate" class="classattr">
                                         <input id="ModelHandlerBase.allocate-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">allocate</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">model</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="n">Tuple</span><span class="p">[</span><span class="n"><a href="models/base.html#ModemmModel">modemm.server.models.base.ModemmModel</a></span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span>:</span></span>
+        <span class="name">allocate</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">model</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="nb">bool</span>:</span></span>
 
                 <label class="view-source-button" for="ModelHandlerBase.allocate-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#ModelHandlerBase.allocate"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelHandlerBase.allocate-40"><a href="#ModelHandlerBase.allocate-40"><span class="linenos">40</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">allocate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ModemmModel</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-</span><span id="ModelHandlerBase.allocate-41"><a href="#ModelHandlerBase.allocate-41"><span class="linenos">41</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ModelHandlerBase.allocate-42"><a href="#ModelHandlerBase.allocate-42"><span class="linenos">42</span></a><span class="sd">        Waits for a requests model to be loaded</span>
-</span><span id="ModelHandlerBase.allocate-43"><a href="#ModelHandlerBase.allocate-43"><span class="linenos">43</span></a><span class="sd">        :param model: The model to allocate</span>
-</span><span id="ModelHandlerBase.allocate-44"><a href="#ModelHandlerBase.allocate-44"><span class="linenos">44</span></a><span class="sd">        :return: Whether the model loaded successfully</span>
-</span><span id="ModelHandlerBase.allocate-45"><a href="#ModelHandlerBase.allocate-45"><span class="linenos">45</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ModelHandlerBase.allocate-46"><a href="#ModelHandlerBase.allocate-46"><span class="linenos">46</span></a>        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-</span><span id="ModelHandlerBase.allocate-47"><a href="#ModelHandlerBase.allocate-47"><span class="linenos">47</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-</span><span id="ModelHandlerBase.allocate-48"><a href="#ModelHandlerBase.allocate-48"><span class="linenos">48</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">],</span> <span class="kc">True</span>
-</span><span id="ModelHandlerBase.allocate-49"><a href="#ModelHandlerBase.allocate-49"><span class="linenos">49</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="ModelHandlerBase.allocate-50"><a href="#ModelHandlerBase.allocate-50"><span class="linenos">50</span></a>            <span class="k">if</span> <span class="s2">&quot;models&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">registered</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-</span><span id="ModelHandlerBase.allocate-51"><a href="#ModelHandlerBase.allocate-51"><span class="linenos">51</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
-</span><span id="ModelHandlerBase.allocate-52"><a href="#ModelHandlerBase.allocate-52"><span class="linenos">52</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">registered</span><span class="p">[</span><span class="s2">&quot;models&quot;</span><span class="p">][</span><span class="n">model</span><span class="p">]</span>
-</span><span id="ModelHandlerBase.allocate-53"><a href="#ModelHandlerBase.allocate-53"><span class="linenos">53</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span id="ModelHandlerBase.allocate-54"><a href="#ModelHandlerBase.allocate-54"><span class="linenos">54</span></a>            <span class="n">loaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-</span><span id="ModelHandlerBase.allocate-55"><a href="#ModelHandlerBase.allocate-55"><span class="linenos">55</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">],</span> <span class="n">loaded</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelHandlerBase.allocate-37"><a href="#ModelHandlerBase.allocate-37"><span class="linenos">37</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">allocate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="ModelHandlerBase.allocate-38"><a href="#ModelHandlerBase.allocate-38"><span class="linenos">38</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelHandlerBase.allocate-39"><a href="#ModelHandlerBase.allocate-39"><span class="linenos">39</span></a><span class="sd">        Waits for a requests model to be loaded</span>
+</span><span id="ModelHandlerBase.allocate-40"><a href="#ModelHandlerBase.allocate-40"><span class="linenos">40</span></a><span class="sd">        :param model: The model to allocate</span>
+</span><span id="ModelHandlerBase.allocate-41"><a href="#ModelHandlerBase.allocate-41"><span class="linenos">41</span></a><span class="sd">        :return: Whether the model loaded successfully</span>
+</span><span id="ModelHandlerBase.allocate-42"><a href="#ModelHandlerBase.allocate-42"><span class="linenos">42</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ModelHandlerBase.allocate-43"><a href="#ModelHandlerBase.allocate-43"><span class="linenos">43</span></a>        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</span><span id="ModelHandlerBase.allocate-44"><a href="#ModelHandlerBase.allocate-44"><span class="linenos">44</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+</span><span id="ModelHandlerBase.allocate-45"><a href="#ModelHandlerBase.allocate-45"><span class="linenos">45</span></a>            <span class="k">return</span> <span class="kc">True</span>
+</span><span id="ModelHandlerBase.allocate-46"><a href="#ModelHandlerBase.allocate-46"><span class="linenos">46</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="ModelHandlerBase.allocate-47"><a href="#ModelHandlerBase.allocate-47"><span class="linenos">47</span></a>            <span class="k">if</span> <span class="s2">&quot;models&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">registered</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</span><span id="ModelHandlerBase.allocate-48"><a href="#ModelHandlerBase.allocate-48"><span class="linenos">48</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+</span><span id="ModelHandlerBase.allocate-49"><a href="#ModelHandlerBase.allocate-49"><span class="linenos">49</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">registered</span><span class="p">[</span><span class="s2">&quot;models&quot;</span><span class="p">][</span><span class="n">model</span><span class="p">]</span>
+</span><span id="ModelHandlerBase.allocate-50"><a href="#ModelHandlerBase.allocate-50"><span class="linenos">50</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span id="ModelHandlerBase.allocate-51"><a href="#ModelHandlerBase.allocate-51"><span class="linenos">51</span></a>            <span class="n">loaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+</span><span id="ModelHandlerBase.allocate-52"><a href="#ModelHandlerBase.allocate-52"><span class="linenos">52</span></a>            <span class="k">return</span> <span class="n">loaded</span>
 </span></pre></div>
 
 
@@ -443,22 +451,22 @@ and loads the model when requested and unloads it when there are no users, which
 
     </div>
     <a class="headerlink" href="#ModelHandlerBase.deallocate"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelHandlerBase.deallocate-57"><a href="#ModelHandlerBase.deallocate-57"><span class="linenos">57</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">deallocate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="ModelHandlerBase.deallocate-58"><a href="#ModelHandlerBase.deallocate-58"><span class="linenos">58</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ModelHandlerBase.deallocate-59"><a href="#ModelHandlerBase.deallocate-59"><span class="linenos">59</span></a><span class="sd">        Waits for a requests model to be unloaded</span>
-</span><span id="ModelHandlerBase.deallocate-60"><a href="#ModelHandlerBase.deallocate-60"><span class="linenos">60</span></a><span class="sd">        :param model: The model to deallocate</span>
-</span><span id="ModelHandlerBase.deallocate-61"><a href="#ModelHandlerBase.deallocate-61"><span class="linenos">61</span></a><span class="sd">        :return: Whether the model unloaded successfully</span>
-</span><span id="ModelHandlerBase.deallocate-62"><a href="#ModelHandlerBase.deallocate-62"><span class="linenos">62</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ModelHandlerBase.deallocate-63"><a href="#ModelHandlerBase.deallocate-63"><span class="linenos">63</span></a>        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-</span><span id="ModelHandlerBase.deallocate-64"><a href="#ModelHandlerBase.deallocate-64"><span class="linenos">64</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
-</span><span id="ModelHandlerBase.deallocate-65"><a href="#ModelHandlerBase.deallocate-65"><span class="linenos">65</span></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-</span><span id="ModelHandlerBase.deallocate-66"><a href="#ModelHandlerBase.deallocate-66"><span class="linenos">66</span></a>                <span class="n">unloaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span><span class="o">.</span><span class="n">unload</span><span class="p">()</span>
-</span><span id="ModelHandlerBase.deallocate-67"><a href="#ModelHandlerBase.deallocate-67"><span class="linenos">67</span></a>                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span>
-</span><span id="ModelHandlerBase.deallocate-68"><a href="#ModelHandlerBase.deallocate-68"><span class="linenos">68</span></a>                <span class="k">return</span> <span class="n">unloaded</span>
-</span><span id="ModelHandlerBase.deallocate-69"><a href="#ModelHandlerBase.deallocate-69"><span class="linenos">69</span></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="ModelHandlerBase.deallocate-70"><a href="#ModelHandlerBase.deallocate-70"><span class="linenos">70</span></a>                <span class="k">return</span> <span class="kc">True</span>
-</span><span id="ModelHandlerBase.deallocate-71"><a href="#ModelHandlerBase.deallocate-71"><span class="linenos">71</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="ModelHandlerBase.deallocate-72"><a href="#ModelHandlerBase.deallocate-72"><span class="linenos">72</span></a>            <span class="k">return</span> <span class="kc">True</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelHandlerBase.deallocate-54"><a href="#ModelHandlerBase.deallocate-54"><span class="linenos">54</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">deallocate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="ModelHandlerBase.deallocate-55"><a href="#ModelHandlerBase.deallocate-55"><span class="linenos">55</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelHandlerBase.deallocate-56"><a href="#ModelHandlerBase.deallocate-56"><span class="linenos">56</span></a><span class="sd">        Waits for a requests model to be unloaded</span>
+</span><span id="ModelHandlerBase.deallocate-57"><a href="#ModelHandlerBase.deallocate-57"><span class="linenos">57</span></a><span class="sd">        :param model: The model to deallocate</span>
+</span><span id="ModelHandlerBase.deallocate-58"><a href="#ModelHandlerBase.deallocate-58"><span class="linenos">58</span></a><span class="sd">        :return: Whether the model unloaded successfully</span>
+</span><span id="ModelHandlerBase.deallocate-59"><a href="#ModelHandlerBase.deallocate-59"><span class="linenos">59</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ModelHandlerBase.deallocate-60"><a href="#ModelHandlerBase.deallocate-60"><span class="linenos">60</span></a>        <span class="k">if</span> <span class="n">model</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+</span><span id="ModelHandlerBase.deallocate-61"><a href="#ModelHandlerBase.deallocate-61"><span class="linenos">61</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+</span><span id="ModelHandlerBase.deallocate-62"><a href="#ModelHandlerBase.deallocate-62"><span class="linenos">62</span></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="ModelHandlerBase.deallocate-63"><a href="#ModelHandlerBase.deallocate-63"><span class="linenos">63</span></a>                <span class="n">unloaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span><span class="o">.</span><span class="n">unload</span><span class="p">()</span>
+</span><span id="ModelHandlerBase.deallocate-64"><a href="#ModelHandlerBase.deallocate-64"><span class="linenos">64</span></a>                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">loaded_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span>
+</span><span id="ModelHandlerBase.deallocate-65"><a href="#ModelHandlerBase.deallocate-65"><span class="linenos">65</span></a>                <span class="k">return</span> <span class="n">unloaded</span>
+</span><span id="ModelHandlerBase.deallocate-66"><a href="#ModelHandlerBase.deallocate-66"><span class="linenos">66</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="ModelHandlerBase.deallocate-67"><a href="#ModelHandlerBase.deallocate-67"><span class="linenos">67</span></a>                <span class="k">return</span> <span class="kc">True</span>
+</span><span id="ModelHandlerBase.deallocate-68"><a href="#ModelHandlerBase.deallocate-68"><span class="linenos">68</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="ModelHandlerBase.deallocate-69"><a href="#ModelHandlerBase.deallocate-69"><span class="linenos">69</span></a>            <span class="k">return</span> <span class="kc">True</span>
 </span></pre></div>
 
 
@@ -484,14 +492,21 @@ and loads the model when requested and unloads it when there are no users, which
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">run</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">model</span><span class="p">:</span> <span class="nb">str</span></span><span class="return-annotation">) -> <span class="n"><a href="#QueuedResponse">QueuedResponse</a></span>:</span></span>
+        <span class="name">run</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span>, </span><span class="param"><span class="n">model</span><span class="p">:</span> <span class="nb">str</span>, </span><span class="param"><span class="n">stream</span>, </span><span class="param"><span class="n">kwargs</span></span><span class="return-annotation">) -> <span class="n">Any</span>:</span></span>
 
                 <label class="view-source-button" for="ModelHandlerBase.run-view-source"><span>View Source</span></label>
 
     </div>
     <a class="headerlink" href="#ModelHandlerBase.run"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelHandlerBase.run-75"><a href="#ModelHandlerBase.run-75"><span class="linenos">75</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QueuedResponse</span><span class="p">:</span>
-</span><span id="ModelHandlerBase.run-76"><a href="#ModelHandlerBase.run-76"><span class="linenos">76</span></a>        <span class="k">pass</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelHandlerBase.run-71"><a href="#ModelHandlerBase.run-71"><span class="linenos">71</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+</span><span id="ModelHandlerBase.run-72"><a href="#ModelHandlerBase.run-72"><span class="linenos">72</span></a>        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configured_models</span><span class="p">[</span><span class="n">model</span><span class="p">]</span>
+</span><span id="ModelHandlerBase.run-73"><a href="#ModelHandlerBase.run-73"><span class="linenos">73</span></a>        <span class="k">if</span> <span class="n">stream</span> <span class="ow">and</span> <span class="n">model</span><span class="o">.</span><span class="n">streamable</span><span class="p">:</span>
+</span><span id="ModelHandlerBase.run-74"><a href="#ModelHandlerBase.run-74"><span class="linenos">74</span></a>            <span class="n">streamer</span> <span class="o">=</span> <span class="n">QueuedResponse</span><span class="p">()</span>
+</span><span id="ModelHandlerBase.run-75"><a href="#ModelHandlerBase.run-75"><span class="linenos">75</span></a>            <span class="n">asyncio</span><span class="o">.</span><span class="n">run_coroutine_threadsafe</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">streamer</span><span class="o">=</span><span class="n">streamer</span><span class="p">),</span> <span class="n">loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">loop</span><span class="p">)</span>
+</span><span id="ModelHandlerBase.run-76"><a href="#ModelHandlerBase.run-76"><span class="linenos">76</span></a>            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">streamer</span><span class="o">.</span><span class="n">wait</span><span class="p">():</span>
+</span><span id="ModelHandlerBase.run-77"><a href="#ModelHandlerBase.run-77"><span class="linenos">77</span></a>                <span class="k">yield</span> <span class="n">i</span>
+</span><span id="ModelHandlerBase.run-78"><a href="#ModelHandlerBase.run-78"><span class="linenos">78</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="ModelHandlerBase.run-79"><a href="#ModelHandlerBase.run-79"><span class="linenos">79</span></a>            <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run_coroutine_threadsafe</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">loop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">executor</span><span class="o">.</span><span class="n">loop</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
 </span></pre></div>
 
 

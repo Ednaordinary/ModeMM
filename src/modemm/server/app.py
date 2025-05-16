@@ -1,10 +1,12 @@
 import argparse
+from typing import Union, Dict, Any
 
 from fastapi import FastAPI, Request
 
-from .model_handler import ModelHandlerBase
+from .model_handler import ModelHandlerBase, ModelExecutor
 from .config import ModemmConfigDynamic, ModemmConfigStatic
 from .errors import ModelNotFound, ModelNotLoaded
+
 
 def build(args: argparse.Namespace) -> FastAPI:
     """
@@ -13,7 +15,8 @@ def build(args: argparse.Namespace) -> FastAPI:
     :return: The Modemm API
     """
     config = ModemmConfigDynamic(args.config_file) if args.dynamic_config else ModemmConfigStatic(args.config_file)
-    handler = ModelHandlerBase(config)
+    executor = ModelExecutor()
+    handler = ModelHandlerBase(config, executor)
     if args.no_advertise:
         app = FastAPI(openapi_url=None, docs_url=None, redoc_url=None, swagger_ui_oauth2_redirect_url=None)
     else:
@@ -25,24 +28,26 @@ def build(args: argparse.Namespace) -> FastAPI:
         if args.no_advertise:
             return {}
         else:
-            return {"config": "/server/config", "models": "/server/models"}
+            return {"config": "/modemm/config", "models": "/modemm/models"}
 
-    @app.get("/server/config")
+    @app.get("/modemm/config")
     def get_config():
         return config.get()
 
-    @app.get("/server/models")
+    @app.get("/modemm/models")
     def get_models():
         return [x["name"] for x in config.get()["models"]]
 
-    @app.get("/server/request/{model_id}")
-    def make_request(model_id: str, request: Request):
+    @app.get("/modemm/request/{model_id}")
+    def make_request(model_id: str, request: Request, kwargs: Union[Dict[str, Any], None] = None, stream: bool = True):
+        if kwargs is None:
+            kwargs = {}
         models = get_models()
         if model_id not in models:
             return {"error": ModelNotFound(model_id).get_error()}
-        model, loaded = handler.allocate(model_id)
+        loaded = handler.allocate(model_id)
         if not loaded:
             return {"error": ModelNotLoaded(model_id).get_error()}
-
+        return handler.run(model_id, stream=stream, kwargs=kwargs)
 
     return app

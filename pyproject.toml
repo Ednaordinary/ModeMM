@@ -13,6 +13,7 @@ dependencies = [
     "pdoc>=15.0.3",
     "pillow>=11.2.1",
     "transformers>=4.51.3",
+    "ujson>=5.10.0",
     "uvicorn>=0.34.2",
 ]
 license = "MIT"

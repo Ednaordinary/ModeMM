@@ -1,5 +1,5 @@
 import importlib
-import json
+import ujson
 
 from typing import Dict, Any, Union
 
@@ -17,7 +17,7 @@ class ModemmConfigBase:
 
     def _load(self) -> Dict:
         with open(self.path, "r") as config_file:
-            return json.load(config_file)
+            return ujson.load(config_file)
 
     def get(self, arg: str = None) -> Union[Dict, Any]:
         """
@@ -30,21 +30,21 @@ class ModemmConfigBase:
     def save(self, config: dict):
         """Saves the config to initialized path"""
         with open(self.path, "w") as config_file:
-            json.dump(config, config_file, indent=4)
+            ujson.dump(config, config_file, indent=4)
 
     def register(self):
         config = self.get()
-        self.registered = {}
         registrable = ["models"]
         config_keys = config.keys()
         for i in registrable:
             if i in config_keys:
-                self.registered[i] = []
+                self.registered[i] = {}
         if "models" in self.registered.keys():
             for i in self.get()["models"]:
                 model = i["module"]
-                module = importlib.import_module("models." + model)
-                self.registered["models"].append(module.__dict__[i["class"]](i["init_kwargs"]))
+                model_name = i["name"]
+                module = importlib.import_module("modemm.server.models." + model)
+                self.registered["models"][model_name] = (module.__dict__[i["class"]](**i["init_kwargs"]))
 
 
 class ModemmConfigDynamic(ModemmConfigBase):
