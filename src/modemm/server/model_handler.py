@@ -2,6 +2,8 @@ from typing import Dict, Any
 import threading
 import asyncio
 
+from fastapi.responses import StreamingResponse
+
 from .config import ModemmConfigBase
 from .models.base import ModemmModel
 from .response import QueuedResponse
@@ -67,12 +69,15 @@ class ModelHandlerBase:
         else:
             return True
 
+    def _run_stream(self, model, kwargs):
+        streamer = QueuedResponse()
+        asyncio.run_coroutine_threadsafe(model(**kwargs, streamer=streamer), loop=self.executor.loop)
+        for i in streamer.wait():
+            yield i
+
     def run(self, model: str, stream, kwargs) -> Any:
         model = self.configured_models[model]
         if stream and model.streamable:
-            streamer = QueuedResponse()
-            asyncio.run_coroutine_threadsafe(model(**kwargs, streamer=streamer), loop=self.executor.loop)
-            for i in streamer.wait():
-                yield i
+            return StreamingResponse(self._run_stream(model, kwargs))
         else:
             return asyncio.run_coroutine_threadsafe(model(**kwargs), loop=self.executor.loop).result()

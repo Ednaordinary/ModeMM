@@ -40,5 +40,5 @@ To configure which models are served through the server, edit config.json with t
 
 The current modules and classes implemented are:
 
-- base
-  - ModemmModel: A placeholder that return the text "meow"
+- modemm.server.models.base
+  - base: A placeholder that returns the text "meow"

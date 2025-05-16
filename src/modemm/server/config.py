@@ -43,7 +43,7 @@ class ModemmConfigBase:
             for i in self.get()["models"]:
                 model = i["module"]
                 model_name = i["name"]
-                module = importlib.import_module("modemm.server.models." + model)
+                module = importlib.import_module(model)
                 self.registered["models"][model_name] = (module.__dict__[i["class"]](**i["init_kwargs"]))
 
 

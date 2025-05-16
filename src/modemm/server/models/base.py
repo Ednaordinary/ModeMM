@@ -5,26 +5,48 @@ import time
 from ..response import QueuedResponse
 from ..errors import ModemmError, ArgumentError, ArgValueError
 
+
 class FakeModel:
+    """
+    A fake model that return meow
+    """
     def __init__(self):
         pass
 
     @staticmethod
     def __call__(**kwargs):
+        """
+        Call the fake model in order to return meow
+        :param kwargs: kwargs passed to the fake model (dropped)
+        :return: meow
+        """
         return "meow"
 
     @staticmethod
     def load():
+        """
+        Pretend to load the fake model
+        :return: if the model loaded correctly
+        """
         return True
 
     @staticmethod
     def unload():
+        """
+        Pretend to unload the fake model
+        :return: if the model unloaded correctly
+        """
         return True
 
     @staticmethod
     def stream(**kwargs) -> str:
+        """
+        Stream 10 meows
+        :param kwargs: kwargs passed to the fake model (dropped)
+        :return: 10 meows
+        """
         for i in range(10):
-            time.sleep(1)
+            time.sleep(0.1)
             yield "meow\n"
 
 
@@ -36,8 +58,8 @@ class ModemmModel:
 
     def __init__(self):
         self._model = FakeModel()  # Underlying model from a different library
-        self.accept_kwargs: Dict[str, Any] = {"stream": bool}
-        self.default_kwargs: Dict[str, Any] = {"stream": True}
+        self.accept_kwargs: Dict[str, Any] = {}
+        self.default_kwargs: Dict[str, Any] = {}
         self.streamable: int = True
 
     def load(self) -> bool:
