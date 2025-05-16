@@ -1,0 +1,3 @@
+{
+  "models": [{"name": "base", "module": "base", "class": "ModemmModel", "init_kwargs":  {}}]
+}

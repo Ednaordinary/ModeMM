@@ -1,0 +1,1 @@
+pdoc ../src/modemm/server '!modemm.server.run' -o ./
