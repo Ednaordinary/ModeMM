@@ -2,6 +2,7 @@ import argparse
 from typing import Union, Dict, Any
 
 from fastapi import FastAPI, Request
+from fastapi.responses import StreamingResponse
 
 from .model_handler import ModelHandlerBase, ModelExecutor
 from .config import ModemmConfigDynamic, ModemmConfigStatic
@@ -38,6 +39,10 @@ def build(args: argparse.Namespace) -> FastAPI:
     def get_models():
         return [x["name"] for x in config.get()["models"]]
 
+    def run_handler(handler, model_id, stream, kwargs):
+        # definition for StreamingResponse
+        return handler.run(model_id, stream=stream, kwargs=kwargs)
+
     @app.get("/modemm/request/{model_id}")
     def make_request(model_id: str, request: Request, kwargs: Union[Dict[str, Any], None] = None, stream: bool = True):
         if kwargs is None:
@@ -48,6 +53,9 @@ def build(args: argparse.Namespace) -> FastAPI:
         loaded = handler.allocate(model_id)
         if not loaded:
             return {"error": ModelNotLoaded(model_id).get_error()}
-        return handler.run(model_id, stream=stream, kwargs=kwargs)
+        if stream:
+            return StreamingResponse(run_handler(handler, model_id, stream=stream, kwargs=kwargs))
+        else:
+            return run_handler(handler, model_id, stream=stream, kwargs=kwargs)
 
     return app

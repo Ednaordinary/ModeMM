@@ -54,17 +54,25 @@ class ModemmModel:
         """
         return self._model.unload()
 
+    def _return(self, obj: Any, streamer):
+        if streamer is not None:
+            streamer.queue.put(obj)
+            streamer.queue.put(None)
+            return
+        else:
+            return obj
+
     async def __call__(self, streamer: Union[QueuedResponse, None] = None, **kwargs) -> Union[str, Image, ModemmError]:
         errors = validate_kwargs(self, kwargs)
         if errors:
-            return errors
+            return self._return(errors, streamer)
         kwargs = write_default_kwargs(self, kwargs)
         if self.streamable and streamer is not None:
             for i in self._model.stream(**kwargs):
                 streamer.queue.put(i)
             streamer.queue.put(None)
         else:
-            return self._model(**kwargs)
+            return self._return(self._model(**kwargs), streamer)
 
 
 def write_default_kwargs(model: ModemmModel, kwargs: dict) -> dict:
