@@ -138,5 +138,4 @@ def validate_kwargs(model: ModemmModel, kwargs: dict) -> Union[ModemmError, List
         errors.append(ArgValueError(bad_values))
     if req_values:
         errors.append(ArgRequiredError(req_values))
-    errors = StackedErrors(errors)
-    return errors if errors else None
+    return StackedErrors(errors) if errors else None

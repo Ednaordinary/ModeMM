@@ -1,11 +1,14 @@
 from typing import Dict, Any, List, Union, Tuple
 import gc
+import io
 import traceback
+
+import numpy as np
 
 from ..base import ModemmModel, validate_kwargs, write_default_kwargs
 from ...errors import ModemmError
 from ...response import PromptEmbeds, QueuedResponse
-
+from ...util import np_save
 
 class T5Model(ModemmModel):
     """
@@ -66,9 +69,13 @@ class T5Model(ModemmModel):
                 return_tensors="pt",
             ).input_ids
             import torch
-            prompt_embeds: torch.FloatTensor = self._model(text_input_ids.to("cuda"), output_hidden_states=False)[0]
-            prompt_embeds = prompt_embeds.numpy(force=True).tolist()
-            result = PromptEmbeds(prompt_embeds)
+            prompt_embeds = self._model(text_input_ids.to("cuda"), output_hidden_states=False)[0]
+            prompt_embeds = prompt_embeds.float().numpy(force=True).astype(np.float16)
+            embeds_io = io.BytesIO()
+            np_save(embeds_io, prompt_embeds)
+            embeds_io.seek(0)
+            embeds = embeds_io.read()
+            result = PromptEmbeds(embeds)
             return self._return(result, streamer)
         except Exception as e:
             print(traceback.format_exc())

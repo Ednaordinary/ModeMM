@@ -21,13 +21,16 @@ class ModemmError:
         """
         return self.error_type + "\n" + str(self.info)
 
+
 class StackedErrors(ModemmError):
     """
     Multiple errors from the Modemm server
     """
     error_type = "Stacked Error"
+
     def __init__(self, errors: List[ModemmError]):
         self.errors = errors
+        print(errors)
 
     def get_error(self):
         if len(self.errors) == 0:
@@ -35,7 +38,8 @@ class StackedErrors(ModemmError):
         elif len(self.errors) == 1:
             return self.errors[0].get_error()
         else:
-            return "The following errors occured:\n" + "\n".join([x.get_error() for x in self.errors])
+            return "The following errors occured:\n" + "\n".join([str(x.get_error()) for x in self.errors])
+
 
 class ArgumentError(ModemmError):
     """
@@ -54,11 +58,12 @@ class ArgumentError(ModemmError):
         arg = self.info
         if isinstance(arg, list):
             if len(arg) == 1:
-                self.info = "Argument is not accepted by the model: " + arg[0]
+                info = "Argument is not accepted by the model: " + arg[0]
             else:
-                self.info = "Arguments are not accepted by the model: " + ", ".join(arg)
+                info = "Arguments are not accepted by the model: " + ", ".join(arg)
         else:
-            self.info = "Argument is not accepted by the model: " + arg
+            info = "Argument is not accepted by the model: " + arg
+        return info
 
 
 def format_arg_value_error(arg) -> str:
@@ -85,13 +90,14 @@ class ArgValueError(ModemmError):
         if isinstance(arg, list):
             if len(arg) == 1:
                 arg = arg[0]
-                self.info = arg[1].__name__ + " is not accepted for " + arg[0] + " by the model"
+                info = arg[1].__name__ + " is not accepted for " + arg[0] + " by the model"
 
             else:
-                self.info = format_arg_value_error(arg)
+                info = format_arg_value_error(arg)
         else:
-            self.info = arg[1].__name__ + " is not accepted for " + arg[0] + " by the model"
-        return self.info
+            info = arg[1].__name__ + " is not accepted for " + arg[0] + " by the model"
+        return info
+
 
 class ArgRequiredError(ModemmError):
     """
@@ -111,13 +117,14 @@ class ArgRequiredError(ModemmError):
         if isinstance(arg, list):
             if len(arg) == 1:
                 arg = arg[0]
-                self.info = arg + " was required but not found"
+                info = arg + " was required but not found"
 
             else:
-                self.info = "The following args were not specified: " + ", ".join(arg)
+                info = "The following args were not specified: " + ", ".join(arg)
         else:
-            self.info = arg + " was required but not found."
-        return self.info
+            info = arg + " was required but not found."
+        return info
+
 
 class ModelNotFound(ModemmError):
     """

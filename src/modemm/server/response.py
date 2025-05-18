@@ -1,6 +1,8 @@
 from queue import Queue
 from typing import Any
 
+from fastapi.responses import Response
+
 from .errors import ModemmError
 
 class QueuedResponse:
@@ -36,4 +38,4 @@ class PromptEmbeds:
         self.embeds = embeds
 
     def to_json(self):
-        return self.embeds
+        return Response(self.embeds)

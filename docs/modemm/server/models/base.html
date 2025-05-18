@@ -236,8 +236,7 @@ modemm<wbr>.<a href="./../../server.html">server</a><wbr>.<a href="./../models.h
 </span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a>        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ArgValueError</span><span class="p">(</span><span class="n">bad_values</span><span class="p">))</span>
 </span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a>    <span class="k">if</span> <span class="n">req_values</span><span class="p">:</span>
 </span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a>        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ArgRequiredError</span><span class="p">(</span><span class="n">req_values</span><span class="p">))</span>
-</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a>    <span class="n">errors</span> <span class="o">=</span> <span class="n">StackedErrors</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
-</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a>    <span class="k">return</span> <span class="n">errors</span> <span class="k">if</span> <span class="n">errors</span> <span class="k">else</span> <span class="kc">None</span>
+</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a>    <span class="k">return</span> <span class="n">StackedErrors</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="k">if</span> <span class="n">errors</span> <span class="k">else</span> <span class="kc">None</span>
 </span></pre></div>
 
 
@@ -658,8 +657,7 @@ ModelHandler :return: A bool stating whether the model was successfully unloaded
 </span><span id="validate_kwargs-139"><a href="#validate_kwargs-139"><span class="linenos">139</span></a>        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ArgValueError</span><span class="p">(</span><span class="n">bad_values</span><span class="p">))</span>
 </span><span id="validate_kwargs-140"><a href="#validate_kwargs-140"><span class="linenos">140</span></a>    <span class="k">if</span> <span class="n">req_values</span><span class="p">:</span>
 </span><span id="validate_kwargs-141"><a href="#validate_kwargs-141"><span class="linenos">141</span></a>        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ArgRequiredError</span><span class="p">(</span><span class="n">req_values</span><span class="p">))</span>
-</span><span id="validate_kwargs-142"><a href="#validate_kwargs-142"><span class="linenos">142</span></a>    <span class="n">errors</span> <span class="o">=</span> <span class="n">StackedErrors</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
-</span><span id="validate_kwargs-143"><a href="#validate_kwargs-143"><span class="linenos">143</span></a>    <span class="k">return</span> <span class="n">errors</span> <span class="k">if</span> <span class="n">errors</span> <span class="k">else</span> <span class="kc">None</span>
+</span><span id="validate_kwargs-142"><a href="#validate_kwargs-142"><span class="linenos">142</span></a>    <span class="k">return</span> <span class="n">StackedErrors</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="k">if</span> <span class="n">errors</span> <span class="k">else</span> <span class="kc">None</span>
 </span></pre></div>
 
 
