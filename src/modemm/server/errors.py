@@ -21,6 +21,21 @@ class ModemmError:
         """
         return self.error_type + "\n" + str(self.info)
 
+class StackedErrors(ModemmError):
+    """
+    Multiple errors from the Modemm server
+    """
+    error_type = "Stacked Error"
+    def __init__(self, errors: List[ModemmError]):
+        self.errors = errors
+
+    def get_error(self):
+        if len(self.errors) == 0:
+            return "No errors occured"
+        elif len(self.errors) == 1:
+            return self.errors[0].get_error()
+        else:
+            return "The following errors occured:\n" + "\n".join([x.get_error() for x in self.errors])
 
 class ArgumentError(ModemmError):
     """
@@ -38,7 +53,7 @@ class ArgumentError(ModemmError):
     def get_error(self):
         arg = self.info
         if isinstance(arg, list):
-            if len(list) == 1:
+            if len(arg) == 1:
                 self.info = "Argument is not accepted by the model: " + arg[0]
             else:
                 self.info = "Arguments are not accepted by the model: " + ", ".join(arg)
@@ -68,7 +83,7 @@ class ArgValueError(ModemmError):
     def get_error(self) -> str:
         arg = self.info
         if isinstance(arg, list):
-            if len(list) == 1:
+            if len(arg) == 1:
                 arg = arg[0]
                 self.info = arg[1].__name__ + " is not accepted for " + arg[0] + " by the model"
 
@@ -78,6 +93,31 @@ class ArgValueError(ModemmError):
             self.info = arg[1].__name__ + " is not accepted for " + arg[0] + " by the model"
         return self.info
 
+class ArgRequiredError(ModemmError):
+    """
+    An error from the Modemm server specifying a required option.
+    """
+    error_type = "Required Option"
+
+    def __init__(self, arg: Union[str, List[str]]):
+        """
+        Construct a value Modemm Error
+        :param arg: The argument that was not specified
+        """
+        super().__init__(arg)
+
+    def get_error(self) -> str:
+        arg = self.info
+        if isinstance(arg, list):
+            if len(arg) == 1:
+                arg = arg[0]
+                self.info = arg + " was required but not found"
+
+            else:
+                self.info = "The following args were not specified: " + ", ".join(arg)
+        else:
+            self.info = arg + " was required but not found."
+        return self.info
 
 class ModelNotFound(ModemmError):
     """

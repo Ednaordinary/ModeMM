@@ -1,6 +1,7 @@
 from queue import Queue
 from typing import Any
 
+from .errors import ModemmError
 
 class QueuedResponse:
     def __init__(self):
@@ -11,6 +12,8 @@ class QueuedResponse:
         while obj is not None:
             if hasattr(obj, "to_json"):
                 yield obj.to_json()
+            if isinstance(obj, ModemmError):
+                obj = {"state": "error", "error": obj.get_error()}
             else:
                 yield obj
             obj = self.queue.get()

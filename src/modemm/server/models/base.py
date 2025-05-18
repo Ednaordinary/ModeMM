@@ -3,7 +3,7 @@ from PIL import Image
 import time
 
 from ..response import QueuedResponse, EOS
-from ..errors import ModemmError, ArgumentError, ArgValueError
+from ..errors import ModemmError, StackedErrors, ArgumentError, ArgValueError, ArgRequiredError
 
 
 class FakeModel:
@@ -64,7 +64,7 @@ class ModemmModel:
     def __init__(self):
         self._model = FakeModel()  # Underlying model from a different library
 
-    def load(self) -> bool:
+    def load(self, device=None) -> bool:
         """
         Defines how a model is loaded. This method cannot have kwargs since loading logic should be handled by the
         ModelHandler :return: A bool stating whether the model was successfully loaded
@@ -120,6 +120,7 @@ def validate_kwargs(model: ModemmModel, kwargs: dict) -> Union[ModemmError, List
     """
     bad_kwargs = []
     bad_values = []
+    req_values = []
     for kwarg in kwargs.keys():
         if kwarg not in model.accept_kwargs.keys():
             bad_kwargs.append(kwarg)
@@ -127,9 +128,15 @@ def validate_kwargs(model: ModemmModel, kwargs: dict) -> Union[ModemmError, List
         if kwarg not in bad_kwargs:
             if not isinstance(value, model.accept_kwargs[kwarg]):
                 bad_values.append(tuple((kwarg, type(value))))
+    for kwarg in model.accept_kwargs.keys():
+        if kwarg not in model.default_kwargs.keys() and kwarg not in kwargs.keys():
+            req_values.append(kwarg)
     errors = []
     if bad_kwargs:
         errors.append(ArgumentError(bad_kwargs))
     if bad_values:
         errors.append(ArgValueError(bad_values))
+    if req_values:
+        errors.append(ArgRequiredError(req_values))
+    errors = StackedErrors(errors)
     return errors if errors else None

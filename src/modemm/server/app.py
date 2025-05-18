@@ -47,7 +47,8 @@ def build(args: argparse.Namespace) -> FastAPI:
         return kwarg_types_name(config.registered["models"][model_id].accept_kwargs)
 
     @app.get("/modemm/request/{model_id}")
-    def make_request(model_id: str, request: Request, kwargs: Union[Dict[str, Any], None] = None, stream: bool = True):
+    def make_request(model_id: str, request: Request, kwargs: Union[dict, None] = None, stream: bool = True):
+        print(kwargs, stream)
         if kwargs is None:
             kwargs = {}
         models = get_models()
@@ -55,7 +56,10 @@ def build(args: argparse.Namespace) -> FastAPI:
             return {"state": "error", "error": ModelNotFound(model_id).get_error()}
         loaded = handler.allocate(model_id)
         if not loaded:
+            handler.deallocate(model_id)
             return {"state": "error", "error": ModelNotLoaded(model_id).get_error()}
-        return handler.run(model_id, stream=stream, kwargs=kwargs)
+        run = handler.run(model_id, stream=stream, kwargs=kwargs)
+        handler.deallocate(model_id)
+        return run
 
     return app

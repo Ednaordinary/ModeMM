@@ -49,6 +49,24 @@
 
             </li>
             <li>
+                    <a class="class" href="#StackedErrors">StackedErrors</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#StackedErrors.__init__">StackedErrors</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#StackedErrors.error_type">error_type</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#StackedErrors.errors">errors</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#StackedErrors.get_error">get_error</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
                     <a class="class" href="#ArgumentError">ArgumentError</a>
                             <ul class="memberlist">
                         <li>
@@ -77,6 +95,21 @@
                         </li>
                         <li>
                                 <a class="function" href="#ArgValueError.get_error">get_error</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#ArgRequiredError">ArgRequiredError</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#ArgRequiredError.__init__">ArgRequiredError</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#ArgRequiredError.error_type">error_type</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#ArgRequiredError.get_error">get_error</a>
                         </li>
                 </ul>
 
@@ -149,90 +182,130 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 </span><span id="L-21"><a href="#L-21"><span class="linenos"> 21</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="L-22"><a href="#L-22"><span class="linenos"> 22</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_type</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">)</span>
 </span><span id="L-23"><a href="#L-23"><span class="linenos"> 23</span></a>
-</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a>
-</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ArgumentError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a><span class="sd">    An error from the Modemm server specifying a bad argument.</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Argument Error&quot;</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a>
-</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a><span class="sd">        Construct an argument Modemm Error</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a><span class="sd">        :param arg: The argument or arguments that the model could not accept</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>
-</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a>        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Argument is not accepted by the model: &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Arguments are not accepted by the model: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Argument is not accepted by the model: &quot;</span> <span class="o">+</span> <span class="n">arg</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a>
-</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a>
-</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a><span class="k">def</span><span class="w"> </span><span class="nf">format_arg_value_error</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a>    <span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Values are not accepted for arguments by the model: &quot;</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a>    <span class="n">info</span> <span class="o">+=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">arg</span><span class="p">])</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>    <span class="k">return</span> <span class="n">info</span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a>
-</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>
-</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ArgValueError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a><span class="sd">    An error from the Modemm server specifying a bad value.</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Value Error&quot;</span>
-</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a>
-</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]):</span>
-</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a><span class="sd">        Construct a value Modemm Error</span>
-</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a><span class="sd">        :param arg: The argument and value that are not accepted by the model, or a list of them</span>
-</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a>
-</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a>        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
-</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a>                <span class="n">arg</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot; is not accepted for &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; by the model&quot;</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>
-</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">format_arg_value_error</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot; is not accepted for &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; by the model&quot;</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
-</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a>
-</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>
-</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelNotFound</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a><span class="sd">    An error from the Modemm server specifying a bad model.</span>
-</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Model Not Found&quot;</span>
-</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>
-</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a><span class="sd">        Construct a Model Not Found Error</span>
-</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a><span class="sd">        :param model: The model that could not be found</span>
-</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>
+</span><span id="L-24"><a href="#L-24"><span class="linenos"> 24</span></a><span class="k">class</span><span class="w"> </span><span class="nc">StackedErrors</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos"> 25</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos"> 26</span></a><span class="sd">    Multiple errors from the Modemm server</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos"> 27</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos"> 28</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Stacked Error&quot;</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos"> 29</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">errors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ModemmError</span><span class="p">]):</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos"> 30</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="n">errors</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos"> 31</span></a>
+</span><span id="L-32"><a href="#L-32"><span class="linenos"> 32</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos"> 33</span></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos"> 34</span></a>            <span class="k">return</span> <span class="s2">&quot;No errors occured&quot;</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos"> 35</span></a>        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos"> 36</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_error</span><span class="p">()</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos"> 37</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos"> 38</span></a>            <span class="k">return</span> <span class="s2">&quot;The following errors occured:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">get_error</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">])</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos"> 39</span></a>
+</span><span id="L-40"><a href="#L-40"><span class="linenos"> 40</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ArgumentError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos"> 41</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos"> 42</span></a><span class="sd">    An error from the Modemm server specifying a bad argument.</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos"> 43</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos"> 44</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Argument Error&quot;</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos"> 45</span></a>
+</span><span id="L-46"><a href="#L-46"><span class="linenos"> 46</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos"> 47</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos"> 48</span></a><span class="sd">        Construct an argument Modemm Error</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos"> 49</span></a><span class="sd">        :param arg: The argument or arguments that the model could not accept</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos"> 50</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos"> 51</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos"> 52</span></a>
+</span><span id="L-53"><a href="#L-53"><span class="linenos"> 53</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos"> 54</span></a>        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Argument is not accepted by the model: &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Arguments are not accepted by the model: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Argument is not accepted by the model: &quot;</span> <span class="o">+</span> <span class="n">arg</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>
+</span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a>
+</span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a><span class="k">def</span><span class="w"> </span><span class="nf">format_arg_value_error</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos"> 65</span></a>    <span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Values are not accepted for arguments by the model: &quot;</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos"> 66</span></a>    <span class="n">info</span> <span class="o">+=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">arg</span><span class="p">])</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos"> 67</span></a>    <span class="k">return</span> <span class="n">info</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos"> 68</span></a>
+</span><span id="L-69"><a href="#L-69"><span class="linenos"> 69</span></a>
+</span><span id="L-70"><a href="#L-70"><span class="linenos"> 70</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ArgValueError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos"> 71</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos"> 72</span></a><span class="sd">    An error from the Modemm server specifying a bad value.</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos"> 73</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos"> 74</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Value Error&quot;</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos"> 75</span></a>
+</span><span id="L-76"><a href="#L-76"><span class="linenos"> 76</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]):</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos"> 77</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos"> 78</span></a><span class="sd">        Construct a value Modemm Error</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos"> 79</span></a><span class="sd">        :param arg: The argument and value that are not accepted by the model, or a list of them</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos"> 80</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos"> 81</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos"> 82</span></a>
+</span><span id="L-83"><a href="#L-83"><span class="linenos"> 83</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos"> 84</span></a>        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos"> 85</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos"> 86</span></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos"> 87</span></a>                <span class="n">arg</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos"> 88</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot; is not accepted for &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; by the model&quot;</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos"> 89</span></a>
+</span><span id="L-90"><a href="#L-90"><span class="linenos"> 90</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos"> 91</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">format_arg_value_error</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos"> 92</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="L-93"><a href="#L-93"><span class="linenos"> 93</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot; is not accepted for &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; by the model&quot;</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos"> 94</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
 </span><span id="L-95"><a href="#L-95"><span class="linenos"> 95</span></a>
-</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelNotLoaded</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="L-96"><a href="#L-96"><span class="linenos"> 96</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ArgRequiredError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
 </span><span id="L-97"><a href="#L-97"><span class="linenos"> 97</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a><span class="sd">    An error from the Modemm server specifying the model failed to load</span>
+</span><span id="L-98"><a href="#L-98"><span class="linenos"> 98</span></a><span class="sd">    An error from the Modemm server specifying a required option.</span>
 </span><span id="L-99"><a href="#L-99"><span class="linenos"> 99</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Model Didn&#39;t Load&quot;</span>
+</span><span id="L-100"><a href="#L-100"><span class="linenos">100</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Required Option&quot;</span>
 </span><span id="L-101"><a href="#L-101"><span class="linenos">101</span></a>
-</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="L-102"><a href="#L-102"><span class="linenos">102</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
 </span><span id="L-103"><a href="#L-103"><span class="linenos">103</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a><span class="sd">        Construct a Model Loading Error</span>
-</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a><span class="sd">        :param model: The model that could not be loaded</span>
+</span><span id="L-104"><a href="#L-104"><span class="linenos">104</span></a><span class="sd">        Construct a value Modemm Error</span>
+</span><span id="L-105"><a href="#L-105"><span class="linenos">105</span></a><span class="sd">        :param arg: The argument that was not specified</span>
 </span><span id="L-106"><a href="#L-106"><span class="linenos">106</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</span><span id="L-107"><a href="#L-107"><span class="linenos">107</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>
+</span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a>                <span class="n">arg</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span> <span class="o">+</span> <span class="s2">&quot; was required but not found&quot;</span>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a>
+</span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;The following args were not specified: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="L-119"><a href="#L-119"><span class="linenos">119</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span> <span class="o">+</span> <span class="s2">&quot; was required but not found.&quot;</span>
+</span><span id="L-120"><a href="#L-120"><span class="linenos">120</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
+</span><span id="L-121"><a href="#L-121"><span class="linenos">121</span></a>
+</span><span id="L-122"><a href="#L-122"><span class="linenos">122</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelNotFound</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="L-123"><a href="#L-123"><span class="linenos">123</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a><span class="sd">    An error from the Modemm server specifying a bad model.</span>
+</span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Model Not Found&quot;</span>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a><span class="sd">        Construct a Model Not Found Error</span>
+</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a><span class="sd">        :param model: The model that could not be found</span>
+</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a>
+</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a>
+</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelNotLoaded</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a><span class="sd">    An error from the Modemm server specifying the model failed to load</span>
+</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Model Didn&#39;t Load&quot;</span>
+</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a>
+</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a><span class="sd">        Construct a Model Loading Error</span>
+</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a><span class="sd">        :param model: The model that could not be loaded</span>
+</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -359,6 +432,130 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 
                             </div>
                 </section>
+                <section id="StackedErrors">
+                            <input id="StackedErrors-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">StackedErrors</span><wbr>(<span class="base"><a href="#ModemmError">ModemmError</a></span>):
+
+                <label class="view-source-button" for="StackedErrors-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#StackedErrors"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="StackedErrors-25"><a href="#StackedErrors-25"><span class="linenos">25</span></a><span class="k">class</span><span class="w"> </span><span class="nc">StackedErrors</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="StackedErrors-26"><a href="#StackedErrors-26"><span class="linenos">26</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="StackedErrors-27"><a href="#StackedErrors-27"><span class="linenos">27</span></a><span class="sd">    Multiple errors from the Modemm server</span>
+</span><span id="StackedErrors-28"><a href="#StackedErrors-28"><span class="linenos">28</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="StackedErrors-29"><a href="#StackedErrors-29"><span class="linenos">29</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Stacked Error&quot;</span>
+</span><span id="StackedErrors-30"><a href="#StackedErrors-30"><span class="linenos">30</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">errors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ModemmError</span><span class="p">]):</span>
+</span><span id="StackedErrors-31"><a href="#StackedErrors-31"><span class="linenos">31</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="n">errors</span>
+</span><span id="StackedErrors-32"><a href="#StackedErrors-32"><span class="linenos">32</span></a>
+</span><span id="StackedErrors-33"><a href="#StackedErrors-33"><span class="linenos">33</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="StackedErrors-34"><a href="#StackedErrors-34"><span class="linenos">34</span></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="StackedErrors-35"><a href="#StackedErrors-35"><span class="linenos">35</span></a>            <span class="k">return</span> <span class="s2">&quot;No errors occured&quot;</span>
+</span><span id="StackedErrors-36"><a href="#StackedErrors-36"><span class="linenos">36</span></a>        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="StackedErrors-37"><a href="#StackedErrors-37"><span class="linenos">37</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_error</span><span class="p">()</span>
+</span><span id="StackedErrors-38"><a href="#StackedErrors-38"><span class="linenos">38</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="StackedErrors-39"><a href="#StackedErrors-39"><span class="linenos">39</span></a>            <span class="k">return</span> <span class="s2">&quot;The following errors occured:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">get_error</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">])</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Multiple errors from the Modemm server</p>
+</div>
+
+
+                            <div id="StackedErrors.__init__" class="classattr">
+                                        <input id="StackedErrors.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">StackedErrors</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">errors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n"><a href="#ModemmError">ModemmError</a></span><span class="p">]</span></span>)</span>
+
+                <label class="view-source-button" for="StackedErrors.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#StackedErrors.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="StackedErrors.__init__-30"><a href="#StackedErrors.__init__-30"><span class="linenos">30</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">errors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ModemmError</span><span class="p">]):</span>
+</span><span id="StackedErrors.__init__-31"><a href="#StackedErrors.__init__-31"><span class="linenos">31</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="n">errors</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Construct a general Modemm error</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>info</strong>: </li>
+</ul>
+</div>
+
+
+                            </div>
+                            <div id="StackedErrors.error_type" class="classattr">
+                                <div class="attr variable">
+            <span class="name">error_type</span>        =
+<span class="default_value">&#39;Stacked Error&#39;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#StackedErrors.error_type"></a>
+    
+    
+
+                            </div>
+                            <div id="StackedErrors.errors" class="classattr">
+                                <div class="attr variable">
+            <span class="name">errors</span>
+
+        
+    </div>
+    <a class="headerlink" href="#StackedErrors.errors"></a>
+    
+    
+
+                            </div>
+                            <div id="StackedErrors.get_error" class="classattr">
+                                        <input id="StackedErrors.get_error-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">get_error</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="StackedErrors.get_error-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#StackedErrors.get_error"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="StackedErrors.get_error-33"><a href="#StackedErrors.get_error-33"><span class="linenos">33</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="StackedErrors.get_error-34"><a href="#StackedErrors.get_error-34"><span class="linenos">34</span></a>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="StackedErrors.get_error-35"><a href="#StackedErrors.get_error-35"><span class="linenos">35</span></a>            <span class="k">return</span> <span class="s2">&quot;No errors occured&quot;</span>
+</span><span id="StackedErrors.get_error-36"><a href="#StackedErrors.get_error-36"><span class="linenos">36</span></a>        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="StackedErrors.get_error-37"><a href="#StackedErrors.get_error-37"><span class="linenos">37</span></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_error</span><span class="p">()</span>
+</span><span id="StackedErrors.get_error-38"><a href="#StackedErrors.get_error-38"><span class="linenos">38</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="StackedErrors.get_error-39"><a href="#StackedErrors.get_error-39"><span class="linenos">39</span></a>            <span class="k">return</span> <span class="s2">&quot;The following errors occured:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">get_error</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="p">])</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Gets info about the error</p>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>str</p>
+</blockquote>
+</div>
+
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="#ModemmError">ModemmError</a></dt>
+                                <dd id="StackedErrors.info" class="variable"><a href="#ModemmError.info">info</a></dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
                 <section id="ArgumentError">
                             <input id="ArgumentError-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
@@ -370,28 +567,28 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 
     </div>
     <a class="headerlink" href="#ArgumentError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ArgumentError-26"><a href="#ArgumentError-26"><span class="linenos">26</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ArgumentError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="ArgumentError-27"><a href="#ArgumentError-27"><span class="linenos">27</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ArgumentError-28"><a href="#ArgumentError-28"><span class="linenos">28</span></a><span class="sd">    An error from the Modemm server specifying a bad argument.</span>
-</span><span id="ArgumentError-29"><a href="#ArgumentError-29"><span class="linenos">29</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="ArgumentError-30"><a href="#ArgumentError-30"><span class="linenos">30</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Argument Error&quot;</span>
-</span><span id="ArgumentError-31"><a href="#ArgumentError-31"><span class="linenos">31</span></a>
-</span><span id="ArgumentError-32"><a href="#ArgumentError-32"><span class="linenos">32</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
-</span><span id="ArgumentError-33"><a href="#ArgumentError-33"><span class="linenos">33</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ArgumentError-34"><a href="#ArgumentError-34"><span class="linenos">34</span></a><span class="sd">        Construct an argument Modemm Error</span>
-</span><span id="ArgumentError-35"><a href="#ArgumentError-35"><span class="linenos">35</span></a><span class="sd">        :param arg: The argument or arguments that the model could not accept</span>
-</span><span id="ArgumentError-36"><a href="#ArgumentError-36"><span class="linenos">36</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ArgumentError-37"><a href="#ArgumentError-37"><span class="linenos">37</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-</span><span id="ArgumentError-38"><a href="#ArgumentError-38"><span class="linenos">38</span></a>
-</span><span id="ArgumentError-39"><a href="#ArgumentError-39"><span class="linenos">39</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="ArgumentError-40"><a href="#ArgumentError-40"><span class="linenos">40</span></a>        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
-</span><span id="ArgumentError-41"><a href="#ArgumentError-41"><span class="linenos">41</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-</span><span id="ArgumentError-42"><a href="#ArgumentError-42"><span class="linenos">42</span></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span id="ArgumentError-43"><a href="#ArgumentError-43"><span class="linenos">43</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Argument is not accepted by the model: &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="ArgumentError-44"><a href="#ArgumentError-44"><span class="linenos">44</span></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="ArgumentError-45"><a href="#ArgumentError-45"><span class="linenos">45</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Arguments are not accepted by the model: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-</span><span id="ArgumentError-46"><a href="#ArgumentError-46"><span class="linenos">46</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="ArgumentError-47"><a href="#ArgumentError-47"><span class="linenos">47</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Argument is not accepted by the model: &quot;</span> <span class="o">+</span> <span class="n">arg</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ArgumentError-41"><a href="#ArgumentError-41"><span class="linenos">41</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ArgumentError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="ArgumentError-42"><a href="#ArgumentError-42"><span class="linenos">42</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ArgumentError-43"><a href="#ArgumentError-43"><span class="linenos">43</span></a><span class="sd">    An error from the Modemm server specifying a bad argument.</span>
+</span><span id="ArgumentError-44"><a href="#ArgumentError-44"><span class="linenos">44</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="ArgumentError-45"><a href="#ArgumentError-45"><span class="linenos">45</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Argument Error&quot;</span>
+</span><span id="ArgumentError-46"><a href="#ArgumentError-46"><span class="linenos">46</span></a>
+</span><span id="ArgumentError-47"><a href="#ArgumentError-47"><span class="linenos">47</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+</span><span id="ArgumentError-48"><a href="#ArgumentError-48"><span class="linenos">48</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ArgumentError-49"><a href="#ArgumentError-49"><span class="linenos">49</span></a><span class="sd">        Construct an argument Modemm Error</span>
+</span><span id="ArgumentError-50"><a href="#ArgumentError-50"><span class="linenos">50</span></a><span class="sd">        :param arg: The argument or arguments that the model could not accept</span>
+</span><span id="ArgumentError-51"><a href="#ArgumentError-51"><span class="linenos">51</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ArgumentError-52"><a href="#ArgumentError-52"><span class="linenos">52</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span><span id="ArgumentError-53"><a href="#ArgumentError-53"><span class="linenos">53</span></a>
+</span><span id="ArgumentError-54"><a href="#ArgumentError-54"><span class="linenos">54</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="ArgumentError-55"><a href="#ArgumentError-55"><span class="linenos">55</span></a>        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
+</span><span id="ArgumentError-56"><a href="#ArgumentError-56"><span class="linenos">56</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="ArgumentError-57"><a href="#ArgumentError-57"><span class="linenos">57</span></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="ArgumentError-58"><a href="#ArgumentError-58"><span class="linenos">58</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Argument is not accepted by the model: &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="ArgumentError-59"><a href="#ArgumentError-59"><span class="linenos">59</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="ArgumentError-60"><a href="#ArgumentError-60"><span class="linenos">60</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Arguments are not accepted by the model: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span><span id="ArgumentError-61"><a href="#ArgumentError-61"><span class="linenos">61</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="ArgumentError-62"><a href="#ArgumentError-62"><span class="linenos">62</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Argument is not accepted by the model: &quot;</span> <span class="o">+</span> <span class="n">arg</span>
 </span></pre></div>
 
 
@@ -409,12 +606,12 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 
     </div>
     <a class="headerlink" href="#ArgumentError.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ArgumentError.__init__-32"><a href="#ArgumentError.__init__-32"><span class="linenos">32</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
-</span><span id="ArgumentError.__init__-33"><a href="#ArgumentError.__init__-33"><span class="linenos">33</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ArgumentError.__init__-34"><a href="#ArgumentError.__init__-34"><span class="linenos">34</span></a><span class="sd">        Construct an argument Modemm Error</span>
-</span><span id="ArgumentError.__init__-35"><a href="#ArgumentError.__init__-35"><span class="linenos">35</span></a><span class="sd">        :param arg: The argument or arguments that the model could not accept</span>
-</span><span id="ArgumentError.__init__-36"><a href="#ArgumentError.__init__-36"><span class="linenos">36</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ArgumentError.__init__-37"><a href="#ArgumentError.__init__-37"><span class="linenos">37</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ArgumentError.__init__-47"><a href="#ArgumentError.__init__-47"><span class="linenos">47</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+</span><span id="ArgumentError.__init__-48"><a href="#ArgumentError.__init__-48"><span class="linenos">48</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ArgumentError.__init__-49"><a href="#ArgumentError.__init__-49"><span class="linenos">49</span></a><span class="sd">        Construct an argument Modemm Error</span>
+</span><span id="ArgumentError.__init__-50"><a href="#ArgumentError.__init__-50"><span class="linenos">50</span></a><span class="sd">        :param arg: The argument or arguments that the model could not accept</span>
+</span><span id="ArgumentError.__init__-51"><a href="#ArgumentError.__init__-51"><span class="linenos">51</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ArgumentError.__init__-52"><a href="#ArgumentError.__init__-52"><span class="linenos">52</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -452,15 +649,15 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 
     </div>
     <a class="headerlink" href="#ArgumentError.get_error"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ArgumentError.get_error-39"><a href="#ArgumentError.get_error-39"><span class="linenos">39</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="ArgumentError.get_error-40"><a href="#ArgumentError.get_error-40"><span class="linenos">40</span></a>        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
-</span><span id="ArgumentError.get_error-41"><a href="#ArgumentError.get_error-41"><span class="linenos">41</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-</span><span id="ArgumentError.get_error-42"><a href="#ArgumentError.get_error-42"><span class="linenos">42</span></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span id="ArgumentError.get_error-43"><a href="#ArgumentError.get_error-43"><span class="linenos">43</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Argument is not accepted by the model: &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="ArgumentError.get_error-44"><a href="#ArgumentError.get_error-44"><span class="linenos">44</span></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="ArgumentError.get_error-45"><a href="#ArgumentError.get_error-45"><span class="linenos">45</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Arguments are not accepted by the model: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-</span><span id="ArgumentError.get_error-46"><a href="#ArgumentError.get_error-46"><span class="linenos">46</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="ArgumentError.get_error-47"><a href="#ArgumentError.get_error-47"><span class="linenos">47</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Argument is not accepted by the model: &quot;</span> <span class="o">+</span> <span class="n">arg</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ArgumentError.get_error-54"><a href="#ArgumentError.get_error-54"><span class="linenos">54</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="ArgumentError.get_error-55"><a href="#ArgumentError.get_error-55"><span class="linenos">55</span></a>        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
+</span><span id="ArgumentError.get_error-56"><a href="#ArgumentError.get_error-56"><span class="linenos">56</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="ArgumentError.get_error-57"><a href="#ArgumentError.get_error-57"><span class="linenos">57</span></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="ArgumentError.get_error-58"><a href="#ArgumentError.get_error-58"><span class="linenos">58</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Argument is not accepted by the model: &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="ArgumentError.get_error-59"><a href="#ArgumentError.get_error-59"><span class="linenos">59</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="ArgumentError.get_error-60"><a href="#ArgumentError.get_error-60"><span class="linenos">60</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Arguments are not accepted by the model: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span><span id="ArgumentError.get_error-61"><a href="#ArgumentError.get_error-61"><span class="linenos">61</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="ArgumentError.get_error-62"><a href="#ArgumentError.get_error-62"><span class="linenos">62</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Argument is not accepted by the model: &quot;</span> <span class="o">+</span> <span class="n">arg</span>
 </span></pre></div>
 
 
@@ -496,10 +693,10 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 
     </div>
     <a class="headerlink" href="#format_arg_value_error"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="format_arg_value_error-50"><a href="#format_arg_value_error-50"><span class="linenos">50</span></a><span class="k">def</span><span class="w"> </span><span class="nf">format_arg_value_error</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="format_arg_value_error-51"><a href="#format_arg_value_error-51"><span class="linenos">51</span></a>    <span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Values are not accepted for arguments by the model: &quot;</span>
-</span><span id="format_arg_value_error-52"><a href="#format_arg_value_error-52"><span class="linenos">52</span></a>    <span class="n">info</span> <span class="o">+=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">arg</span><span class="p">])</span>
-</span><span id="format_arg_value_error-53"><a href="#format_arg_value_error-53"><span class="linenos">53</span></a>    <span class="k">return</span> <span class="n">info</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="format_arg_value_error-65"><a href="#format_arg_value_error-65"><span class="linenos">65</span></a><span class="k">def</span><span class="w"> </span><span class="nf">format_arg_value_error</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="format_arg_value_error-66"><a href="#format_arg_value_error-66"><span class="linenos">66</span></a>    <span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;Values are not accepted for arguments by the model: &quot;</span>
+</span><span id="format_arg_value_error-67"><a href="#format_arg_value_error-67"><span class="linenos">67</span></a>    <span class="n">info</span> <span class="o">+=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">arg</span><span class="p">])</span>
+</span><span id="format_arg_value_error-68"><a href="#format_arg_value_error-68"><span class="linenos">68</span></a>    <span class="k">return</span> <span class="n">info</span>
 </span></pre></div>
 
 
@@ -517,31 +714,31 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 
     </div>
     <a class="headerlink" href="#ArgValueError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ArgValueError-56"><a href="#ArgValueError-56"><span class="linenos">56</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ArgValueError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="ArgValueError-57"><a href="#ArgValueError-57"><span class="linenos">57</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ArgValueError-58"><a href="#ArgValueError-58"><span class="linenos">58</span></a><span class="sd">    An error from the Modemm server specifying a bad value.</span>
-</span><span id="ArgValueError-59"><a href="#ArgValueError-59"><span class="linenos">59</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="ArgValueError-60"><a href="#ArgValueError-60"><span class="linenos">60</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Value Error&quot;</span>
-</span><span id="ArgValueError-61"><a href="#ArgValueError-61"><span class="linenos">61</span></a>
-</span><span id="ArgValueError-62"><a href="#ArgValueError-62"><span class="linenos">62</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]):</span>
-</span><span id="ArgValueError-63"><a href="#ArgValueError-63"><span class="linenos">63</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ArgValueError-64"><a href="#ArgValueError-64"><span class="linenos">64</span></a><span class="sd">        Construct a value Modemm Error</span>
-</span><span id="ArgValueError-65"><a href="#ArgValueError-65"><span class="linenos">65</span></a><span class="sd">        :param arg: The argument and value that are not accepted by the model, or a list of them</span>
-</span><span id="ArgValueError-66"><a href="#ArgValueError-66"><span class="linenos">66</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ArgValueError-67"><a href="#ArgValueError-67"><span class="linenos">67</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-</span><span id="ArgValueError-68"><a href="#ArgValueError-68"><span class="linenos">68</span></a>
-</span><span id="ArgValueError-69"><a href="#ArgValueError-69"><span class="linenos">69</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="ArgValueError-70"><a href="#ArgValueError-70"><span class="linenos">70</span></a>        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
-</span><span id="ArgValueError-71"><a href="#ArgValueError-71"><span class="linenos">71</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-</span><span id="ArgValueError-72"><a href="#ArgValueError-72"><span class="linenos">72</span></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span id="ArgValueError-73"><a href="#ArgValueError-73"><span class="linenos">73</span></a>                <span class="n">arg</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="ArgValueError-74"><a href="#ArgValueError-74"><span class="linenos">74</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot; is not accepted for &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; by the model&quot;</span>
-</span><span id="ArgValueError-75"><a href="#ArgValueError-75"><span class="linenos">75</span></a>
-</span><span id="ArgValueError-76"><a href="#ArgValueError-76"><span class="linenos">76</span></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="ArgValueError-77"><a href="#ArgValueError-77"><span class="linenos">77</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">format_arg_value_error</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-</span><span id="ArgValueError-78"><a href="#ArgValueError-78"><span class="linenos">78</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="ArgValueError-79"><a href="#ArgValueError-79"><span class="linenos">79</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot; is not accepted for &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; by the model&quot;</span>
-</span><span id="ArgValueError-80"><a href="#ArgValueError-80"><span class="linenos">80</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ArgValueError-71"><a href="#ArgValueError-71"><span class="linenos">71</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ArgValueError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="ArgValueError-72"><a href="#ArgValueError-72"><span class="linenos">72</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ArgValueError-73"><a href="#ArgValueError-73"><span class="linenos">73</span></a><span class="sd">    An error from the Modemm server specifying a bad value.</span>
+</span><span id="ArgValueError-74"><a href="#ArgValueError-74"><span class="linenos">74</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="ArgValueError-75"><a href="#ArgValueError-75"><span class="linenos">75</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Value Error&quot;</span>
+</span><span id="ArgValueError-76"><a href="#ArgValueError-76"><span class="linenos">76</span></a>
+</span><span id="ArgValueError-77"><a href="#ArgValueError-77"><span class="linenos">77</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]):</span>
+</span><span id="ArgValueError-78"><a href="#ArgValueError-78"><span class="linenos">78</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ArgValueError-79"><a href="#ArgValueError-79"><span class="linenos">79</span></a><span class="sd">        Construct a value Modemm Error</span>
+</span><span id="ArgValueError-80"><a href="#ArgValueError-80"><span class="linenos">80</span></a><span class="sd">        :param arg: The argument and value that are not accepted by the model, or a list of them</span>
+</span><span id="ArgValueError-81"><a href="#ArgValueError-81"><span class="linenos">81</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ArgValueError-82"><a href="#ArgValueError-82"><span class="linenos">82</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span><span id="ArgValueError-83"><a href="#ArgValueError-83"><span class="linenos">83</span></a>
+</span><span id="ArgValueError-84"><a href="#ArgValueError-84"><span class="linenos">84</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="ArgValueError-85"><a href="#ArgValueError-85"><span class="linenos">85</span></a>        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
+</span><span id="ArgValueError-86"><a href="#ArgValueError-86"><span class="linenos">86</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="ArgValueError-87"><a href="#ArgValueError-87"><span class="linenos">87</span></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="ArgValueError-88"><a href="#ArgValueError-88"><span class="linenos">88</span></a>                <span class="n">arg</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="ArgValueError-89"><a href="#ArgValueError-89"><span class="linenos">89</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot; is not accepted for &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; by the model&quot;</span>
+</span><span id="ArgValueError-90"><a href="#ArgValueError-90"><span class="linenos">90</span></a>
+</span><span id="ArgValueError-91"><a href="#ArgValueError-91"><span class="linenos">91</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="ArgValueError-92"><a href="#ArgValueError-92"><span class="linenos">92</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">format_arg_value_error</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span><span id="ArgValueError-93"><a href="#ArgValueError-93"><span class="linenos">93</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="ArgValueError-94"><a href="#ArgValueError-94"><span class="linenos">94</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot; is not accepted for &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; by the model&quot;</span>
+</span><span id="ArgValueError-95"><a href="#ArgValueError-95"><span class="linenos">95</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
 </span></pre></div>
 
 
@@ -559,12 +756,12 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 
     </div>
     <a class="headerlink" href="#ArgValueError.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ArgValueError.__init__-62"><a href="#ArgValueError.__init__-62"><span class="linenos">62</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]):</span>
-</span><span id="ArgValueError.__init__-63"><a href="#ArgValueError.__init__-63"><span class="linenos">63</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ArgValueError.__init__-64"><a href="#ArgValueError.__init__-64"><span class="linenos">64</span></a><span class="sd">        Construct a value Modemm Error</span>
-</span><span id="ArgValueError.__init__-65"><a href="#ArgValueError.__init__-65"><span class="linenos">65</span></a><span class="sd">        :param arg: The argument and value that are not accepted by the model, or a list of them</span>
-</span><span id="ArgValueError.__init__-66"><a href="#ArgValueError.__init__-66"><span class="linenos">66</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ArgValueError.__init__-67"><a href="#ArgValueError.__init__-67"><span class="linenos">67</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ArgValueError.__init__-77"><a href="#ArgValueError.__init__-77"><span class="linenos">77</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]):</span>
+</span><span id="ArgValueError.__init__-78"><a href="#ArgValueError.__init__-78"><span class="linenos">78</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ArgValueError.__init__-79"><a href="#ArgValueError.__init__-79"><span class="linenos">79</span></a><span class="sd">        Construct a value Modemm Error</span>
+</span><span id="ArgValueError.__init__-80"><a href="#ArgValueError.__init__-80"><span class="linenos">80</span></a><span class="sd">        :param arg: The argument and value that are not accepted by the model, or a list of them</span>
+</span><span id="ArgValueError.__init__-81"><a href="#ArgValueError.__init__-81"><span class="linenos">81</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ArgValueError.__init__-82"><a href="#ArgValueError.__init__-82"><span class="linenos">82</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -602,18 +799,18 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 
     </div>
     <a class="headerlink" href="#ArgValueError.get_error"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ArgValueError.get_error-69"><a href="#ArgValueError.get_error-69"><span class="linenos">69</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="ArgValueError.get_error-70"><a href="#ArgValueError.get_error-70"><span class="linenos">70</span></a>        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
-</span><span id="ArgValueError.get_error-71"><a href="#ArgValueError.get_error-71"><span class="linenos">71</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-</span><span id="ArgValueError.get_error-72"><a href="#ArgValueError.get_error-72"><span class="linenos">72</span></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-</span><span id="ArgValueError.get_error-73"><a href="#ArgValueError.get_error-73"><span class="linenos">73</span></a>                <span class="n">arg</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="ArgValueError.get_error-74"><a href="#ArgValueError.get_error-74"><span class="linenos">74</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot; is not accepted for &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; by the model&quot;</span>
-</span><span id="ArgValueError.get_error-75"><a href="#ArgValueError.get_error-75"><span class="linenos">75</span></a>
-</span><span id="ArgValueError.get_error-76"><a href="#ArgValueError.get_error-76"><span class="linenos">76</span></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="ArgValueError.get_error-77"><a href="#ArgValueError.get_error-77"><span class="linenos">77</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">format_arg_value_error</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-</span><span id="ArgValueError.get_error-78"><a href="#ArgValueError.get_error-78"><span class="linenos">78</span></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="ArgValueError.get_error-79"><a href="#ArgValueError.get_error-79"><span class="linenos">79</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot; is not accepted for &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; by the model&quot;</span>
-</span><span id="ArgValueError.get_error-80"><a href="#ArgValueError.get_error-80"><span class="linenos">80</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ArgValueError.get_error-84"><a href="#ArgValueError.get_error-84"><span class="linenos">84</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="ArgValueError.get_error-85"><a href="#ArgValueError.get_error-85"><span class="linenos">85</span></a>        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
+</span><span id="ArgValueError.get_error-86"><a href="#ArgValueError.get_error-86"><span class="linenos">86</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="ArgValueError.get_error-87"><a href="#ArgValueError.get_error-87"><span class="linenos">87</span></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="ArgValueError.get_error-88"><a href="#ArgValueError.get_error-88"><span class="linenos">88</span></a>                <span class="n">arg</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="ArgValueError.get_error-89"><a href="#ArgValueError.get_error-89"><span class="linenos">89</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot; is not accepted for &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; by the model&quot;</span>
+</span><span id="ArgValueError.get_error-90"><a href="#ArgValueError.get_error-90"><span class="linenos">90</span></a>
+</span><span id="ArgValueError.get_error-91"><a href="#ArgValueError.get_error-91"><span class="linenos">91</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="ArgValueError.get_error-92"><a href="#ArgValueError.get_error-92"><span class="linenos">92</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">format_arg_value_error</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span><span id="ArgValueError.get_error-93"><a href="#ArgValueError.get_error-93"><span class="linenos">93</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="ArgValueError.get_error-94"><a href="#ArgValueError.get_error-94"><span class="linenos">94</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot; is not accepted for &quot;</span> <span class="o">+</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; by the model&quot;</span>
+</span><span id="ArgValueError.get_error-95"><a href="#ArgValueError.get_error-95"><span class="linenos">95</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
 </span></pre></div>
 
 
@@ -638,6 +835,138 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
                                 </dl>
                             </div>
                 </section>
+                <section id="ArgRequiredError">
+                            <input id="ArgRequiredError-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">ArgRequiredError</span><wbr>(<span class="base"><a href="#ModemmError">ModemmError</a></span>):
+
+                <label class="view-source-button" for="ArgRequiredError-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ArgRequiredError"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ArgRequiredError-97"><a href="#ArgRequiredError-97"><span class="linenos"> 97</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ArgRequiredError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="ArgRequiredError-98"><a href="#ArgRequiredError-98"><span class="linenos"> 98</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ArgRequiredError-99"><a href="#ArgRequiredError-99"><span class="linenos"> 99</span></a><span class="sd">    An error from the Modemm server specifying a required option.</span>
+</span><span id="ArgRequiredError-100"><a href="#ArgRequiredError-100"><span class="linenos">100</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="ArgRequiredError-101"><a href="#ArgRequiredError-101"><span class="linenos">101</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Required Option&quot;</span>
+</span><span id="ArgRequiredError-102"><a href="#ArgRequiredError-102"><span class="linenos">102</span></a>
+</span><span id="ArgRequiredError-103"><a href="#ArgRequiredError-103"><span class="linenos">103</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+</span><span id="ArgRequiredError-104"><a href="#ArgRequiredError-104"><span class="linenos">104</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ArgRequiredError-105"><a href="#ArgRequiredError-105"><span class="linenos">105</span></a><span class="sd">        Construct a value Modemm Error</span>
+</span><span id="ArgRequiredError-106"><a href="#ArgRequiredError-106"><span class="linenos">106</span></a><span class="sd">        :param arg: The argument that was not specified</span>
+</span><span id="ArgRequiredError-107"><a href="#ArgRequiredError-107"><span class="linenos">107</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ArgRequiredError-108"><a href="#ArgRequiredError-108"><span class="linenos">108</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span><span id="ArgRequiredError-109"><a href="#ArgRequiredError-109"><span class="linenos">109</span></a>
+</span><span id="ArgRequiredError-110"><a href="#ArgRequiredError-110"><span class="linenos">110</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="ArgRequiredError-111"><a href="#ArgRequiredError-111"><span class="linenos">111</span></a>        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
+</span><span id="ArgRequiredError-112"><a href="#ArgRequiredError-112"><span class="linenos">112</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="ArgRequiredError-113"><a href="#ArgRequiredError-113"><span class="linenos">113</span></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="ArgRequiredError-114"><a href="#ArgRequiredError-114"><span class="linenos">114</span></a>                <span class="n">arg</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="ArgRequiredError-115"><a href="#ArgRequiredError-115"><span class="linenos">115</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span> <span class="o">+</span> <span class="s2">&quot; was required but not found&quot;</span>
+</span><span id="ArgRequiredError-116"><a href="#ArgRequiredError-116"><span class="linenos">116</span></a>
+</span><span id="ArgRequiredError-117"><a href="#ArgRequiredError-117"><span class="linenos">117</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="ArgRequiredError-118"><a href="#ArgRequiredError-118"><span class="linenos">118</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;The following args were not specified: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span><span id="ArgRequiredError-119"><a href="#ArgRequiredError-119"><span class="linenos">119</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="ArgRequiredError-120"><a href="#ArgRequiredError-120"><span class="linenos">120</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span> <span class="o">+</span> <span class="s2">&quot; was required but not found.&quot;</span>
+</span><span id="ArgRequiredError-121"><a href="#ArgRequiredError-121"><span class="linenos">121</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>An error from the Modemm server specifying a required option.</p>
+</div>
+
+
+                            <div id="ArgRequiredError.__init__" class="classattr">
+                                        <input id="ArgRequiredError.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">ArgRequiredError</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">arg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span></span>)</span>
+
+                <label class="view-source-button" for="ArgRequiredError.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ArgRequiredError.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ArgRequiredError.__init__-103"><a href="#ArgRequiredError.__init__-103"><span class="linenos">103</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+</span><span id="ArgRequiredError.__init__-104"><a href="#ArgRequiredError.__init__-104"><span class="linenos">104</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ArgRequiredError.__init__-105"><a href="#ArgRequiredError.__init__-105"><span class="linenos">105</span></a><span class="sd">        Construct a value Modemm Error</span>
+</span><span id="ArgRequiredError.__init__-106"><a href="#ArgRequiredError.__init__-106"><span class="linenos">106</span></a><span class="sd">        :param arg: The argument that was not specified</span>
+</span><span id="ArgRequiredError.__init__-107"><a href="#ArgRequiredError.__init__-107"><span class="linenos">107</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ArgRequiredError.__init__-108"><a href="#ArgRequiredError.__init__-108"><span class="linenos">108</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Construct a value Modemm Error</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>arg</strong>:  The argument that was not specified</li>
+</ul>
+</div>
+
+
+                            </div>
+                            <div id="ArgRequiredError.error_type" class="classattr">
+                                <div class="attr variable">
+            <span class="name">error_type</span>        =
+<span class="default_value">&#39;Required Option&#39;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#ArgRequiredError.error_type"></a>
+    
+    
+
+                            </div>
+                            <div id="ArgRequiredError.get_error" class="classattr">
+                                        <input id="ArgRequiredError.get_error-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">get_error</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">) -> <span class="nb">str</span>:</span></span>
+
+                <label class="view-source-button" for="ArgRequiredError.get_error-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#ArgRequiredError.get_error"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ArgRequiredError.get_error-110"><a href="#ArgRequiredError.get_error-110"><span class="linenos">110</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_error</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="ArgRequiredError.get_error-111"><a href="#ArgRequiredError.get_error-111"><span class="linenos">111</span></a>        <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
+</span><span id="ArgRequiredError.get_error-112"><a href="#ArgRequiredError.get_error-112"><span class="linenos">112</span></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="ArgRequiredError.get_error-113"><a href="#ArgRequiredError.get_error-113"><span class="linenos">113</span></a>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+</span><span id="ArgRequiredError.get_error-114"><a href="#ArgRequiredError.get_error-114"><span class="linenos">114</span></a>                <span class="n">arg</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="ArgRequiredError.get_error-115"><a href="#ArgRequiredError.get_error-115"><span class="linenos">115</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span> <span class="o">+</span> <span class="s2">&quot; was required but not found&quot;</span>
+</span><span id="ArgRequiredError.get_error-116"><a href="#ArgRequiredError.get_error-116"><span class="linenos">116</span></a>
+</span><span id="ArgRequiredError.get_error-117"><a href="#ArgRequiredError.get_error-117"><span class="linenos">117</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="ArgRequiredError.get_error-118"><a href="#ArgRequiredError.get_error-118"><span class="linenos">118</span></a>                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;The following args were not specified: &quot;</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+</span><span id="ArgRequiredError.get_error-119"><a href="#ArgRequiredError.get_error-119"><span class="linenos">119</span></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="ArgRequiredError.get_error-120"><a href="#ArgRequiredError.get_error-120"><span class="linenos">120</span></a>            <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">arg</span> <span class="o">+</span> <span class="s2">&quot; was required but not found.&quot;</span>
+</span><span id="ArgRequiredError.get_error-121"><a href="#ArgRequiredError.get_error-121"><span class="linenos">121</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Gets info about the error</p>
+
+<h6 id="returns">Returns</h6>
+
+<blockquote>
+  <p>str</p>
+</blockquote>
+</div>
+
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="#ModemmError">ModemmError</a></dt>
+                                <dd id="ArgRequiredError.info" class="variable"><a href="#ModemmError.info">info</a></dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
                 <section id="ModelNotFound">
                             <input id="ModelNotFound-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
@@ -649,18 +978,18 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 
     </div>
     <a class="headerlink" href="#ModelNotFound"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotFound-83"><a href="#ModelNotFound-83"><span class="linenos">83</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelNotFound</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="ModelNotFound-84"><a href="#ModelNotFound-84"><span class="linenos">84</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ModelNotFound-85"><a href="#ModelNotFound-85"><span class="linenos">85</span></a><span class="sd">    An error from the Modemm server specifying a bad model.</span>
-</span><span id="ModelNotFound-86"><a href="#ModelNotFound-86"><span class="linenos">86</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="ModelNotFound-87"><a href="#ModelNotFound-87"><span class="linenos">87</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Model Not Found&quot;</span>
-</span><span id="ModelNotFound-88"><a href="#ModelNotFound-88"><span class="linenos">88</span></a>
-</span><span id="ModelNotFound-89"><a href="#ModelNotFound-89"><span class="linenos">89</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="ModelNotFound-90"><a href="#ModelNotFound-90"><span class="linenos">90</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ModelNotFound-91"><a href="#ModelNotFound-91"><span class="linenos">91</span></a><span class="sd">        Construct a Model Not Found Error</span>
-</span><span id="ModelNotFound-92"><a href="#ModelNotFound-92"><span class="linenos">92</span></a><span class="sd">        :param model: The model that could not be found</span>
-</span><span id="ModelNotFound-93"><a href="#ModelNotFound-93"><span class="linenos">93</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ModelNotFound-94"><a href="#ModelNotFound-94"><span class="linenos">94</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotFound-123"><a href="#ModelNotFound-123"><span class="linenos">123</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelNotFound</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="ModelNotFound-124"><a href="#ModelNotFound-124"><span class="linenos">124</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelNotFound-125"><a href="#ModelNotFound-125"><span class="linenos">125</span></a><span class="sd">    An error from the Modemm server specifying a bad model.</span>
+</span><span id="ModelNotFound-126"><a href="#ModelNotFound-126"><span class="linenos">126</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="ModelNotFound-127"><a href="#ModelNotFound-127"><span class="linenos">127</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Model Not Found&quot;</span>
+</span><span id="ModelNotFound-128"><a href="#ModelNotFound-128"><span class="linenos">128</span></a>
+</span><span id="ModelNotFound-129"><a href="#ModelNotFound-129"><span class="linenos">129</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="ModelNotFound-130"><a href="#ModelNotFound-130"><span class="linenos">130</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelNotFound-131"><a href="#ModelNotFound-131"><span class="linenos">131</span></a><span class="sd">        Construct a Model Not Found Error</span>
+</span><span id="ModelNotFound-132"><a href="#ModelNotFound-132"><span class="linenos">132</span></a><span class="sd">        :param model: The model that could not be found</span>
+</span><span id="ModelNotFound-133"><a href="#ModelNotFound-133"><span class="linenos">133</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ModelNotFound-134"><a href="#ModelNotFound-134"><span class="linenos">134</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -678,12 +1007,12 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 
     </div>
     <a class="headerlink" href="#ModelNotFound.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotFound.__init__-89"><a href="#ModelNotFound.__init__-89"><span class="linenos">89</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="ModelNotFound.__init__-90"><a href="#ModelNotFound.__init__-90"><span class="linenos">90</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ModelNotFound.__init__-91"><a href="#ModelNotFound.__init__-91"><span class="linenos">91</span></a><span class="sd">        Construct a Model Not Found Error</span>
-</span><span id="ModelNotFound.__init__-92"><a href="#ModelNotFound.__init__-92"><span class="linenos">92</span></a><span class="sd">        :param model: The model that could not be found</span>
-</span><span id="ModelNotFound.__init__-93"><a href="#ModelNotFound.__init__-93"><span class="linenos">93</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ModelNotFound.__init__-94"><a href="#ModelNotFound.__init__-94"><span class="linenos">94</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotFound.__init__-129"><a href="#ModelNotFound.__init__-129"><span class="linenos">129</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="ModelNotFound.__init__-130"><a href="#ModelNotFound.__init__-130"><span class="linenos">130</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelNotFound.__init__-131"><a href="#ModelNotFound.__init__-131"><span class="linenos">131</span></a><span class="sd">        Construct a Model Not Found Error</span>
+</span><span id="ModelNotFound.__init__-132"><a href="#ModelNotFound.__init__-132"><span class="linenos">132</span></a><span class="sd">        :param model: The model that could not be found</span>
+</span><span id="ModelNotFound.__init__-133"><a href="#ModelNotFound.__init__-133"><span class="linenos">133</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ModelNotFound.__init__-134"><a href="#ModelNotFound.__init__-134"><span class="linenos">134</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -732,18 +1061,18 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 
     </div>
     <a class="headerlink" href="#ModelNotLoaded"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotLoaded-97"><a href="#ModelNotLoaded-97"><span class="linenos"> 97</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelNotLoaded</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="ModelNotLoaded-98"><a href="#ModelNotLoaded-98"><span class="linenos"> 98</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ModelNotLoaded-99"><a href="#ModelNotLoaded-99"><span class="linenos"> 99</span></a><span class="sd">    An error from the Modemm server specifying the model failed to load</span>
-</span><span id="ModelNotLoaded-100"><a href="#ModelNotLoaded-100"><span class="linenos">100</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="ModelNotLoaded-101"><a href="#ModelNotLoaded-101"><span class="linenos">101</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Model Didn&#39;t Load&quot;</span>
-</span><span id="ModelNotLoaded-102"><a href="#ModelNotLoaded-102"><span class="linenos">102</span></a>
-</span><span id="ModelNotLoaded-103"><a href="#ModelNotLoaded-103"><span class="linenos">103</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="ModelNotLoaded-104"><a href="#ModelNotLoaded-104"><span class="linenos">104</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ModelNotLoaded-105"><a href="#ModelNotLoaded-105"><span class="linenos">105</span></a><span class="sd">        Construct a Model Loading Error</span>
-</span><span id="ModelNotLoaded-106"><a href="#ModelNotLoaded-106"><span class="linenos">106</span></a><span class="sd">        :param model: The model that could not be loaded</span>
-</span><span id="ModelNotLoaded-107"><a href="#ModelNotLoaded-107"><span class="linenos">107</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ModelNotLoaded-108"><a href="#ModelNotLoaded-108"><span class="linenos">108</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotLoaded-137"><a href="#ModelNotLoaded-137"><span class="linenos">137</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelNotLoaded</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="ModelNotLoaded-138"><a href="#ModelNotLoaded-138"><span class="linenos">138</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelNotLoaded-139"><a href="#ModelNotLoaded-139"><span class="linenos">139</span></a><span class="sd">    An error from the Modemm server specifying the model failed to load</span>
+</span><span id="ModelNotLoaded-140"><a href="#ModelNotLoaded-140"><span class="linenos">140</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="ModelNotLoaded-141"><a href="#ModelNotLoaded-141"><span class="linenos">141</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Model Didn&#39;t Load&quot;</span>
+</span><span id="ModelNotLoaded-142"><a href="#ModelNotLoaded-142"><span class="linenos">142</span></a>
+</span><span id="ModelNotLoaded-143"><a href="#ModelNotLoaded-143"><span class="linenos">143</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="ModelNotLoaded-144"><a href="#ModelNotLoaded-144"><span class="linenos">144</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelNotLoaded-145"><a href="#ModelNotLoaded-145"><span class="linenos">145</span></a><span class="sd">        Construct a Model Loading Error</span>
+</span><span id="ModelNotLoaded-146"><a href="#ModelNotLoaded-146"><span class="linenos">146</span></a><span class="sd">        :param model: The model that could not be loaded</span>
+</span><span id="ModelNotLoaded-147"><a href="#ModelNotLoaded-147"><span class="linenos">147</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ModelNotLoaded-148"><a href="#ModelNotLoaded-148"><span class="linenos">148</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -761,12 +1090,12 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 
     </div>
     <a class="headerlink" href="#ModelNotLoaded.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotLoaded.__init__-103"><a href="#ModelNotLoaded.__init__-103"><span class="linenos">103</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="ModelNotLoaded.__init__-104"><a href="#ModelNotLoaded.__init__-104"><span class="linenos">104</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ModelNotLoaded.__init__-105"><a href="#ModelNotLoaded.__init__-105"><span class="linenos">105</span></a><span class="sd">        Construct a Model Loading Error</span>
-</span><span id="ModelNotLoaded.__init__-106"><a href="#ModelNotLoaded.__init__-106"><span class="linenos">106</span></a><span class="sd">        :param model: The model that could not be loaded</span>
-</span><span id="ModelNotLoaded.__init__-107"><a href="#ModelNotLoaded.__init__-107"><span class="linenos">107</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ModelNotLoaded.__init__-108"><a href="#ModelNotLoaded.__init__-108"><span class="linenos">108</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotLoaded.__init__-143"><a href="#ModelNotLoaded.__init__-143"><span class="linenos">143</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="ModelNotLoaded.__init__-144"><a href="#ModelNotLoaded.__init__-144"><span class="linenos">144</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelNotLoaded.__init__-145"><a href="#ModelNotLoaded.__init__-145"><span class="linenos">145</span></a><span class="sd">        Construct a Model Loading Error</span>
+</span><span id="ModelNotLoaded.__init__-146"><a href="#ModelNotLoaded.__init__-146"><span class="linenos">146</span></a><span class="sd">        :param model: The model that could not be loaded</span>
+</span><span id="ModelNotLoaded.__init__-147"><a href="#ModelNotLoaded.__init__-147"><span class="linenos">147</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ModelNotLoaded.__init__-148"><a href="#ModelNotLoaded.__init__-148"><span class="linenos">148</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </span></pre></div>
 
 

@@ -16,18 +16,18 @@ class LTX096DVideoModel(ModemmModel):
     requires: List[str] = ["torch", "diffusers"]
     streamable: bool = True
 
-    def __init__(self, path: str, steps: int, device: str = "cuda"):
+    def __init__(self, path: str, steps: int):
         self.path = path
         self.steps = steps
-        self.device = device
         self._model = None
 
-    def load(self) -> bool:
+    def load(self, device="cuda") -> bool:
         try:
             import torch
             from diffusers import LTXConditionPipeline
-            self._model = LTXConditionPipeline.from_single_file(self.path, torch_dtype=torch.bfloat16)
-            self._model.to("cuda")
+            if not isinstance(self._model, LTXConditionPipeline):
+                self._model = LTXConditionPipeline.from_single_file(self.path, torch_dtype=torch.bfloat16)
+            self._model.to(device)
             self._model.vae.enable_tiling()
         except Exception as e:
             return False
@@ -36,7 +36,9 @@ class LTX096DVideoModel(ModemmModel):
 
     def unload(self) -> bool:
         try:
-            del self._model
+            if hasattr(self, "_model"):
+                del self._model
+                self._model = None
             gc.collect()
             import torch
             torch.cuda.empty_cache()

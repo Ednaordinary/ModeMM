@@ -7,6 +7,7 @@ from fastapi.responses import StreamingResponse
 from .config import ModemmConfigBase
 from .models.base import ModemmModel
 from .response import QueuedResponse
+from .errors import ModemmError
 
 class ModelExecutor:
     """
@@ -77,8 +78,15 @@ class ModelHandlerBase:
             yield i
 
     def run(self, model: str, stream, kwargs) -> Any:
+        model_name = model
         model = self.configured_models[model]
         if stream and model.streamable:
             return StreamingResponse(self._run_stream(model, kwargs))
         else:
-            return asyncio.run_coroutine_threadsafe(model(**kwargs), loop=self.executor.loop).result()
+            result = asyncio.run_coroutine_threadsafe(model(**kwargs), loop=self.executor.loop).result()
+            if hasattr(result, "to_json"):
+                result = result.to_json()
+            if isinstance(result, ModemmError):
+                result = {"state": "error", "error": result.get_error()}
+            self.deallocate(model_name)
+            return result
