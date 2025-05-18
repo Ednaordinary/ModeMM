@@ -2,7 +2,7 @@ from typing import Dict, Any, Union, List
 from PIL import Image
 import time
 
-from ..response import QueuedResponse
+from ..response import QueuedResponse, EOS
 from ..errors import ModemmError, ArgumentError, ArgValueError
 
 
@@ -10,6 +10,7 @@ class FakeModel:
     """
     A fake model that return meow
     """
+
     def __init__(self):
         pass
 
@@ -55,12 +56,13 @@ class ModemmModel:
     A ModemmModel that can process a request. The model accepts specific kwargs and hardcodes others. Hardcoded
     kwargs may be added by specifying a value in default_kwargs but not in accept_kwargs.
     """
+    accept_kwargs: Dict[str, Any] = {}
+    default_kwargs: Dict[str, Any] = {}
+    requires: List[str] = []
+    streamable: bool = True
 
     def __init__(self):
         self._model = FakeModel()  # Underlying model from a different library
-        self.accept_kwargs: Dict[str, Any] = {}
-        self.default_kwargs: Dict[str, Any] = {}
-        self.streamable: int = True
 
     def load(self) -> bool:
         """
@@ -79,7 +81,7 @@ class ModemmModel:
     def _return(self, obj: Any, streamer):
         if streamer is not None:
             streamer.queue.put(obj)
-            streamer.queue.put(None)
+            streamer.queue.put(EOS)
             return
         else:
             return obj
@@ -92,7 +94,7 @@ class ModemmModel:
         if self.streamable and streamer is not None:
             for i in self._model.stream(**kwargs):
                 streamer.queue.put(i)
-            streamer.queue.put(None)
+            streamer.queue.put(EOS)
         else:
             return self._return(self._model(**kwargs), streamer)
 

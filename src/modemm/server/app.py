@@ -15,6 +15,7 @@ def build(args: argparse.Namespace) -> FastAPI:
     :return: The Modemm API
     """
     config = ModemmConfigDynamic(args.config_file) if args.dynamic_config else ModemmConfigStatic(args.config_file)
+    config.register()
     executor = ModelExecutor()
     handler = ModelHandlerBase(config, executor)
     if args.no_advertise:
@@ -36,7 +37,7 @@ def build(args: argparse.Namespace) -> FastAPI:
 
     @app.get("/modemm/models")
     def get_models():
-        return [x["name"] for x in config.get()["models"]]
+        return config.registered["models"].keys()
 
     @app.get("/modemm/request/{model_id}")
     def make_request(model_id: str, request: Request, kwargs: Union[Dict[str, Any], None] = None, stream: bool = True):

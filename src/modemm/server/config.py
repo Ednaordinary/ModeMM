@@ -1,7 +1,13 @@
 import importlib
 import ujson
+import logging
 
 from typing import Dict, Any, Union
+
+from .models.base import ModemmModel
+from .util import check_requires
+
+logger = logging.getLogger(__name__)
 
 
 class ModemmConfigBase:
@@ -41,10 +47,15 @@ class ModemmConfigBase:
                 self.registered[i] = {}
         if "models" in self.registered.keys():
             for i in self.get()["models"]:
-                model = i["module"]
-                model_name = i["name"]
-                module = importlib.import_module(model)
-                self.registered["models"][model_name] = (module.__dict__[i["class"]](**i["init_kwargs"]))
+                model = str(i["module"])
+                model_name = str(i["name"])
+                module: ModemmModel = importlib.import_module(model).__dict__[i["class"]](**i["init_kwargs"])
+                failed = check_requires(module.requires)
+                if failed:
+                    logger.warning("The following packages were not found: " + ", ".join(failed))
+                    logger.warning(model_name + " will not be registered")
+                else:
+                    self.registered["models"][model_name] = module
 
 
 class ModemmConfigDynamic(ModemmConfigBase):
