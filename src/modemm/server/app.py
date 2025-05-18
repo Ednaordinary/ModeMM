@@ -3,6 +3,7 @@ from typing import Union, Dict, Any
 
 from fastapi import FastAPI, Request
 
+from .models.base import validate_kwargs
 from .model_handler import ModelHandlerBase, ModelExecutor
 from .config import ModemmConfigDynamic, ModemmConfigStatic
 from .errors import ModelNotFound, ModelNotLoaded
@@ -54,6 +55,9 @@ def build(args: argparse.Namespace) -> FastAPI:
         models = get_models()
         if model_id not in models:
             return {"state": "error", "error": ModelNotFound(model_id).get_error()}
+        errors = validate_kwargs(config.registered["models"][model_id], kwargs)
+        if errors:
+            return {"state": "error", "error": errors.get_error()}
         loaded = handler.allocate(model_id)
         if not loaded:
             handler.deallocate(model_id)

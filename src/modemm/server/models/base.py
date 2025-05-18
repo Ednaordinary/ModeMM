@@ -64,14 +64,14 @@ class ModemmModel:
     def __init__(self):
         self._model = FakeModel()  # Underlying model from a different library
 
-    def load(self, device=None) -> bool:
+    async def load(self, device=None) -> bool:
         """
         Defines how a model is loaded. This method cannot have kwargs since loading logic should be handled by the
         ModelHandler :return: A bool stating whether the model was successfully loaded
         """
         return self._model.load()
 
-    def unload(self) -> bool:
+    async def unload(self) -> bool:
         """
         Defines how a model is unloaded. This method cannot have kwargs since unloading logic should be handled by the
         ModelHandler :return: A bool stating whether the model was successfully unloaded
@@ -87,9 +87,6 @@ class ModemmModel:
             return obj
 
     async def __call__(self, streamer: Union[QueuedResponse, None] = None, **kwargs) -> Union[str, Image, ModemmError]:
-        errors = validate_kwargs(self, kwargs)
-        if errors:
-            return self._return(errors, streamer)
         kwargs = write_default_kwargs(self, kwargs)
         if self.streamable and streamer is not None:
             for i in self._model.stream(**kwargs):

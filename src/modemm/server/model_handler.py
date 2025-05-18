@@ -9,6 +9,7 @@ from .models.base import ModemmModel
 from .response import QueuedResponse
 from .errors import ModemmError
 
+
 class ModelExecutor:
     """
     A loop to execute model requests in
@@ -49,7 +50,8 @@ class ModelHandlerBase:
             if "models" not in self.config.registered.keys():
                 self.config.register()
             self.configured_models[model] = self.config.registered["models"][model]
-            loaded = self.configured_models[model].load()
+            loaded = asyncio.run_coroutine_threadsafe(self.configured_models[model].load(),
+                                                      loop=self.executor.loop).result()
             if loaded:
                 self.loaded_models[model] = 1
             return loaded
@@ -63,9 +65,13 @@ class ModelHandlerBase:
         if model in self.loaded_models.keys():
             self.loaded_models[model] -= 1
             if self.loaded_models[model] <= 0:
-                unloaded = self.configured_models[model].unload()
-                del self.loaded_models[model]
-                return unloaded
+                asyncio.run_coroutine_threadsafe(self.configured_models[model].unload(),
+                                                            loop=self.executor.loop)
+                try:
+                    del self.loaded_models[model]
+                except:
+                    pass
+                return True
             else:
                 return True
         else:

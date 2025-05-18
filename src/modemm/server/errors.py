@@ -125,7 +125,6 @@ class ArgRequiredError(ModemmError):
             info = arg + " was required but not found."
         return info
 
-
 class ModelNotFound(ModemmError):
     """
     An error from the Modemm server specifying a bad model.
@@ -152,3 +151,12 @@ class ModelNotLoaded(ModemmError):
         :param model: The model that could not be loaded
         """
         super().__init__(model)
+
+class T5MaxLengthError(ModemmError):
+    """
+    The max length of T5 was set too high
+    """
+    error_type = "T5 Max Length"
+
+    def __init__(self):
+        super().__init__("The maximum length of T5 is 512")

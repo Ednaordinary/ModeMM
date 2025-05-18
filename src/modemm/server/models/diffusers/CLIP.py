@@ -6,17 +6,17 @@ import traceback
 import numpy as np
 
 from ..base import ModemmModel, validate_kwargs, write_default_kwargs
-from ...errors import ModemmError, T5MaxLengthError
+from ...errors import ModemmError
 from ...response import PromptEmbeds, QueuedResponse
 from ...util import np_save
 
-class T5Model(ModemmModel):
+class CLIPModel(ModemmModel):
     """
-    A model wrapper for T5
+    A model wrapper for CLIP
     """
-    accept_kwargs: Dict[str, Any] = {"prompt": str, "max_length": int}
-    default_kwargs: Dict[str, Any] = {"max_length": 512}
-    requires: List[str] = ["torch", "transformers", "sentencepiece", "numpy", "accelerate", "google.protobuf"]
+    accept_kwargs: Dict[str, Any] = {"prompt": str}
+    default_kwargs: Dict[str, Any] = {}
+    requires: List[str] = ["torch", "transformers", "numpy", "accelerate"]
     streamable: bool = False
 
     def __init__(self, path: str):
@@ -27,12 +27,12 @@ class T5Model(ModemmModel):
     async def load(self, device="cuda") -> bool:
         try:
             import torch
-            from transformers import T5EncoderModel, T5TokenizerFast
-            if not hasattr(self, "_model") or not isinstance(self._model, T5EncoderModel):
-                self._model = T5EncoderModel.from_pretrained(self.path, torch_dtype=torch.bfloat16)
+            from transformers import CLIPTextModel, CLIPTokenizerFast
+            if not hasattr(self, "_model") or not isinstance(self._model, CLIPTextModel):
+                self._model = CLIPTextModel.from_pretrained(self.path, torch_dtype=torch.bfloat16)
             self._model.to(device)
-            if not hasattr(self, "_tokenizer") or not isinstance(self._tokenizer, T5TokenizerFast):
-                self._tokenizer = T5TokenizerFast.from_pretrained(self.path)
+            if not hasattr(self, "_tokenizer") or not isinstance(self._tokenizer, CLIPTokenizerFast):
+                self._tokenizer = CLIPTokenizerFast.from_pretrained(self.path)
         except Exception as e:
             print(traceback.format_exc())
             return False
@@ -54,14 +54,15 @@ class T5Model(ModemmModel):
             return False
 
     async def __call__(self, streamer: Union[QueuedResponse, None] = None, **kwargs) -> Union[ModemmError, PromptEmbeds]:
+        errors = validate_kwargs(self, kwargs)
+        if errors:
+            return self._return(errors, streamer)
         kwargs = write_default_kwargs(self, kwargs)
-        if kwargs["max_length"] > 512:
-            return T5MaxLengthError()
         try:
             text_input_ids = self._tokenizer(
                 kwargs["prompt"],
                 padding="max_length",
-                max_length=kwargs["max_length"],
+                max_length=77,
                 truncation=True,
                 return_length=False,
                 return_overflowing_tokens=False,

@@ -34,7 +34,7 @@ class LTX096DVideoModel(ModemmModel):
         else:
             return True
 
-    def unload(self) -> bool:
+    async def unload(self) -> bool:
         try:
             if hasattr(self, "_model"):
                 del self._model
@@ -56,7 +56,6 @@ class LTX096DVideoModel(ModemmModel):
 
 
     async def __call__(self, streamer: Union[QueuedResponse, None] = None, **kwargs) -> Union[str, Image, ModemmError]:
-        errors = validate_kwargs(self, kwargs)
         if errors:
             return self._return(errors, streamer)
         kwargs = write_default_kwargs(self, kwargs)
