@@ -48,8 +48,9 @@ class ModelHandlerBase:
             if "models" not in self.config.registered.keys():
                 self.config.register()
             self.configured_models[model] = self.config.registered["models"][model]
-            self.loaded_models[model] = 1
             loaded = self.configured_models[model].load()
+            if loaded:
+                self.loaded_models[model] = 1
             return loaded
 
     def deallocate(self, model: str) -> bool:

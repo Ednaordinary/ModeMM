@@ -6,7 +6,7 @@ from fastapi import FastAPI, Request
 from .model_handler import ModelHandlerBase, ModelExecutor
 from .config import ModemmConfigDynamic, ModemmConfigStatic
 from .errors import ModelNotFound, ModelNotLoaded
-
+from .util import kwarg_types_name
 
 def build(args: argparse.Namespace) -> FastAPI:
     """
@@ -37,7 +37,14 @@ def build(args: argparse.Namespace) -> FastAPI:
 
     @app.get("/modemm/models")
     def get_models():
-        return config.registered["models"].keys()
+        return list(config.registered["models"].keys())
+
+    @app.get("/modemm/models/{model_id}/kwargs")
+    def get_kwargs(model_id: str):
+        models = get_models()
+        if model_id not in models:
+            return {"state": "error", "error": ModelNotFound(model_id).get_error()}
+        return kwarg_types_name(config.registered["models"][model_id].accept_kwargs)
 
     @app.get("/modemm/request/{model_id}")
     def make_request(model_id: str, request: Request, kwargs: Union[Dict[str, Any], None] = None, stream: bool = True):
@@ -45,10 +52,10 @@ def build(args: argparse.Namespace) -> FastAPI:
             kwargs = {}
         models = get_models()
         if model_id not in models:
-            return {"error": ModelNotFound(model_id).get_error()}
+            return {"state": "error", "error": ModelNotFound(model_id).get_error()}
         loaded = handler.allocate(model_id)
         if not loaded:
-            return {"error": ModelNotLoaded(model_id).get_error()}
+            return {"state": "error", "error": ModelNotLoaded(model_id).get_error()}
         return handler.run(model_id, stream=stream, kwargs=kwargs)
 
     return app

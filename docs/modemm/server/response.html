@@ -66,6 +66,21 @@
                 </ul>
 
             </li>
+            <li>
+                    <a class="class" href="#PromptEmbeds">PromptEmbeds</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#PromptEmbeds.__init__">PromptEmbeds</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#PromptEmbeds.embeds">embeds</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#PromptEmbeds.to_json">to_json</a>
+                        </li>
+                </ul>
+
+            </li>
     </ul>
 
 
@@ -116,6 +131,13 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.response    </h1>
 </span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>
 </span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 </span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;progress&quot;</span><span class="p">,</span> <span class="s2">&quot;progress&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">total</span><span class="p">]}</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="k">class</span><span class="w"> </span><span class="nc">PromptEmbeds</span><span class="p">:</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embeds</span><span class="p">):</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">embeds</span> <span class="o">=</span> <span class="n">embeds</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">embeds</span>
 </span></pre></div>
 
 
@@ -281,6 +303,77 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.response    </h1>
     <a class="headerlink" href="#Progress.to_json"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="Progress.to_json-29"><a href="#Progress.to_json-29"><span class="linenos">29</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 </span><span id="Progress.to_json-30"><a href="#Progress.to_json-30"><span class="linenos">30</span></a>        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;progress&quot;</span><span class="p">,</span> <span class="s2">&quot;progress&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">total</span><span class="p">]}</span>
+</span></pre></div>
+
+
+    
+
+                            </div>
+                </section>
+                <section id="PromptEmbeds">
+                            <input id="PromptEmbeds-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">PromptEmbeds</span>:
+
+                <label class="view-source-button" for="PromptEmbeds-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#PromptEmbeds"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="PromptEmbeds-32"><a href="#PromptEmbeds-32"><span class="linenos">32</span></a><span class="k">class</span><span class="w"> </span><span class="nc">PromptEmbeds</span><span class="p">:</span>
+</span><span id="PromptEmbeds-33"><a href="#PromptEmbeds-33"><span class="linenos">33</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embeds</span><span class="p">):</span>
+</span><span id="PromptEmbeds-34"><a href="#PromptEmbeds-34"><span class="linenos">34</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">embeds</span> <span class="o">=</span> <span class="n">embeds</span>
+</span><span id="PromptEmbeds-35"><a href="#PromptEmbeds-35"><span class="linenos">35</span></a>
+</span><span id="PromptEmbeds-36"><a href="#PromptEmbeds-36"><span class="linenos">36</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="PromptEmbeds-37"><a href="#PromptEmbeds-37"><span class="linenos">37</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">embeds</span>
+</span></pre></div>
+
+
+    
+
+                            <div id="PromptEmbeds.__init__" class="classattr">
+                                        <input id="PromptEmbeds.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">PromptEmbeds</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">embeds</span></span>)</span>
+
+                <label class="view-source-button" for="PromptEmbeds.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#PromptEmbeds.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="PromptEmbeds.__init__-33"><a href="#PromptEmbeds.__init__-33"><span class="linenos">33</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embeds</span><span class="p">):</span>
+</span><span id="PromptEmbeds.__init__-34"><a href="#PromptEmbeds.__init__-34"><span class="linenos">34</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">embeds</span> <span class="o">=</span> <span class="n">embeds</span>
+</span></pre></div>
+
+
+    
+
+                            </div>
+                            <div id="PromptEmbeds.embeds" class="classattr">
+                                <div class="attr variable">
+            <span class="name">embeds</span>
+
+        
+    </div>
+    <a class="headerlink" href="#PromptEmbeds.embeds"></a>
+    
+    
+
+                            </div>
+                            <div id="PromptEmbeds.to_json" class="classattr">
+                                        <input id="PromptEmbeds.to_json-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">to_json</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="PromptEmbeds.to_json-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#PromptEmbeds.to_json"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="PromptEmbeds.to_json-36"><a href="#PromptEmbeds.to_json-36"><span class="linenos">36</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="PromptEmbeds.to_json-37"><a href="#PromptEmbeds.to_json-37"><span class="linenos">37</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">embeds</span>
 </span></pre></div>
 
 

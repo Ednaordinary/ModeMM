@@ -32,3 +32,12 @@ def package_available(module: str) -> bool:
     :return: Whether the module is installed
     """
     return importlib.util.find_spec(module) is not None
+
+
+def kwarg_types_name(kwargs: dict):
+    """
+    Transforms an accepted kwargs dict into one with string instead of direct types
+    :param kwargs: The input kwargs list
+    :return: The kwargs list with strings
+    """
+    return {k: v.__name__ for k, v in kwargs.items()}

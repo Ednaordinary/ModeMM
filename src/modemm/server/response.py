@@ -27,3 +27,10 @@ class Progress:
 
     def to_json(self) -> dict:
         return {"state": "progress", "progress": [self.current, self.total]}
+
+class PromptEmbeds:
+    def __init__(self, embeds):
+        self.embeds = embeds
+
+    def to_json(self):
+        return self.embeds
