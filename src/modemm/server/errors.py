@@ -30,7 +30,6 @@ class StackedErrors(ModemmError):
 
     def __init__(self, errors: List[ModemmError]):
         self.errors = errors
-        print(errors)
 
     def get_error(self):
         if len(self.errors) == 0:

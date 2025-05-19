@@ -14,8 +14,8 @@ class T5Model(ModemmModel):
     """
     A model wrapper for T5
     """
-    accept_kwargs: Dict[str, Any] = {"prompt": str, "max_length": int}
-    default_kwargs: Dict[str, Any] = {"max_length": 512}
+    accept_kwargs: Dict[str, Any] = {"prompt": str, "max_length": int, "pad": bool}
+    default_kwargs: Dict[str, Any] = {"max_length": 512, "pad": True}
     requires: List[str] = ["torch", "transformers", "sentencepiece", "numpy", "accelerate", "google.protobuf"]
     streamable: bool = False
 
@@ -60,7 +60,7 @@ class T5Model(ModemmModel):
         try:
             text_input_ids = self._tokenizer(
                 kwargs["prompt"],
-                padding="max_length",
+                padding="max_length" if kwargs["pad"] else "do_not_pad",
                 max_length=kwargs["max_length"],
                 truncation=True,
                 return_length=False,

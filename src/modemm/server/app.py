@@ -48,7 +48,8 @@ def build(args: argparse.Namespace) -> FastAPI:
         return kwarg_types_name(config.registered["models"][model_id].accept_kwargs)
 
     @app.get("/modemm/request/{model_id}")
-    def make_request(model_id: str, request: Request, kwargs: Union[dict, None] = None, stream: bool = True):
+    def make_request(model_id: str, request: Request, arguments: dict = None, stream: bool = True):
+        kwargs = arguments
         print(kwargs, stream)
         if kwargs is None:
             kwargs = {}

@@ -66,7 +66,7 @@ class ModelHandlerBase:
             self.loaded_models[model] -= 1
             if self.loaded_models[model] <= 0:
                 asyncio.run_coroutine_threadsafe(self.configured_models[model].unload(),
-                                                            loop=self.executor.loop)
+                                                 loop=self.executor.loop)
                 try:
                     del self.loaded_models[model]
                 except:
