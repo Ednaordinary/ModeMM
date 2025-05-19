@@ -150,6 +150,30 @@
                 </ul>
 
             </li>
+            <li>
+                    <a class="class" href="#BadLatentShapeError">BadLatentShapeError</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#BadLatentShapeError.__init__">BadLatentShapeError</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#BadLatentShapeError.error_type">error_type</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
+                    <a class="class" href="#BadTensor">BadTensor</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#BadTensor.__init__">BadTensor</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#BadTensor.error_type">error_type</a>
+                        </li>
+                </ul>
+
+            </li>
     </ul>
 
 
@@ -332,6 +356,24 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 </span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a>
 </span><span id="L-160"><a href="#L-160"><span class="linenos">160</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="L-161"><a href="#L-161"><span class="linenos">161</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The maximum length of T5 is 512&quot;</span><span class="p">)</span>
+</span><span id="L-162"><a href="#L-162"><span class="linenos">162</span></a>
+</span><span id="L-163"><a href="#L-163"><span class="linenos">163</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadLatentShapeError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="L-164"><a href="#L-164"><span class="linenos">164</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-165"><a href="#L-165"><span class="linenos">165</span></a><span class="sd">    Attempted to make a latent with a bad shape</span>
+</span><span id="L-166"><a href="#L-166"><span class="linenos">166</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-167"><a href="#L-167"><span class="linenos">167</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Latent Shape&quot;</span>
+</span><span id="L-168"><a href="#L-168"><span class="linenos">168</span></a>
+</span><span id="L-169"><a href="#L-169"><span class="linenos">169</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-170"><a href="#L-170"><span class="linenos">170</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The latent shape is too large or too small&quot;</span><span class="p">)</span>
+</span><span id="L-171"><a href="#L-171"><span class="linenos">171</span></a>
+</span><span id="L-172"><a href="#L-172"><span class="linenos">172</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadTensor</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="L-173"><a href="#L-173"><span class="linenos">173</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-174"><a href="#L-174"><span class="linenos">174</span></a><span class="sd">    Failed to load a tensor over the network</span>
+</span><span id="L-175"><a href="#L-175"><span class="linenos">175</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-176"><a href="#L-176"><span class="linenos">176</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Tensor&quot;</span>
+</span><span id="L-177"><a href="#L-177"><span class="linenos">177</span></a>
+</span><span id="L-178"><a href="#L-178"><span class="linenos">178</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-179"><a href="#L-179"><span class="linenos">179</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Failed to load a tensor&quot;</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -1232,6 +1274,156 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
                                     <div><dt><a href="#ModemmError">ModemmError</a></dt>
                                 <dd id="T5MaxLengthError.info" class="variable"><a href="#ModemmError.info">info</a></dd>
                 <dd id="T5MaxLengthError.get_error" class="function"><a href="#ModemmError.get_error">get_error</a></dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="BadLatentShapeError">
+                            <input id="BadLatentShapeError-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">BadLatentShapeError</span><wbr>(<span class="base"><a href="#ModemmError">ModemmError</a></span>):
+
+                <label class="view-source-button" for="BadLatentShapeError-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#BadLatentShapeError"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="BadLatentShapeError-164"><a href="#BadLatentShapeError-164"><span class="linenos">164</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadLatentShapeError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="BadLatentShapeError-165"><a href="#BadLatentShapeError-165"><span class="linenos">165</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="BadLatentShapeError-166"><a href="#BadLatentShapeError-166"><span class="linenos">166</span></a><span class="sd">    Attempted to make a latent with a bad shape</span>
+</span><span id="BadLatentShapeError-167"><a href="#BadLatentShapeError-167"><span class="linenos">167</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="BadLatentShapeError-168"><a href="#BadLatentShapeError-168"><span class="linenos">168</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Latent Shape&quot;</span>
+</span><span id="BadLatentShapeError-169"><a href="#BadLatentShapeError-169"><span class="linenos">169</span></a>
+</span><span id="BadLatentShapeError-170"><a href="#BadLatentShapeError-170"><span class="linenos">170</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="BadLatentShapeError-171"><a href="#BadLatentShapeError-171"><span class="linenos">171</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The latent shape is too large or too small&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Attempted to make a latent with a bad shape</p>
+</div>
+
+
+                            <div id="BadLatentShapeError.__init__" class="classattr">
+                                        <input id="BadLatentShapeError.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">BadLatentShapeError</span><span class="signature pdoc-code condensed">()</span>
+
+                <label class="view-source-button" for="BadLatentShapeError.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#BadLatentShapeError.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="BadLatentShapeError.__init__-170"><a href="#BadLatentShapeError.__init__-170"><span class="linenos">170</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="BadLatentShapeError.__init__-171"><a href="#BadLatentShapeError.__init__-171"><span class="linenos">171</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The latent shape is too large or too small&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Construct a general Modemm error</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>info</strong>: </li>
+</ul>
+</div>
+
+
+                            </div>
+                            <div id="BadLatentShapeError.error_type" class="classattr">
+                                <div class="attr variable">
+            <span class="name">error_type</span>        =
+<span class="default_value">&#39;Bad Latent Shape&#39;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#BadLatentShapeError.error_type"></a>
+    
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="#ModemmError">ModemmError</a></dt>
+                                <dd id="BadLatentShapeError.info" class="variable"><a href="#ModemmError.info">info</a></dd>
+                <dd id="BadLatentShapeError.get_error" class="function"><a href="#ModemmError.get_error">get_error</a></dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
+                <section id="BadTensor">
+                            <input id="BadTensor-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">BadTensor</span><wbr>(<span class="base"><a href="#ModemmError">ModemmError</a></span>):
+
+                <label class="view-source-button" for="BadTensor-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#BadTensor"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="BadTensor-173"><a href="#BadTensor-173"><span class="linenos">173</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadTensor</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="BadTensor-174"><a href="#BadTensor-174"><span class="linenos">174</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="BadTensor-175"><a href="#BadTensor-175"><span class="linenos">175</span></a><span class="sd">    Failed to load a tensor over the network</span>
+</span><span id="BadTensor-176"><a href="#BadTensor-176"><span class="linenos">176</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="BadTensor-177"><a href="#BadTensor-177"><span class="linenos">177</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Tensor&quot;</span>
+</span><span id="BadTensor-178"><a href="#BadTensor-178"><span class="linenos">178</span></a>
+</span><span id="BadTensor-179"><a href="#BadTensor-179"><span class="linenos">179</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="BadTensor-180"><a href="#BadTensor-180"><span class="linenos">180</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Failed to load a tensor&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Failed to load a tensor over the network</p>
+</div>
+
+
+                            <div id="BadTensor.__init__" class="classattr">
+                                        <input id="BadTensor.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">BadTensor</span><span class="signature pdoc-code condensed">()</span>
+
+                <label class="view-source-button" for="BadTensor.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#BadTensor.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="BadTensor.__init__-179"><a href="#BadTensor.__init__-179"><span class="linenos">179</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="BadTensor.__init__-180"><a href="#BadTensor.__init__-180"><span class="linenos">180</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Failed to load a tensor&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Construct a general Modemm error</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>info</strong>: </li>
+</ul>
+</div>
+
+
+                            </div>
+                            <div id="BadTensor.error_type" class="classattr">
+                                <div class="attr variable">
+            <span class="name">error_type</span>        =
+<span class="default_value">&#39;Bad Tensor&#39;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#BadTensor.error_type"></a>
+    
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="#ModemmError">ModemmError</a></dt>
+                                <dd id="BadTensor.info" class="variable"><a href="#ModemmError.info">info</a></dd>
+                <dd id="BadTensor.get_error" class="function"><a href="#ModemmError.get_error">get_error</a></dd>
 
             </div>
                                 </dl>

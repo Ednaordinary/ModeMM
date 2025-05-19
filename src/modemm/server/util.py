@@ -53,7 +53,7 @@ def np_save(file, array):
     file.write(header)
     file.write(array.data)
 
-def np_load(file):
+def np_load(file, limit=None):
     if type(file) is str:
         file=open(file,"rb")
     header = file.read(128)
@@ -61,6 +61,11 @@ def np_load(file):
         return None
     descr = str(header[19:25], 'utf-8').replace("'","").replace(" ","")
     shape = tuple(int(num) for num in str(header[60:120], 'utf-8').replace(',)', ')').replace(', }', '').replace('(', '').replace(')', '').split(','))
+    if len(shape) != len(limit):
+        return None
+    for idx, i in shape:
+        if i > limit[idx]:
+            return None
     datasize = np.lib.format.descr_to_dtype(descr).itemsize
     for dimension in shape:
         datasize *= dimension

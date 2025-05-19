@@ -159,3 +159,21 @@ class T5MaxLengthError(ModemmError):
 
     def __init__(self):
         super().__init__("The maximum length of T5 is 512")
+
+class BadLatentShapeError(ModemmError):
+    """
+    Attempted to make a latent with a bad shape
+    """
+    error_type = "Bad Latent Shape"
+
+    def __init__(self):
+        super().__init__("The latent shape is too large or too small")
+
+class BadTensor(ModemmError):
+    """
+    Failed to load a tensor over the network
+    """
+    error_type = "Bad Tensor"
+
+    def __init__(self):
+        super().__init__("Failed to load a tensor")

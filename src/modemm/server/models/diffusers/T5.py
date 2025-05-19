@@ -3,11 +3,12 @@ import gc
 import io
 import traceback
 
+import torch
 import numpy as np
 
 from ..base import ModemmModel, validate_kwargs, write_default_kwargs
 from ...errors import ModemmError, T5MaxLengthError
-from ...response import PromptEmbeds, QueuedResponse
+from ...response import NPYTensor, QueuedResponse
 from ...util import np_save
 
 class T5Model(ModemmModel):
@@ -29,7 +30,7 @@ class T5Model(ModemmModel):
             import torch
             from transformers import T5EncoderModel, T5TokenizerFast
             if not hasattr(self, "_model") or not isinstance(self._model, T5EncoderModel):
-                self._model = T5EncoderModel.from_pretrained(self.path, torch_dtype=torch.bfloat16)
+                self._model = T5EncoderModel.from_pretrained(self.path, torch_dtype=torch.float16)
             self._model.to(device)
             if not hasattr(self, "_tokenizer") or not isinstance(self._tokenizer, T5TokenizerFast):
                 self._tokenizer = T5TokenizerFast.from_pretrained(self.path)
@@ -48,12 +49,11 @@ class T5Model(ModemmModel):
                 del self._tokenizer
                 self._tokenizer = None
             gc.collect()
-            import torch
             torch.cuda.empty_cache()
         except Exception as e:
             return False
 
-    async def __call__(self, streamer: Union[QueuedResponse, None] = None, **kwargs) -> Union[ModemmError, PromptEmbeds]:
+    async def __call__(self, streamer: Union[QueuedResponse, None] = None, **kwargs) -> Union[ModemmError, NPYTensor]:
         kwargs = write_default_kwargs(self, kwargs)
         if kwargs["max_length"] > 512:
             return T5MaxLengthError()
@@ -67,14 +67,8 @@ class T5Model(ModemmModel):
                 return_overflowing_tokens=False,
                 return_tensors="pt",
             ).input_ids
-            import torch
             prompt_embeds = self._model(text_input_ids.to("cuda"), output_hidden_states=False)[0]
-            prompt_embeds = prompt_embeds.float().numpy(force=True).astype(np.float16)
-            embeds_io = io.BytesIO()
-            np_save(embeds_io, prompt_embeds)
-            embeds_io.seek(0)
-            embeds = embeds_io.read()
-            result = PromptEmbeds(embeds)
+            result = NPYTensor(prompt_embeds)
             return self._return(result, streamer)
         except Exception as e:
             print(traceback.format_exc())

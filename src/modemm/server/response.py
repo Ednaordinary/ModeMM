@@ -1,9 +1,14 @@
+import io
 from queue import Queue
 from typing import Any
+
+import torch
+import numpy as np
 
 from fastapi.responses import Response
 
 from .errors import ModemmError
+from .util import np_save
 
 class QueuedResponse:
     def __init__(self):
@@ -33,9 +38,21 @@ class Progress:
     def to_json(self) -> dict:
         return {"state": "progress", "progress": [self.current, self.total]}
 
-class PromptEmbeds:
-    def __init__(self, embeds):
-        self.embeds = embeds
+class NPYTensor:
+    """
+    A response with a torch tensor.
+    """
+    def __init__(self, tensor: torch.Tensor):
+        self.tensor = tensor
 
     def to_json(self):
-        return Response(self.embeds)
+        """
+        Converts the tensor to bytes
+        :return: A fastapi response with bytes representing a npy file
+        """
+        tensor = self.tensor.float().numpy(force=True).astype(np.float16)
+        tensor_io = io.BytesIO()
+        np_save(tensor_io, tensor)
+        tensor_io.seek(0)
+        tensor = tensor_io.read()
+        return Response(tensor)
