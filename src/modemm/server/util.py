@@ -61,6 +61,8 @@ def np_load(file, limit=None):
         return None
     descr = str(header[19:25], 'utf-8').replace("'","").replace(" ","")
     shape = tuple(int(num) for num in str(header[60:120], 'utf-8').replace(',)', ')').replace(', }', '').replace('(', '').replace(')', '').split(','))
+    if header[0:10] != b"\x93NUMPY\x01\x00v\x00":
+        return None
     if len(shape) != len(limit):
         return None
     for idx, i in shape:

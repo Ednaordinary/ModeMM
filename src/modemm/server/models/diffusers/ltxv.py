@@ -10,7 +10,7 @@ from ...response import QueuedResponse, EOS, Progress, NPYTensor
 from ...errors import ModemmError, BadLatentShapeError, T5MaxLengthError, BadTensor
 from ...util import np_load
 
-class LTXLatents(ModemmModel):
+class LTXEmptyLatent(ModemmModel):
     """
     Generate LTX latents
     """
@@ -124,7 +124,7 @@ class LTX096DVideoModel(ModemmModel):
             error = BadTensor()
             return self._return(error, streamer)
         if not tensor:
-            error = T5MaxLengthError()
+            error = BadTensor()
             return self._return(error, streamer)
         if tensor.shape[2] != 4096:
             error = BadTensor()

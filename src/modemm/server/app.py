@@ -3,6 +3,7 @@ from typing import Union, Dict, Any
 
 from fastapi import FastAPI, Request
 
+from .middleware import ContentSizeMiddleware
 from .models.base import validate_kwargs
 from .model_handler import ModelHandlerBase, ModelExecutor
 from .config import ModemmConfigDynamic, ModemmConfigStatic
@@ -23,6 +24,10 @@ def build(args: argparse.Namespace) -> FastAPI:
         app = FastAPI(openapi_url=None, docs_url=None, redoc_url=None, swagger_ui_oauth2_redirect_url=None)
     else:
         app = FastAPI(title="Modemm Server", version="0.0.1")
+
+
+    # This limits the maximum incoming content size to make sure the server isn't overwhelmed.
+    #app.add_middleware(ContentSizeMiddleware, max_content=args.max_income)
 
     @app.get("/")
     def root():
@@ -65,6 +70,4 @@ def build(args: argparse.Namespace) -> FastAPI:
             return {"state": "error", "error": ModelNotLoaded(model_id).get_error()}
         run = handler.run(model_id, stream=stream, kwargs=kwargs)
         handler.deallocate(model_id)
-        return run
-
-    return app
+        
