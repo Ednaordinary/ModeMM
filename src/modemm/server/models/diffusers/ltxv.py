@@ -38,8 +38,9 @@ class LTXEmptyLatent(ModemmModel):
         try:
             height = kwargs["height"] // 32
             width = kwargs["width"] // 32
+            print(height, width)
             frames = (kwargs["frames"] - 1) // 8 + 1
-            if height * width > 880 or frames > 161:
+            if (height * width) > 880 or (height * width) < 1 or frames > 161:
                 error = BadLatentShapeError()
                 return self._return(error, streamer)
             shape = (1, 128, frames, height, width)

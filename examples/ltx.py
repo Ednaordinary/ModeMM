@@ -24,3 +24,5 @@ prompt_file = io.BytesIO()
 np.save(prompt_file, prompt_embeds)
 prompt_file.seek(0)
 prompt_file = prompt_file.read()
+
+# Get an empty latent using the defaults

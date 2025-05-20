@@ -27,7 +27,7 @@ def build(args: argparse.Namespace) -> FastAPI:
 
 
     # This limits the maximum incoming content size to make sure the server isn't overwhelmed.
-    #app.add_middleware(ContentSizeMiddleware, max_content=args.max_income)
+    app.add_middleware(ContentSizeMiddleware, max_content=args.max_income)
 
     @app.get("/")
     def root():
@@ -70,4 +70,6 @@ def build(args: argparse.Namespace) -> FastAPI:
             return {"state": "error", "error": ModelNotLoaded(model_id).get_error()}
         run = handler.run(model_id, stream=stream, kwargs=kwargs)
         handler.deallocate(model_id)
-        
+        return run
+
+    return app
