@@ -55,7 +55,6 @@ def build(args: argparse.Namespace) -> FastAPI:
     @app.get("/modemm/request/{model_id}")
     def make_request(model_id: str, request: Request, arguments: dict = None, stream: bool = True):
         kwargs = arguments
-        print(kwargs, stream)
         if kwargs is None:
             kwargs = {}
         models = get_models()

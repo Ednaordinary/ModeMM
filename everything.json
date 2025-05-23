@@ -1,0 +1,8 @@
+{
+  "models": [
+    {"name": "T5", "module": "modemm.server.models.diffusers.T5", "class": "T5Model", "init_kwargs":  {"path":  "./T5Quant"}},
+    {"name": "CLIP", "module": "modemm.server.models.diffusers.CLIP", "class":  "CLIPModel", "init_kwargs":  {"path":  "openai/clip-vit-large-patch14"}},
+    {"name": "LTXLatent", "module": "modemm.server.models.diffusers.ltxv", "class":  "LTXEmptyLatent", "init_kwargs":  {}},
+    {"name": "LTXVideo", "module": "modemm.server.models.diffusers.ltxv", "class":  "LTX096DVideoModel", "init_kwargs":  {"path": "ltxv-2b-0.9.6-distilled.safetensors", "steps": 8}}
+  ]
+}

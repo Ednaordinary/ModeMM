@@ -14,8 +14,8 @@ def run():
     parser.add_argument("-n", "--no-advertise", help="Don't advertise docs and paths, making large scale "
                                                      "scraping more difficult", action="store_true")
 
-    parser.add_argument("-m", "--max-income", type=int, help="Limits the maximum incoming content size",
-                        default=4194432)
+    parser.add_argument("-m", "--max-income", type=int, help="Limits the maximum incoming content size (bytes)",
+                        default=1e+8)  # 100 MB
 
     args = parser.parse_args()
     app = build(args)

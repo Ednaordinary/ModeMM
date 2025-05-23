@@ -1,14 +1,17 @@
-import io
+import traceback
 from typing import Dict, Any, List, Union
+import base64
 import gc
+import io
 
-import torch
 from PIL import Image
+import torch
 
 from ..base import ModemmModel, write_default_kwargs
 from ...response import QueuedResponse, EOS, Progress, NPYTensor
 from ...errors import ModemmError, BadLatentShapeError, T5MaxLengthError, BadTensor
 from ...util import np_load
+
 
 class LTXEmptyLatent(ModemmModel):
     """
@@ -48,6 +51,7 @@ class LTXEmptyLatent(ModemmModel):
             if kwargs["seed"]:
                 generator.manual_seed(kwargs["seed"])
             latents = torch.randn(shape, generator=generator, dtype=torch.float16)
+            print(latents.shape)
             result = NPYTensor(latents)
             return self._return(result, streamer)
         except:
@@ -59,7 +63,7 @@ class LTX096DVideoModel(ModemmModel):
     """
     A model wrapper for LTX Video 0.9.6 distilled
     """
-    accept_kwargs: Dict[str, Any] = {"prompt_embeds": bytes, "latents": bytes}
+    accept_kwargs: Dict[str, Any] = {"prompt_embeds": str, "latents": str}
     default_kwargs: Dict[str, Any] = {
         "width": 1216,
         "height": 704,
@@ -78,7 +82,7 @@ class LTX096DVideoModel(ModemmModel):
         self.steps = steps
         self._model = None
 
-    def load(self, device="cuda") -> bool:
+    async def load(self, device="cuda") -> bool:
         try:
             from diffusers import LTXConditionPipeline
             if not isinstance(self._model, LTXConditionPipeline):
@@ -107,33 +111,64 @@ class LTX096DVideoModel(ModemmModel):
             streamer.put(Progress(i, self.steps))
             return pipe_kwargs
 
-        self._model(**kwargs, callback=callback)
+        output = self._model(**kwargs, callback=callback)
+
+        streamer.queue.put(NPYTensor(output))
 
         streamer.queue.put(EOS)
 
     async def __call__(self, streamer: Union[QueuedResponse, None] = None, **kwargs) -> Union[str, Image, ModemmError]:
         kwargs = write_default_kwargs(self, kwargs)
-        kwargs["prompt_embeds"] = bytes(kwargs["prompt_embeds"])
+        kwargs["prompt_embeds"] = base64.b64decode(kwargs["prompt_embeds"].encode('UTF-8'))
+        kwargs["latents"] = base64.b64decode(kwargs["latents"].encode('UTF-8'))
+        print(kwargs["latents"][0:10])
         if len(kwargs["prompt_embeds"]) > 4194432:
             error = T5MaxLengthError()
             return self._return(error, streamer)
         try:
             tensor_io = io.BytesIO(kwargs["prompt_embeds"])
             tensor_io.seek(0)
-            tensor = np_load(tensor_io, (1, 512, 4096))
+            prompt_embeds = np_load(tensor_io, (1, 512, 4096))
         except:
             error = BadTensor()
+            print(traceback.format_exc())
             return self._return(error, streamer)
-        if not tensor:
+        if prompt_embeds is None:
             error = BadTensor()
             return self._return(error, streamer)
-        if tensor.shape[2] != 4096:
+        if prompt_embeds.shape[2] != 4096:
             error = BadTensor()
+            return self._return(error, streamer)
+        kwargs["prompt_embeds"] = prompt_embeds
+        kwargs["latents"] = bytes(kwargs["latents"])
+        print(len(kwargs["latents"]))
+        if len(kwargs["latents"]) > 4731008:
+            error = BadLatentShapeError()
+            return self._return(error, streamer)
+        try:
+            tensor_io = io.BytesIO(kwargs["latents"])
+            tensor_io.seek(0)
+            latents = np_load(tensor_io, (1, 128, 21, 22, 40))
+        except:
+            error = BadTensor()
+            print(traceback.format_exc())
+            return self._return(error, streamer)
+        if latents is None:
+            error = BadTensor()
+            return self._return(error, streamer)
+        # (batch, 128, frames, height, width)
+        # batch is limited by np_load
+        print(prompt_embeds.shape)
+        if prompt_embeds.shape[1] != 128:
+            # idk not 128 though
+            error = BadLatentShapeError()
             return self._return(error, streamer)
         if self.streamable and streamer is not None:
             self._stream(streamer, **kwargs)
         else:
-            return self._return(self._model(**kwargs), streamer)
+            output = self._model(**kwargs)
+            output = NPYTensor(output)
+            return self._return(output, streamer)
 
 
 class LTXVaeModel(ModemmModel):
@@ -147,7 +182,6 @@ class LTXVaeModel(ModemmModel):
 
     def __init__(self, path: str, steps: int):
         self.path = path
-        self.steps = steps
         self._model = None
 
     def load(self, device="cuda") -> bool:
@@ -176,12 +210,6 @@ class LTXVaeModel(ModemmModel):
             torch.cuda.empty_cache()
         except Exception as e:
             return False
-
-    def _stream(self, streamer, **kwargs):
-
-        self._model(**kwargs)
-
-        streamer.queue.put(EOS)
 
     async def __call__(self, streamer: Union[QueuedResponse, None] = None, **kwargs) -> Union[str, Image, ModemmError]:
         kwargs = write_default_kwargs(self, kwargs)
