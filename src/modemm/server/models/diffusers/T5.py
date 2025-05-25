@@ -7,7 +7,7 @@ import torch
 from ..base import ModemmModel, write_default_kwargs
 from ...errors import ModemmError
 from .diff_errors import T5MaxLengthError
-from ...response import NPYTensor, QueuedResponse
+from ...response import NPYTensor, QueuedResponse, NestedJSON
 
 class T5Model(ModemmModel):
     """
@@ -64,9 +64,12 @@ class T5Model(ModemmModel):
                 return_length=False,
                 return_overflowing_tokens=False,
                 return_tensors="pt",
-            ).input_ids
-            prompt_embeds = self._model(text_input_ids.to("cuda"), output_hidden_states=False)[0]
-            result = NPYTensor(prompt_embeds)
+            )
+            input_ids = text_input_ids.input_ids
+            attn_mask = [int(x) for x in text_input_ids.attention_mask[0]]
+            prompt_embeds = self._model(input_ids.to("cuda"), output_hidden_states=False)[0]
+            result = {"prompt_embeds": NPYTensor(prompt_embeds), "attn_mask": attn_mask}
+            result = NestedJSON(result)
             return self._return(result, streamer)
         except Exception as e:
             print(traceback.format_exc())

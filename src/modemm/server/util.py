@@ -32,6 +32,8 @@ def package_available(module: str) -> bool:
     :param module: The module to check
     :return: Whether the module is installed
     """
+    if "." in module:
+        module = module.split(".")[0]
     return importlib.util.find_spec(module) is not None
 
 

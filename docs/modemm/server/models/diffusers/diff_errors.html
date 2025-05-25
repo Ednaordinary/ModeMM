@@ -43,6 +43,18 @@
 
             </li>
             <li>
+                    <a class="class" href="#BadAttnMask">BadAttnMask</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#BadAttnMask.__init__">BadAttnMask</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#BadAttnMask.error_type">error_type</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
                     <a class="class" href="#BadLatentShapeError">BadLatentShapeError</a>
                             <ul class="memberlist">
                         <li>
@@ -99,25 +111,33 @@ modemm<wbr>.<a href="./../../../server.html">server</a><wbr>.<a href="./../../mo
 </span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The maximum length of T5 is 512&quot;</span><span class="p">)</span>
 </span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadLatentShapeError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">    Attempted to make a latent with a bad shape</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Latent Shape&quot;</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The latent shape is too large or too small&quot;</span><span class="p">)</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadTensor</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="sd">    Failed to load a tensor over the network</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Tensor&quot;</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Failed to load a tensor&quot;</span><span class="p">)</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadAttnMask</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="sd">    Something&#39;s wrong with the attention mask</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Attention Mask&quot;</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Something&#39;s wrong with the attention mask&quot;</span><span class="p">)</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadLatentShapeError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="sd">    Attempted to make a latent with a bad shape</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Latent Shape&quot;</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The latent shape is too large or too small&quot;</span><span class="p">)</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadTensor</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="sd">    Failed to load a tensor over the network</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Tensor&quot;</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Failed to load a tensor&quot;</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -197,6 +217,81 @@ modemm<wbr>.<a href="./../../../server.html">server</a><wbr>.<a href="./../../mo
                                 </dl>
                             </div>
                 </section>
+                <section id="BadAttnMask">
+                            <input id="BadAttnMask-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">BadAttnMask</span><wbr>(<span class="base"><a href="../../errors.html#ModemmError">modemm.server.errors.ModemmError</a></span>):
+
+                <label class="view-source-button" for="BadAttnMask-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#BadAttnMask"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="BadAttnMask-14"><a href="#BadAttnMask-14"><span class="linenos">14</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadAttnMask</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="BadAttnMask-15"><a href="#BadAttnMask-15"><span class="linenos">15</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="BadAttnMask-16"><a href="#BadAttnMask-16"><span class="linenos">16</span></a><span class="sd">    Something&#39;s wrong with the attention mask</span>
+</span><span id="BadAttnMask-17"><a href="#BadAttnMask-17"><span class="linenos">17</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="BadAttnMask-18"><a href="#BadAttnMask-18"><span class="linenos">18</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Attention Mask&quot;</span>
+</span><span id="BadAttnMask-19"><a href="#BadAttnMask-19"><span class="linenos">19</span></a>
+</span><span id="BadAttnMask-20"><a href="#BadAttnMask-20"><span class="linenos">20</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="BadAttnMask-21"><a href="#BadAttnMask-21"><span class="linenos">21</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Something&#39;s wrong with the attention mask&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Something's wrong with the attention mask</p>
+</div>
+
+
+                            <div id="BadAttnMask.__init__" class="classattr">
+                                        <input id="BadAttnMask.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">BadAttnMask</span><span class="signature pdoc-code condensed">()</span>
+
+                <label class="view-source-button" for="BadAttnMask.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#BadAttnMask.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="BadAttnMask.__init__-20"><a href="#BadAttnMask.__init__-20"><span class="linenos">20</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="BadAttnMask.__init__-21"><a href="#BadAttnMask.__init__-21"><span class="linenos">21</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Something&#39;s wrong with the attention mask&quot;</span><span class="p">)</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Construct a general Modemm error</p>
+
+<h6 id="parameters">Parameters</h6>
+
+<ul>
+<li><strong>info</strong>: </li>
+</ul>
+</div>
+
+
+                            </div>
+                            <div id="BadAttnMask.error_type" class="classattr">
+                                <div class="attr variable">
+            <span class="name">error_type</span>        =
+<span class="default_value">&#39;Bad Attention Mask&#39;</span>
+
+        
+    </div>
+    <a class="headerlink" href="#BadAttnMask.error_type"></a>
+    
+    
+
+                            </div>
+                            <div class="inherited">
+                                <h5>Inherited Members</h5>
+                                <dl>
+                                    <div><dt><a href="../../errors.html#ModemmError">modemm.server.errors.ModemmError</a></dt>
+                                <dd id="BadAttnMask.info" class="variable"><a href="../../errors.html#ModemmError.info">info</a></dd>
+                <dd id="BadAttnMask.get_error" class="function"><a href="../../errors.html#ModemmError.get_error">get_error</a></dd>
+
+            </div>
+                                </dl>
+                            </div>
+                </section>
                 <section id="BadLatentShapeError">
                             <input id="BadLatentShapeError-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr class">
@@ -208,14 +303,14 @@ modemm<wbr>.<a href="./../../../server.html">server</a><wbr>.<a href="./../../mo
 
     </div>
     <a class="headerlink" href="#BadLatentShapeError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="BadLatentShapeError-15"><a href="#BadLatentShapeError-15"><span class="linenos">15</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadLatentShapeError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="BadLatentShapeError-16"><a href="#BadLatentShapeError-16"><span class="linenos">16</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="BadLatentShapeError-17"><a href="#BadLatentShapeError-17"><span class="linenos">17</span></a><span class="sd">    Attempted to make a latent with a bad shape</span>
-</span><span id="BadLatentShapeError-18"><a href="#BadLatentShapeError-18"><span class="linenos">18</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="BadLatentShapeError-19"><a href="#BadLatentShapeError-19"><span class="linenos">19</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Latent Shape&quot;</span>
-</span><span id="BadLatentShapeError-20"><a href="#BadLatentShapeError-20"><span class="linenos">20</span></a>
-</span><span id="BadLatentShapeError-21"><a href="#BadLatentShapeError-21"><span class="linenos">21</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="BadLatentShapeError-22"><a href="#BadLatentShapeError-22"><span class="linenos">22</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The latent shape is too large or too small&quot;</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="BadLatentShapeError-23"><a href="#BadLatentShapeError-23"><span class="linenos">23</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadLatentShapeError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="BadLatentShapeError-24"><a href="#BadLatentShapeError-24"><span class="linenos">24</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="BadLatentShapeError-25"><a href="#BadLatentShapeError-25"><span class="linenos">25</span></a><span class="sd">    Attempted to make a latent with a bad shape</span>
+</span><span id="BadLatentShapeError-26"><a href="#BadLatentShapeError-26"><span class="linenos">26</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="BadLatentShapeError-27"><a href="#BadLatentShapeError-27"><span class="linenos">27</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Latent Shape&quot;</span>
+</span><span id="BadLatentShapeError-28"><a href="#BadLatentShapeError-28"><span class="linenos">28</span></a>
+</span><span id="BadLatentShapeError-29"><a href="#BadLatentShapeError-29"><span class="linenos">29</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="BadLatentShapeError-30"><a href="#BadLatentShapeError-30"><span class="linenos">30</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The latent shape is too large or too small&quot;</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -233,8 +328,8 @@ modemm<wbr>.<a href="./../../../server.html">server</a><wbr>.<a href="./../../mo
 
     </div>
     <a class="headerlink" href="#BadLatentShapeError.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="BadLatentShapeError.__init__-21"><a href="#BadLatentShapeError.__init__-21"><span class="linenos">21</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="BadLatentShapeError.__init__-22"><a href="#BadLatentShapeError.__init__-22"><span class="linenos">22</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The latent shape is too large or too small&quot;</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="BadLatentShapeError.__init__-29"><a href="#BadLatentShapeError.__init__-29"><span class="linenos">29</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="BadLatentShapeError.__init__-30"><a href="#BadLatentShapeError.__init__-30"><span class="linenos">30</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The latent shape is too large or too small&quot;</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -283,14 +378,14 @@ modemm<wbr>.<a href="./../../../server.html">server</a><wbr>.<a href="./../../mo
 
     </div>
     <a class="headerlink" href="#BadTensor"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="BadTensor-25"><a href="#BadTensor-25"><span class="linenos">25</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadTensor</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="BadTensor-26"><a href="#BadTensor-26"><span class="linenos">26</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="BadTensor-27"><a href="#BadTensor-27"><span class="linenos">27</span></a><span class="sd">    Failed to load a tensor over the network</span>
-</span><span id="BadTensor-28"><a href="#BadTensor-28"><span class="linenos">28</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="BadTensor-29"><a href="#BadTensor-29"><span class="linenos">29</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Tensor&quot;</span>
-</span><span id="BadTensor-30"><a href="#BadTensor-30"><span class="linenos">30</span></a>
-</span><span id="BadTensor-31"><a href="#BadTensor-31"><span class="linenos">31</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="BadTensor-32"><a href="#BadTensor-32"><span class="linenos">32</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Failed to load a tensor&quot;</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="BadTensor-33"><a href="#BadTensor-33"><span class="linenos">33</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadTensor</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="BadTensor-34"><a href="#BadTensor-34"><span class="linenos">34</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="BadTensor-35"><a href="#BadTensor-35"><span class="linenos">35</span></a><span class="sd">    Failed to load a tensor over the network</span>
+</span><span id="BadTensor-36"><a href="#BadTensor-36"><span class="linenos">36</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="BadTensor-37"><a href="#BadTensor-37"><span class="linenos">37</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Tensor&quot;</span>
+</span><span id="BadTensor-38"><a href="#BadTensor-38"><span class="linenos">38</span></a>
+</span><span id="BadTensor-39"><a href="#BadTensor-39"><span class="linenos">39</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="BadTensor-40"><a href="#BadTensor-40"><span class="linenos">40</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Failed to load a tensor&quot;</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -308,8 +403,8 @@ modemm<wbr>.<a href="./../../../server.html">server</a><wbr>.<a href="./../../mo
 
     </div>
     <a class="headerlink" href="#BadTensor.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="BadTensor.__init__-31"><a href="#BadTensor.__init__-31"><span class="linenos">31</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="BadTensor.__init__-32"><a href="#BadTensor.__init__-32"><span class="linenos">32</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Failed to load a tensor&quot;</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="BadTensor.__init__-39"><a href="#BadTensor.__init__-39"><span class="linenos">39</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="BadTensor.__init__-40"><a href="#BadTensor.__init__-40"><span class="linenos">40</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Failed to load a tensor&quot;</span><span class="p">)</span>
 </span></pre></div>
 
 

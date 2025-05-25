@@ -11,15 +11,19 @@ params = {"stream": False}
 data = {"prompt": "meow", "pad": False}
 
 # This returns a npy file as bytes with T5 prompt embeds for our prompt
-prompt_embeds = requests.get("http://127.0.0.1:14145/modemm/request/T5", params=params, json=data).content
+T5_result = requests.get("http://127.0.0.1:14145/modemm/request/T5", params=params, json=data).json()
 
 # Result is an error, print it
-if prompt_embeds[0] == 123:
-    print(prompt_embeds)
+if "prompt_embeds" not in T5_result.keys():
+    print(T5_result)
     exit(0)
 
-# Turn the bytes into a readable file-like object
+# The model has returned the prompt embeds and an attention mask
+prompt_embeds = T5_result["prompt_embeds"]["tensor"]
+prompt_embeds = base64.b64decode(prompt_embeds.encode('UTF-8'))
 prompt_embeds = io.BytesIO(prompt_embeds)
+
+attn_mask = T5_result["attn_mask"]
 
 # Load the npy file into a numpy array
 prompt_embeds = np.load(prompt_embeds)
@@ -39,7 +43,7 @@ print("Requesting a transformer run")
 # Pass the latents and prompt embeddings in order to run the model. The model passes out updated latents with the video encoded
 
 params = {"stream": False}
-data = {"prompt_embeds": base64.b64encode(prompt_embeds).decode('UTF-8')}
+data = {"prompt_embeds": base64.b64encode(prompt_embeds).decode('UTF-8'), "attn_mask": attn_mask}
 latent = requests.get("http://127.0.0.1:14145/modemm/request/LTXVideo", params=params, json=data).content
 
 # Result is an error, print it

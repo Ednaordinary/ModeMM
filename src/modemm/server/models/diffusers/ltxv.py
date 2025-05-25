@@ -9,8 +9,8 @@ import torch
 
 from ..base import ModemmModel, write_default_kwargs
 from ...response import QueuedResponse, EOS, Progress, NPYTensor
-from .diff_errors import BadLatentShapeError, T5MaxLengthError, BadTensor
-from ...errors import ModemmError
+from .diff_errors import BadLatentShapeError, T5MaxLengthError, BadTensor, BadAttnMask
+from ...errors import ModemmError, ArgRequiredError
 from ...util import np_load
 
 
@@ -63,11 +63,21 @@ class LTXEmptyLatent(ModemmModel):
             return self._return(error, streamer)
 
 
+class FakeLTXVae:
+    """
+    This class exists to fix an error in the pipeline
+    """
+
+    def __init__(self):
+        self.dtype = None
+
+
 class LTX096DVideoModel(ModemmModel):
     """
     A model wrapper for LTX Video 0.9.6 distilled
     """
-    accept_kwargs: Dict[str, Any] = {"prompt_embeds": str, "height": int, "width": int, "frames": int}
+    accept_kwargs: Dict[str, Any] = {"prompt_embeds": str, "height": int, "width": int, "frames": int,
+                                     "attn_mask": list}
     default_kwargs: Dict[str, Any] = {
         "width": 1216,
         "height": 704,
@@ -77,7 +87,6 @@ class LTX096DVideoModel(ModemmModel):
         "decode_timestep": 0.05,
         "guidance_scale": 1,
         "output_type": "latent",
-        "sigmas": [1.0, 0.95, 0.85, 0.5, 0.1, 0.001],
     }
     requires: List[str] = ["torch", "diffusers"]
     streamable: bool = True
@@ -93,9 +102,11 @@ class LTX096DVideoModel(ModemmModel):
             if not isinstance(self._model, LTXConditionPipeline):
                 self._model = LTXConditionPipeline.from_single_file(self.path, text_encoder=None, tokenizer=None,
                                                                     vae=None, torch_dtype=torch.bfloat16)
+                self._model.vae = FakeLTXVae()
             self._model.to(device)
             self._model.scheduler._shift = 150.0
         except Exception as e:
+            print(traceback.format_exc())
             return False
         else:
             return True
@@ -116,7 +127,7 @@ class LTX096DVideoModel(ModemmModel):
             streamer.put(Progress(i, self.steps))
             return pipe_kwargs
 
-        output = self._model(**kwargs, callback=callback)
+        output = self._model(**kwargs, callback=callback).frames
 
         streamer.queue.put(NPYTensor(output))
 
@@ -126,7 +137,13 @@ class LTX096DVideoModel(ModemmModel):
         kwargs = write_default_kwargs(self, kwargs)
         kwargs["prompt_embeds"] = base64.b64decode(kwargs["prompt_embeds"].encode('UTF-8'))
         kwargs["num_frames"] = kwargs.pop("frames", 141)
-        print(kwargs["latents"][0:10])
+        kwargs["prompt_attention_mask"] = kwargs.pop("attn_mask", None)
+        if kwargs["prompt_attention_mask"] is None:
+            error = ArgRequiredError("attn_mask")
+            return self._return(error, streamer)
+        if not all((x == 1 or x == 0) for x in kwargs["prompt_attention_mask"]):
+            error = BadAttnMask()
+            return self._return(error, streamer)
         if len(kwargs["prompt_embeds"]) > 4194432:
             error = T5MaxLengthError()
             return self._return(error, streamer)
@@ -145,11 +162,13 @@ class LTX096DVideoModel(ModemmModel):
         if prompt_embeds.shape[2] != 4096:
             error = BadTensor()
             return self._return(error, streamer)
-        kwargs["prompt_embeds"] = prompt_embeds
+        kwargs["prompt_embeds"] = torch.tensor(prompt_embeds).to("cuda", dtype=torch.bfloat16)
+        kwargs["prompt_attention_mask"] = torch.tensor(kwargs["prompt_attention_mask"]).unsqueeze(0).to("cuda",
+                                                                                                        dtype=torch.bfloat16)
         if self.streamable and streamer is not None:
             self._stream(streamer, **kwargs)
         else:
-            output = self._model(**kwargs)
+            output = self._model(**kwargs).frames  # this is actually a latent! it is silly
             output = NPYTensor(output)
             return self._return(output, streamer)
 

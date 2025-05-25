@@ -1,14 +1,14 @@
 import io
 from queue import Queue
 from typing import Any
+import base64
 
 import torch
 import numpy as np
 
-from fastapi.responses import Response
-
 from .errors import ModemmError
 from .util import np_save
+
 
 class QueuedResponse:
     def __init__(self):
@@ -38,10 +38,12 @@ class Progress:
     def to_json(self) -> dict:
         return {"state": "progress", "progress": [self.current, self.total]}
 
+
 class NPYTensor:
     """
     A response with a torch tensor.
     """
+
     def __init__(self, tensor: torch.Tensor):
         self.tensor = tensor
 
@@ -55,4 +57,23 @@ class NPYTensor:
         np_save(tensor_io, tensor)
         tensor_io.seek(0)
         tensor = tensor_io.read()
-        return Response(tensor)
+        response = {"tensor": base64.b64encode(tensor).decode('UTF-8')}
+        return response
+
+
+class NestedJSON:
+    """
+    Nests multiple responses together
+    """
+
+    def __init__(self, responses: dict):
+        self.responses = responses
+
+    def to_json(self):
+        response = {}
+        for i, v in self.responses.items():
+            if hasattr(v, "to_json"):
+                response[i] = v.to_json()
+            else:
+                response[i] = v
+        return response

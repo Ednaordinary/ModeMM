@@ -10,6 +10,14 @@ class T5MaxLengthError(ModemmError):
     def __init__(self):
         super().__init__("The maximum length of T5 is 512")
 
+class BadAttnMask(ModemmError):
+    """
+    Something's wrong with the attention mask
+    """
+    error_type = "Bad Attention Mask"
+
+    def __init__(self):
+        super().__init__("Something's wrong with the attention mask")
 
 class BadLatentShapeError(ModemmError):
     """

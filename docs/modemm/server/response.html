@@ -81,6 +81,21 @@
                 </ul>
 
             </li>
+            <li>
+                    <a class="class" href="#NestedJSON">NestedJSON</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#NestedJSON.__init__">NestedJSON</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#NestedJSON.responses">responses</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#NestedJSON.to_json">to_json</a>
+                        </li>
+                </ul>
+
+            </li>
     </ul>
 
 
@@ -105,14 +120,14 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.response    </h1>
                         <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 </span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">queue</span><span class="w"> </span><span class="kn">import</span> <span class="n">Queue</span>
 </span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
-</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">fastapi.responses</span><span class="w"> </span><span class="kn">import</span> <span class="n">Response</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModemmError</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">np_save</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModemmError</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">np_save</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>
 </span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>
 </span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="k">class</span><span class="w"> </span><span class="nc">QueuedResponse</span><span class="p">:</span>
 </span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -142,24 +157,45 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.response    </h1>
 </span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 </span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;progress&quot;</span><span class="p">,</span> <span class="s2">&quot;progress&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">total</span><span class="p">]}</span>
 </span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a><span class="k">class</span><span class="w"> </span><span class="nc">NPYTensor</span><span class="p">:</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a><span class="sd">    A response with a torch tensor.</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tensor</span> <span class="o">=</span> <span class="n">tensor</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a><span class="sd">        Converts the tensor to bytes</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a><span class="sd">        :return: A fastapi response with bytes representing a npy file</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>        <span class="n">tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tensor</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>        <span class="n">tensor_io</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
-</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>        <span class="n">np_save</span><span class="p">(</span><span class="n">tensor_io</span><span class="p">,</span> <span class="n">tensor</span><span class="p">)</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>        <span class="n">tensor_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>        <span class="n">tensor</span> <span class="o">=</span> <span class="n">tensor_io</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a><span class="k">class</span><span class="w"> </span><span class="nc">NPYTensor</span><span class="p">:</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="sd">    A response with a torch tensor.</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tensor</span> <span class="o">=</span> <span class="n">tensor</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a><span class="sd">        Converts the tensor to bytes</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a><span class="sd">        :return: A fastapi response with bytes representing a npy file</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>        <span class="n">tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tensor</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>        <span class="n">tensor_io</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>        <span class="n">np_save</span><span class="p">(</span><span class="n">tensor_io</span><span class="p">,</span> <span class="n">tensor</span><span class="p">)</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>        <span class="n">tensor_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>        <span class="n">tensor</span> <span class="o">=</span> <span class="n">tensor_io</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;tensor&quot;</span><span class="p">:</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)}</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a>        <span class="k">return</span> <span class="n">response</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a>
+</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a>
+</span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a><span class="k">class</span><span class="w"> </span><span class="nc">NestedJSON</span><span class="p">:</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a><span class="sd">    Nests multiple responses together</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a>
+</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">responses</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">responses</span> <span class="o">=</span> <span class="n">responses</span>
+</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a>
+</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s2">&quot;to_json&quot;</span><span class="p">):</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>                <span class="n">response</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a>                <span class="n">response</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a>        <span class="k">return</span> <span class="n">response</span>
 </span></pre></div>
 
 
@@ -347,24 +383,26 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.response    </h1>
 
     </div>
     <a class="headerlink" href="#NPYTensor"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="NPYTensor-42"><a href="#NPYTensor-42"><span class="linenos">42</span></a><span class="k">class</span><span class="w"> </span><span class="nc">NPYTensor</span><span class="p">:</span>
-</span><span id="NPYTensor-43"><a href="#NPYTensor-43"><span class="linenos">43</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="NPYTensor-44"><a href="#NPYTensor-44"><span class="linenos">44</span></a><span class="sd">    A response with a torch tensor.</span>
-</span><span id="NPYTensor-45"><a href="#NPYTensor-45"><span class="linenos">45</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="NPYTensor-46"><a href="#NPYTensor-46"><span class="linenos">46</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
-</span><span id="NPYTensor-47"><a href="#NPYTensor-47"><span class="linenos">47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tensor</span> <span class="o">=</span> <span class="n">tensor</span>
-</span><span id="NPYTensor-48"><a href="#NPYTensor-48"><span class="linenos">48</span></a>
-</span><span id="NPYTensor-49"><a href="#NPYTensor-49"><span class="linenos">49</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="NPYTensor-50"><a href="#NPYTensor-50"><span class="linenos">50</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="NPYTensor-51"><a href="#NPYTensor-51"><span class="linenos">51</span></a><span class="sd">        Converts the tensor to bytes</span>
-</span><span id="NPYTensor-52"><a href="#NPYTensor-52"><span class="linenos">52</span></a><span class="sd">        :return: A fastapi response with bytes representing a npy file</span>
-</span><span id="NPYTensor-53"><a href="#NPYTensor-53"><span class="linenos">53</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="NPYTensor-54"><a href="#NPYTensor-54"><span class="linenos">54</span></a>        <span class="n">tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tensor</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
-</span><span id="NPYTensor-55"><a href="#NPYTensor-55"><span class="linenos">55</span></a>        <span class="n">tensor_io</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
-</span><span id="NPYTensor-56"><a href="#NPYTensor-56"><span class="linenos">56</span></a>        <span class="n">np_save</span><span class="p">(</span><span class="n">tensor_io</span><span class="p">,</span> <span class="n">tensor</span><span class="p">)</span>
-</span><span id="NPYTensor-57"><a href="#NPYTensor-57"><span class="linenos">57</span></a>        <span class="n">tensor_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-</span><span id="NPYTensor-58"><a href="#NPYTensor-58"><span class="linenos">58</span></a>        <span class="n">tensor</span> <span class="o">=</span> <span class="n">tensor_io</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-</span><span id="NPYTensor-59"><a href="#NPYTensor-59"><span class="linenos">59</span></a>        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="NPYTensor-43"><a href="#NPYTensor-43"><span class="linenos">43</span></a><span class="k">class</span><span class="w"> </span><span class="nc">NPYTensor</span><span class="p">:</span>
+</span><span id="NPYTensor-44"><a href="#NPYTensor-44"><span class="linenos">44</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="NPYTensor-45"><a href="#NPYTensor-45"><span class="linenos">45</span></a><span class="sd">    A response with a torch tensor.</span>
+</span><span id="NPYTensor-46"><a href="#NPYTensor-46"><span class="linenos">46</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="NPYTensor-47"><a href="#NPYTensor-47"><span class="linenos">47</span></a>
+</span><span id="NPYTensor-48"><a href="#NPYTensor-48"><span class="linenos">48</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+</span><span id="NPYTensor-49"><a href="#NPYTensor-49"><span class="linenos">49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tensor</span> <span class="o">=</span> <span class="n">tensor</span>
+</span><span id="NPYTensor-50"><a href="#NPYTensor-50"><span class="linenos">50</span></a>
+</span><span id="NPYTensor-51"><a href="#NPYTensor-51"><span class="linenos">51</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="NPYTensor-52"><a href="#NPYTensor-52"><span class="linenos">52</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="NPYTensor-53"><a href="#NPYTensor-53"><span class="linenos">53</span></a><span class="sd">        Converts the tensor to bytes</span>
+</span><span id="NPYTensor-54"><a href="#NPYTensor-54"><span class="linenos">54</span></a><span class="sd">        :return: A fastapi response with bytes representing a npy file</span>
+</span><span id="NPYTensor-55"><a href="#NPYTensor-55"><span class="linenos">55</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="NPYTensor-56"><a href="#NPYTensor-56"><span class="linenos">56</span></a>        <span class="n">tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tensor</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+</span><span id="NPYTensor-57"><a href="#NPYTensor-57"><span class="linenos">57</span></a>        <span class="n">tensor_io</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+</span><span id="NPYTensor-58"><a href="#NPYTensor-58"><span class="linenos">58</span></a>        <span class="n">np_save</span><span class="p">(</span><span class="n">tensor_io</span><span class="p">,</span> <span class="n">tensor</span><span class="p">)</span>
+</span><span id="NPYTensor-59"><a href="#NPYTensor-59"><span class="linenos">59</span></a>        <span class="n">tensor_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="NPYTensor-60"><a href="#NPYTensor-60"><span class="linenos">60</span></a>        <span class="n">tensor</span> <span class="o">=</span> <span class="n">tensor_io</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span><span id="NPYTensor-61"><a href="#NPYTensor-61"><span class="linenos">61</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;tensor&quot;</span><span class="p">:</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)}</span>
+</span><span id="NPYTensor-62"><a href="#NPYTensor-62"><span class="linenos">62</span></a>        <span class="k">return</span> <span class="n">response</span>
 </span></pre></div>
 
 
@@ -382,8 +420,8 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.response    </h1>
 
     </div>
     <a class="headerlink" href="#NPYTensor.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="NPYTensor.__init__-46"><a href="#NPYTensor.__init__-46"><span class="linenos">46</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
-</span><span id="NPYTensor.__init__-47"><a href="#NPYTensor.__init__-47"><span class="linenos">47</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tensor</span> <span class="o">=</span> <span class="n">tensor</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="NPYTensor.__init__-48"><a href="#NPYTensor.__init__-48"><span class="linenos">48</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tensor</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+</span><span id="NPYTensor.__init__-49"><a href="#NPYTensor.__init__-49"><span class="linenos">49</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">tensor</span> <span class="o">=</span> <span class="n">tensor</span>
 </span></pre></div>
 
 
@@ -412,17 +450,18 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.response    </h1>
 
     </div>
     <a class="headerlink" href="#NPYTensor.to_json"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="NPYTensor.to_json-49"><a href="#NPYTensor.to_json-49"><span class="linenos">49</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="NPYTensor.to_json-50"><a href="#NPYTensor.to_json-50"><span class="linenos">50</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="NPYTensor.to_json-51"><a href="#NPYTensor.to_json-51"><span class="linenos">51</span></a><span class="sd">        Converts the tensor to bytes</span>
-</span><span id="NPYTensor.to_json-52"><a href="#NPYTensor.to_json-52"><span class="linenos">52</span></a><span class="sd">        :return: A fastapi response with bytes representing a npy file</span>
-</span><span id="NPYTensor.to_json-53"><a href="#NPYTensor.to_json-53"><span class="linenos">53</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="NPYTensor.to_json-54"><a href="#NPYTensor.to_json-54"><span class="linenos">54</span></a>        <span class="n">tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tensor</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
-</span><span id="NPYTensor.to_json-55"><a href="#NPYTensor.to_json-55"><span class="linenos">55</span></a>        <span class="n">tensor_io</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
-</span><span id="NPYTensor.to_json-56"><a href="#NPYTensor.to_json-56"><span class="linenos">56</span></a>        <span class="n">np_save</span><span class="p">(</span><span class="n">tensor_io</span><span class="p">,</span> <span class="n">tensor</span><span class="p">)</span>
-</span><span id="NPYTensor.to_json-57"><a href="#NPYTensor.to_json-57"><span class="linenos">57</span></a>        <span class="n">tensor_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-</span><span id="NPYTensor.to_json-58"><a href="#NPYTensor.to_json-58"><span class="linenos">58</span></a>        <span class="n">tensor</span> <span class="o">=</span> <span class="n">tensor_io</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-</span><span id="NPYTensor.to_json-59"><a href="#NPYTensor.to_json-59"><span class="linenos">59</span></a>        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="NPYTensor.to_json-51"><a href="#NPYTensor.to_json-51"><span class="linenos">51</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="NPYTensor.to_json-52"><a href="#NPYTensor.to_json-52"><span class="linenos">52</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="NPYTensor.to_json-53"><a href="#NPYTensor.to_json-53"><span class="linenos">53</span></a><span class="sd">        Converts the tensor to bytes</span>
+</span><span id="NPYTensor.to_json-54"><a href="#NPYTensor.to_json-54"><span class="linenos">54</span></a><span class="sd">        :return: A fastapi response with bytes representing a npy file</span>
+</span><span id="NPYTensor.to_json-55"><a href="#NPYTensor.to_json-55"><span class="linenos">55</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="NPYTensor.to_json-56"><a href="#NPYTensor.to_json-56"><span class="linenos">56</span></a>        <span class="n">tensor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tensor</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+</span><span id="NPYTensor.to_json-57"><a href="#NPYTensor.to_json-57"><span class="linenos">57</span></a>        <span class="n">tensor_io</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+</span><span id="NPYTensor.to_json-58"><a href="#NPYTensor.to_json-58"><span class="linenos">58</span></a>        <span class="n">np_save</span><span class="p">(</span><span class="n">tensor_io</span><span class="p">,</span> <span class="n">tensor</span><span class="p">)</span>
+</span><span id="NPYTensor.to_json-59"><a href="#NPYTensor.to_json-59"><span class="linenos">59</span></a>        <span class="n">tensor_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="NPYTensor.to_json-60"><a href="#NPYTensor.to_json-60"><span class="linenos">60</span></a>        <span class="n">tensor</span> <span class="o">=</span> <span class="n">tensor_io</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span><span id="NPYTensor.to_json-61"><a href="#NPYTensor.to_json-61"><span class="linenos">61</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;tensor&quot;</span><span class="p">:</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">tensor</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)}</span>
+</span><span id="NPYTensor.to_json-62"><a href="#NPYTensor.to_json-62"><span class="linenos">62</span></a>        <span class="k">return</span> <span class="n">response</span>
 </span></pre></div>
 
 
@@ -435,6 +474,95 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.response    </h1>
 </blockquote>
 </div>
 
+
+                            </div>
+                </section>
+                <section id="NestedJSON">
+                            <input id="NestedJSON-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr class">
+            
+    <span class="def">class</span>
+    <span class="name">NestedJSON</span>:
+
+                <label class="view-source-button" for="NestedJSON-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#NestedJSON"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="NestedJSON-65"><a href="#NestedJSON-65"><span class="linenos">65</span></a><span class="k">class</span><span class="w"> </span><span class="nc">NestedJSON</span><span class="p">:</span>
+</span><span id="NestedJSON-66"><a href="#NestedJSON-66"><span class="linenos">66</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="NestedJSON-67"><a href="#NestedJSON-67"><span class="linenos">67</span></a><span class="sd">    Nests multiple responses together</span>
+</span><span id="NestedJSON-68"><a href="#NestedJSON-68"><span class="linenos">68</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="NestedJSON-69"><a href="#NestedJSON-69"><span class="linenos">69</span></a>
+</span><span id="NestedJSON-70"><a href="#NestedJSON-70"><span class="linenos">70</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">responses</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+</span><span id="NestedJSON-71"><a href="#NestedJSON-71"><span class="linenos">71</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">responses</span> <span class="o">=</span> <span class="n">responses</span>
+</span><span id="NestedJSON-72"><a href="#NestedJSON-72"><span class="linenos">72</span></a>
+</span><span id="NestedJSON-73"><a href="#NestedJSON-73"><span class="linenos">73</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="NestedJSON-74"><a href="#NestedJSON-74"><span class="linenos">74</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="NestedJSON-75"><a href="#NestedJSON-75"><span class="linenos">75</span></a>        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span id="NestedJSON-76"><a href="#NestedJSON-76"><span class="linenos">76</span></a>            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s2">&quot;to_json&quot;</span><span class="p">):</span>
+</span><span id="NestedJSON-77"><a href="#NestedJSON-77"><span class="linenos">77</span></a>                <span class="n">response</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
+</span><span id="NestedJSON-78"><a href="#NestedJSON-78"><span class="linenos">78</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="NestedJSON-79"><a href="#NestedJSON-79"><span class="linenos">79</span></a>                <span class="n">response</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+</span><span id="NestedJSON-80"><a href="#NestedJSON-80"><span class="linenos">80</span></a>        <span class="k">return</span> <span class="n">response</span>
+</span></pre></div>
+
+
+            <div class="docstring"><p>Nests multiple responses together</p>
+</div>
+
+
+                            <div id="NestedJSON.__init__" class="classattr">
+                                        <input id="NestedJSON.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="name">NestedJSON</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">responses</span><span class="p">:</span> <span class="nb">dict</span></span>)</span>
+
+                <label class="view-source-button" for="NestedJSON.__init__-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#NestedJSON.__init__"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="NestedJSON.__init__-70"><a href="#NestedJSON.__init__-70"><span class="linenos">70</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">responses</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+</span><span id="NestedJSON.__init__-71"><a href="#NestedJSON.__init__-71"><span class="linenos">71</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">responses</span> <span class="o">=</span> <span class="n">responses</span>
+</span></pre></div>
+
+
+    
+
+                            </div>
+                            <div id="NestedJSON.responses" class="classattr">
+                                <div class="attr variable">
+            <span class="name">responses</span>
+
+        
+    </div>
+    <a class="headerlink" href="#NestedJSON.responses"></a>
+    
+    
+
+                            </div>
+                            <div id="NestedJSON.to_json" class="classattr">
+                                        <input id="NestedJSON.to_json-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
+<div class="attr function">
+            
+        <span class="def">def</span>
+        <span class="name">to_json</span><span class="signature pdoc-code condensed">(<span class="param"><span class="bp">self</span></span><span class="return-annotation">):</span></span>
+
+                <label class="view-source-button" for="NestedJSON.to_json-view-source"><span>View Source</span></label>
+
+    </div>
+    <a class="headerlink" href="#NestedJSON.to_json"></a>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="NestedJSON.to_json-73"><a href="#NestedJSON.to_json-73"><span class="linenos">73</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="NestedJSON.to_json-74"><a href="#NestedJSON.to_json-74"><span class="linenos">74</span></a>        <span class="n">response</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="NestedJSON.to_json-75"><a href="#NestedJSON.to_json-75"><span class="linenos">75</span></a>        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">responses</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span id="NestedJSON.to_json-76"><a href="#NestedJSON.to_json-76"><span class="linenos">76</span></a>            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s2">&quot;to_json&quot;</span><span class="p">):</span>
+</span><span id="NestedJSON.to_json-77"><a href="#NestedJSON.to_json-77"><span class="linenos">77</span></a>                <span class="n">response</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
+</span><span id="NestedJSON.to_json-78"><a href="#NestedJSON.to_json-78"><span class="linenos">78</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="NestedJSON.to_json-79"><a href="#NestedJSON.to_json-79"><span class="linenos">79</span></a>                <span class="n">response</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+</span><span id="NestedJSON.to_json-80"><a href="#NestedJSON.to_json-80"><span class="linenos">80</span></a>        <span class="k">return</span> <span class="n">response</span>
+</span></pre></div>
+
+
+    
 
                             </div>
                 </section>
