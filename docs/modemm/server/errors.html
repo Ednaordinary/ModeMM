@@ -138,42 +138,6 @@
                 </ul>
 
             </li>
-            <li>
-                    <a class="class" href="#T5MaxLengthError">T5MaxLengthError</a>
-                            <ul class="memberlist">
-                        <li>
-                                <a class="function" href="#T5MaxLengthError.__init__">T5MaxLengthError</a>
-                        </li>
-                        <li>
-                                <a class="variable" href="#T5MaxLengthError.error_type">error_type</a>
-                        </li>
-                </ul>
-
-            </li>
-            <li>
-                    <a class="class" href="#BadLatentShapeError">BadLatentShapeError</a>
-                            <ul class="memberlist">
-                        <li>
-                                <a class="function" href="#BadLatentShapeError.__init__">BadLatentShapeError</a>
-                        </li>
-                        <li>
-                                <a class="variable" href="#BadLatentShapeError.error_type">error_type</a>
-                        </li>
-                </ul>
-
-            </li>
-            <li>
-                    <a class="class" href="#BadTensor">BadTensor</a>
-                            <ul class="memberlist">
-                        <li>
-                                <a class="function" href="#BadTensor.__init__">BadTensor</a>
-                        </li>
-                        <li>
-                                <a class="variable" href="#BadTensor.error_type">error_type</a>
-                        </li>
-                </ul>
-
-            </li>
     </ul>
 
 
@@ -321,59 +285,33 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 </span><span id="L-124"><a href="#L-124"><span class="linenos">124</span></a>            <span class="n">info</span> <span class="o">=</span> <span class="n">arg</span> <span class="o">+</span> <span class="s2">&quot; was required but not found.&quot;</span>
 </span><span id="L-125"><a href="#L-125"><span class="linenos">125</span></a>        <span class="k">return</span> <span class="n">info</span>
 </span><span id="L-126"><a href="#L-126"><span class="linenos">126</span></a>
-</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelNotFound</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a><span class="sd">    An error from the Modemm server specifying a bad model.</span>
-</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Model Not Found&quot;</span>
-</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a>
-</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a><span class="sd">        Construct a Model Not Found Error</span>
-</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a><span class="sd">        :param model: The model that could not be found</span>
-</span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a>
+</span><span id="L-127"><a href="#L-127"><span class="linenos">127</span></a>
+</span><span id="L-128"><a href="#L-128"><span class="linenos">128</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelNotFound</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="L-129"><a href="#L-129"><span class="linenos">129</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-130"><a href="#L-130"><span class="linenos">130</span></a><span class="sd">    An error from the Modemm server specifying a bad model.</span>
+</span><span id="L-131"><a href="#L-131"><span class="linenos">131</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-132"><a href="#L-132"><span class="linenos">132</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Model Not Found&quot;</span>
+</span><span id="L-133"><a href="#L-133"><span class="linenos">133</span></a>
+</span><span id="L-134"><a href="#L-134"><span class="linenos">134</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="L-135"><a href="#L-135"><span class="linenos">135</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-136"><a href="#L-136"><span class="linenos">136</span></a><span class="sd">        Construct a Model Not Found Error</span>
+</span><span id="L-137"><a href="#L-137"><span class="linenos">137</span></a><span class="sd">        :param model: The model that could not be found</span>
+</span><span id="L-138"><a href="#L-138"><span class="linenos">138</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-139"><a href="#L-139"><span class="linenos">139</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </span><span id="L-140"><a href="#L-140"><span class="linenos">140</span></a>
-</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelNotLoaded</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a><span class="sd">    An error from the Modemm server specifying the model failed to load</span>
-</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Model Didn&#39;t Load&quot;</span>
-</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a>
-</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a><span class="sd">        Construct a Model Loading Error</span>
-</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a><span class="sd">        :param model: The model that could not be loaded</span>
-</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a>
-</span><span id="L-154"><a href="#L-154"><span class="linenos">154</span></a><span class="k">class</span><span class="w"> </span><span class="nc">T5MaxLengthError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="L-155"><a href="#L-155"><span class="linenos">155</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-156"><a href="#L-156"><span class="linenos">156</span></a><span class="sd">    The max length of T5 was set too high</span>
-</span><span id="L-157"><a href="#L-157"><span class="linenos">157</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-158"><a href="#L-158"><span class="linenos">158</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;T5 Max Length&quot;</span>
-</span><span id="L-159"><a href="#L-159"><span class="linenos">159</span></a>
-</span><span id="L-160"><a href="#L-160"><span class="linenos">160</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-161"><a href="#L-161"><span class="linenos">161</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The maximum length of T5 is 512&quot;</span><span class="p">)</span>
-</span><span id="L-162"><a href="#L-162"><span class="linenos">162</span></a>
-</span><span id="L-163"><a href="#L-163"><span class="linenos">163</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadLatentShapeError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="L-164"><a href="#L-164"><span class="linenos">164</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-165"><a href="#L-165"><span class="linenos">165</span></a><span class="sd">    Attempted to make a latent with a bad shape</span>
-</span><span id="L-166"><a href="#L-166"><span class="linenos">166</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-167"><a href="#L-167"><span class="linenos">167</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Latent Shape&quot;</span>
-</span><span id="L-168"><a href="#L-168"><span class="linenos">168</span></a>
-</span><span id="L-169"><a href="#L-169"><span class="linenos">169</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-170"><a href="#L-170"><span class="linenos">170</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The latent shape is too large or too small&quot;</span><span class="p">)</span>
-</span><span id="L-171"><a href="#L-171"><span class="linenos">171</span></a>
-</span><span id="L-172"><a href="#L-172"><span class="linenos">172</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadTensor</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="L-173"><a href="#L-173"><span class="linenos">173</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-174"><a href="#L-174"><span class="linenos">174</span></a><span class="sd">    Failed to load a tensor over the network</span>
-</span><span id="L-175"><a href="#L-175"><span class="linenos">175</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-176"><a href="#L-176"><span class="linenos">176</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Tensor&quot;</span>
-</span><span id="L-177"><a href="#L-177"><span class="linenos">177</span></a>
-</span><span id="L-178"><a href="#L-178"><span class="linenos">178</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="L-179"><a href="#L-179"><span class="linenos">179</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Failed to load a tensor&quot;</span><span class="p">)</span>
+</span><span id="L-141"><a href="#L-141"><span class="linenos">141</span></a>
+</span><span id="L-142"><a href="#L-142"><span class="linenos">142</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelNotLoaded</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="L-143"><a href="#L-143"><span class="linenos">143</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-144"><a href="#L-144"><span class="linenos">144</span></a><span class="sd">    An error from the Modemm server specifying the model failed to load</span>
+</span><span id="L-145"><a href="#L-145"><span class="linenos">145</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-146"><a href="#L-146"><span class="linenos">146</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Model Didn&#39;t Load&quot;</span>
+</span><span id="L-147"><a href="#L-147"><span class="linenos">147</span></a>
+</span><span id="L-148"><a href="#L-148"><span class="linenos">148</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="L-149"><a href="#L-149"><span class="linenos">149</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-150"><a href="#L-150"><span class="linenos">150</span></a><span class="sd">        Construct a Model Loading Error</span>
+</span><span id="L-151"><a href="#L-151"><span class="linenos">151</span></a><span class="sd">        :param model: The model that could not be loaded</span>
+</span><span id="L-152"><a href="#L-152"><span class="linenos">152</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="L-153"><a href="#L-153"><span class="linenos">153</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -1049,18 +987,18 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 
     </div>
     <a class="headerlink" href="#ModelNotFound"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotFound-128"><a href="#ModelNotFound-128"><span class="linenos">128</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelNotFound</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="ModelNotFound-129"><a href="#ModelNotFound-129"><span class="linenos">129</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ModelNotFound-130"><a href="#ModelNotFound-130"><span class="linenos">130</span></a><span class="sd">    An error from the Modemm server specifying a bad model.</span>
-</span><span id="ModelNotFound-131"><a href="#ModelNotFound-131"><span class="linenos">131</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="ModelNotFound-132"><a href="#ModelNotFound-132"><span class="linenos">132</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Model Not Found&quot;</span>
-</span><span id="ModelNotFound-133"><a href="#ModelNotFound-133"><span class="linenos">133</span></a>
-</span><span id="ModelNotFound-134"><a href="#ModelNotFound-134"><span class="linenos">134</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="ModelNotFound-135"><a href="#ModelNotFound-135"><span class="linenos">135</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ModelNotFound-136"><a href="#ModelNotFound-136"><span class="linenos">136</span></a><span class="sd">        Construct a Model Not Found Error</span>
-</span><span id="ModelNotFound-137"><a href="#ModelNotFound-137"><span class="linenos">137</span></a><span class="sd">        :param model: The model that could not be found</span>
-</span><span id="ModelNotFound-138"><a href="#ModelNotFound-138"><span class="linenos">138</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ModelNotFound-139"><a href="#ModelNotFound-139"><span class="linenos">139</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotFound-129"><a href="#ModelNotFound-129"><span class="linenos">129</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelNotFound</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="ModelNotFound-130"><a href="#ModelNotFound-130"><span class="linenos">130</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelNotFound-131"><a href="#ModelNotFound-131"><span class="linenos">131</span></a><span class="sd">    An error from the Modemm server specifying a bad model.</span>
+</span><span id="ModelNotFound-132"><a href="#ModelNotFound-132"><span class="linenos">132</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="ModelNotFound-133"><a href="#ModelNotFound-133"><span class="linenos">133</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Model Not Found&quot;</span>
+</span><span id="ModelNotFound-134"><a href="#ModelNotFound-134"><span class="linenos">134</span></a>
+</span><span id="ModelNotFound-135"><a href="#ModelNotFound-135"><span class="linenos">135</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="ModelNotFound-136"><a href="#ModelNotFound-136"><span class="linenos">136</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelNotFound-137"><a href="#ModelNotFound-137"><span class="linenos">137</span></a><span class="sd">        Construct a Model Not Found Error</span>
+</span><span id="ModelNotFound-138"><a href="#ModelNotFound-138"><span class="linenos">138</span></a><span class="sd">        :param model: The model that could not be found</span>
+</span><span id="ModelNotFound-139"><a href="#ModelNotFound-139"><span class="linenos">139</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ModelNotFound-140"><a href="#ModelNotFound-140"><span class="linenos">140</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -1078,12 +1016,12 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 
     </div>
     <a class="headerlink" href="#ModelNotFound.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotFound.__init__-134"><a href="#ModelNotFound.__init__-134"><span class="linenos">134</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="ModelNotFound.__init__-135"><a href="#ModelNotFound.__init__-135"><span class="linenos">135</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ModelNotFound.__init__-136"><a href="#ModelNotFound.__init__-136"><span class="linenos">136</span></a><span class="sd">        Construct a Model Not Found Error</span>
-</span><span id="ModelNotFound.__init__-137"><a href="#ModelNotFound.__init__-137"><span class="linenos">137</span></a><span class="sd">        :param model: The model that could not be found</span>
-</span><span id="ModelNotFound.__init__-138"><a href="#ModelNotFound.__init__-138"><span class="linenos">138</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ModelNotFound.__init__-139"><a href="#ModelNotFound.__init__-139"><span class="linenos">139</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotFound.__init__-135"><a href="#ModelNotFound.__init__-135"><span class="linenos">135</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="ModelNotFound.__init__-136"><a href="#ModelNotFound.__init__-136"><span class="linenos">136</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelNotFound.__init__-137"><a href="#ModelNotFound.__init__-137"><span class="linenos">137</span></a><span class="sd">        Construct a Model Not Found Error</span>
+</span><span id="ModelNotFound.__init__-138"><a href="#ModelNotFound.__init__-138"><span class="linenos">138</span></a><span class="sd">        :param model: The model that could not be found</span>
+</span><span id="ModelNotFound.__init__-139"><a href="#ModelNotFound.__init__-139"><span class="linenos">139</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ModelNotFound.__init__-140"><a href="#ModelNotFound.__init__-140"><span class="linenos">140</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -1132,18 +1070,18 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 
     </div>
     <a class="headerlink" href="#ModelNotLoaded"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotLoaded-142"><a href="#ModelNotLoaded-142"><span class="linenos">142</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelNotLoaded</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="ModelNotLoaded-143"><a href="#ModelNotLoaded-143"><span class="linenos">143</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ModelNotLoaded-144"><a href="#ModelNotLoaded-144"><span class="linenos">144</span></a><span class="sd">    An error from the Modemm server specifying the model failed to load</span>
-</span><span id="ModelNotLoaded-145"><a href="#ModelNotLoaded-145"><span class="linenos">145</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="ModelNotLoaded-146"><a href="#ModelNotLoaded-146"><span class="linenos">146</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Model Didn&#39;t Load&quot;</span>
-</span><span id="ModelNotLoaded-147"><a href="#ModelNotLoaded-147"><span class="linenos">147</span></a>
-</span><span id="ModelNotLoaded-148"><a href="#ModelNotLoaded-148"><span class="linenos">148</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="ModelNotLoaded-149"><a href="#ModelNotLoaded-149"><span class="linenos">149</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ModelNotLoaded-150"><a href="#ModelNotLoaded-150"><span class="linenos">150</span></a><span class="sd">        Construct a Model Loading Error</span>
-</span><span id="ModelNotLoaded-151"><a href="#ModelNotLoaded-151"><span class="linenos">151</span></a><span class="sd">        :param model: The model that could not be loaded</span>
-</span><span id="ModelNotLoaded-152"><a href="#ModelNotLoaded-152"><span class="linenos">152</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ModelNotLoaded-153"><a href="#ModelNotLoaded-153"><span class="linenos">153</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotLoaded-143"><a href="#ModelNotLoaded-143"><span class="linenos">143</span></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelNotLoaded</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
+</span><span id="ModelNotLoaded-144"><a href="#ModelNotLoaded-144"><span class="linenos">144</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelNotLoaded-145"><a href="#ModelNotLoaded-145"><span class="linenos">145</span></a><span class="sd">    An error from the Modemm server specifying the model failed to load</span>
+</span><span id="ModelNotLoaded-146"><a href="#ModelNotLoaded-146"><span class="linenos">146</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="ModelNotLoaded-147"><a href="#ModelNotLoaded-147"><span class="linenos">147</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Model Didn&#39;t Load&quot;</span>
+</span><span id="ModelNotLoaded-148"><a href="#ModelNotLoaded-148"><span class="linenos">148</span></a>
+</span><span id="ModelNotLoaded-149"><a href="#ModelNotLoaded-149"><span class="linenos">149</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="ModelNotLoaded-150"><a href="#ModelNotLoaded-150"><span class="linenos">150</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelNotLoaded-151"><a href="#ModelNotLoaded-151"><span class="linenos">151</span></a><span class="sd">        Construct a Model Loading Error</span>
+</span><span id="ModelNotLoaded-152"><a href="#ModelNotLoaded-152"><span class="linenos">152</span></a><span class="sd">        :param model: The model that could not be loaded</span>
+</span><span id="ModelNotLoaded-153"><a href="#ModelNotLoaded-153"><span class="linenos">153</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ModelNotLoaded-154"><a href="#ModelNotLoaded-154"><span class="linenos">154</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -1161,12 +1099,12 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
 
     </div>
     <a class="headerlink" href="#ModelNotLoaded.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotLoaded.__init__-148"><a href="#ModelNotLoaded.__init__-148"><span class="linenos">148</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-</span><span id="ModelNotLoaded.__init__-149"><a href="#ModelNotLoaded.__init__-149"><span class="linenos">149</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="ModelNotLoaded.__init__-150"><a href="#ModelNotLoaded.__init__-150"><span class="linenos">150</span></a><span class="sd">        Construct a Model Loading Error</span>
-</span><span id="ModelNotLoaded.__init__-151"><a href="#ModelNotLoaded.__init__-151"><span class="linenos">151</span></a><span class="sd">        :param model: The model that could not be loaded</span>
-</span><span id="ModelNotLoaded.__init__-152"><a href="#ModelNotLoaded.__init__-152"><span class="linenos">152</span></a><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="ModelNotLoaded.__init__-153"><a href="#ModelNotLoaded.__init__-153"><span class="linenos">153</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="ModelNotLoaded.__init__-149"><a href="#ModelNotLoaded.__init__-149"><span class="linenos">149</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+</span><span id="ModelNotLoaded.__init__-150"><a href="#ModelNotLoaded.__init__-150"><span class="linenos">150</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="ModelNotLoaded.__init__-151"><a href="#ModelNotLoaded.__init__-151"><span class="linenos">151</span></a><span class="sd">        Construct a Model Loading Error</span>
+</span><span id="ModelNotLoaded.__init__-152"><a href="#ModelNotLoaded.__init__-152"><span class="linenos">152</span></a><span class="sd">        :param model: The model that could not be loaded</span>
+</span><span id="ModelNotLoaded.__init__-153"><a href="#ModelNotLoaded.__init__-153"><span class="linenos">153</span></a><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="ModelNotLoaded.__init__-154"><a href="#ModelNotLoaded.__init__-154"><span class="linenos">154</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -1199,231 +1137,6 @@ modemm<wbr>.<a href="./../server.html">server</a><wbr>.errors    </h1>
                                     <div><dt><a href="#ModemmError">ModemmError</a></dt>
                                 <dd id="ModelNotLoaded.info" class="variable"><a href="#ModemmError.info">info</a></dd>
                 <dd id="ModelNotLoaded.get_error" class="function"><a href="#ModemmError.get_error">get_error</a></dd>
-
-            </div>
-                                </dl>
-                            </div>
-                </section>
-                <section id="T5MaxLengthError">
-                            <input id="T5MaxLengthError-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr class">
-            
-    <span class="def">class</span>
-    <span class="name">T5MaxLengthError</span><wbr>(<span class="base"><a href="#ModemmError">ModemmError</a></span>):
-
-                <label class="view-source-button" for="T5MaxLengthError-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#T5MaxLengthError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="T5MaxLengthError-155"><a href="#T5MaxLengthError-155"><span class="linenos">155</span></a><span class="k">class</span><span class="w"> </span><span class="nc">T5MaxLengthError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="T5MaxLengthError-156"><a href="#T5MaxLengthError-156"><span class="linenos">156</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="T5MaxLengthError-157"><a href="#T5MaxLengthError-157"><span class="linenos">157</span></a><span class="sd">    The max length of T5 was set too high</span>
-</span><span id="T5MaxLengthError-158"><a href="#T5MaxLengthError-158"><span class="linenos">158</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="T5MaxLengthError-159"><a href="#T5MaxLengthError-159"><span class="linenos">159</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;T5 Max Length&quot;</span>
-</span><span id="T5MaxLengthError-160"><a href="#T5MaxLengthError-160"><span class="linenos">160</span></a>
-</span><span id="T5MaxLengthError-161"><a href="#T5MaxLengthError-161"><span class="linenos">161</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="T5MaxLengthError-162"><a href="#T5MaxLengthError-162"><span class="linenos">162</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The maximum length of T5 is 512&quot;</span><span class="p">)</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>The max length of T5 was set too high</p>
-</div>
-
-
-                            <div id="T5MaxLengthError.__init__" class="classattr">
-                                        <input id="T5MaxLengthError.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
-            
-        <span class="name">T5MaxLengthError</span><span class="signature pdoc-code condensed">()</span>
-
-                <label class="view-source-button" for="T5MaxLengthError.__init__-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#T5MaxLengthError.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="T5MaxLengthError.__init__-161"><a href="#T5MaxLengthError.__init__-161"><span class="linenos">161</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="T5MaxLengthError.__init__-162"><a href="#T5MaxLengthError.__init__-162"><span class="linenos">162</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The maximum length of T5 is 512&quot;</span><span class="p">)</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Construct a general Modemm error</p>
-
-<h6 id="parameters">Parameters</h6>
-
-<ul>
-<li><strong>info</strong>: </li>
-</ul>
-</div>
-
-
-                            </div>
-                            <div id="T5MaxLengthError.error_type" class="classattr">
-                                <div class="attr variable">
-            <span class="name">error_type</span>        =
-<span class="default_value">&#39;T5 Max Length&#39;</span>
-
-        
-    </div>
-    <a class="headerlink" href="#T5MaxLengthError.error_type"></a>
-    
-    
-
-                            </div>
-                            <div class="inherited">
-                                <h5>Inherited Members</h5>
-                                <dl>
-                                    <div><dt><a href="#ModemmError">ModemmError</a></dt>
-                                <dd id="T5MaxLengthError.info" class="variable"><a href="#ModemmError.info">info</a></dd>
-                <dd id="T5MaxLengthError.get_error" class="function"><a href="#ModemmError.get_error">get_error</a></dd>
-
-            </div>
-                                </dl>
-                            </div>
-                </section>
-                <section id="BadLatentShapeError">
-                            <input id="BadLatentShapeError-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr class">
-            
-    <span class="def">class</span>
-    <span class="name">BadLatentShapeError</span><wbr>(<span class="base"><a href="#ModemmError">ModemmError</a></span>):
-
-                <label class="view-source-button" for="BadLatentShapeError-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#BadLatentShapeError"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="BadLatentShapeError-164"><a href="#BadLatentShapeError-164"><span class="linenos">164</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadLatentShapeError</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="BadLatentShapeError-165"><a href="#BadLatentShapeError-165"><span class="linenos">165</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="BadLatentShapeError-166"><a href="#BadLatentShapeError-166"><span class="linenos">166</span></a><span class="sd">    Attempted to make a latent with a bad shape</span>
-</span><span id="BadLatentShapeError-167"><a href="#BadLatentShapeError-167"><span class="linenos">167</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="BadLatentShapeError-168"><a href="#BadLatentShapeError-168"><span class="linenos">168</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Latent Shape&quot;</span>
-</span><span id="BadLatentShapeError-169"><a href="#BadLatentShapeError-169"><span class="linenos">169</span></a>
-</span><span id="BadLatentShapeError-170"><a href="#BadLatentShapeError-170"><span class="linenos">170</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="BadLatentShapeError-171"><a href="#BadLatentShapeError-171"><span class="linenos">171</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The latent shape is too large or too small&quot;</span><span class="p">)</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Attempted to make a latent with a bad shape</p>
-</div>
-
-
-                            <div id="BadLatentShapeError.__init__" class="classattr">
-                                        <input id="BadLatentShapeError.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
-            
-        <span class="name">BadLatentShapeError</span><span class="signature pdoc-code condensed">()</span>
-
-                <label class="view-source-button" for="BadLatentShapeError.__init__-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#BadLatentShapeError.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="BadLatentShapeError.__init__-170"><a href="#BadLatentShapeError.__init__-170"><span class="linenos">170</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="BadLatentShapeError.__init__-171"><a href="#BadLatentShapeError.__init__-171"><span class="linenos">171</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;The latent shape is too large or too small&quot;</span><span class="p">)</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Construct a general Modemm error</p>
-
-<h6 id="parameters">Parameters</h6>
-
-<ul>
-<li><strong>info</strong>: </li>
-</ul>
-</div>
-
-
-                            </div>
-                            <div id="BadLatentShapeError.error_type" class="classattr">
-                                <div class="attr variable">
-            <span class="name">error_type</span>        =
-<span class="default_value">&#39;Bad Latent Shape&#39;</span>
-
-        
-    </div>
-    <a class="headerlink" href="#BadLatentShapeError.error_type"></a>
-    
-    
-
-                            </div>
-                            <div class="inherited">
-                                <h5>Inherited Members</h5>
-                                <dl>
-                                    <div><dt><a href="#ModemmError">ModemmError</a></dt>
-                                <dd id="BadLatentShapeError.info" class="variable"><a href="#ModemmError.info">info</a></dd>
-                <dd id="BadLatentShapeError.get_error" class="function"><a href="#ModemmError.get_error">get_error</a></dd>
-
-            </div>
-                                </dl>
-                            </div>
-                </section>
-                <section id="BadTensor">
-                            <input id="BadTensor-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr class">
-            
-    <span class="def">class</span>
-    <span class="name">BadTensor</span><wbr>(<span class="base"><a href="#ModemmError">ModemmError</a></span>):
-
-                <label class="view-source-button" for="BadTensor-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#BadTensor"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="BadTensor-173"><a href="#BadTensor-173"><span class="linenos">173</span></a><span class="k">class</span><span class="w"> </span><span class="nc">BadTensor</span><span class="p">(</span><span class="n">ModemmError</span><span class="p">):</span>
-</span><span id="BadTensor-174"><a href="#BadTensor-174"><span class="linenos">174</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="BadTensor-175"><a href="#BadTensor-175"><span class="linenos">175</span></a><span class="sd">    Failed to load a tensor over the network</span>
-</span><span id="BadTensor-176"><a href="#BadTensor-176"><span class="linenos">176</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="BadTensor-177"><a href="#BadTensor-177"><span class="linenos">177</span></a>    <span class="n">error_type</span> <span class="o">=</span> <span class="s2">&quot;Bad Tensor&quot;</span>
-</span><span id="BadTensor-178"><a href="#BadTensor-178"><span class="linenos">178</span></a>
-</span><span id="BadTensor-179"><a href="#BadTensor-179"><span class="linenos">179</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="BadTensor-180"><a href="#BadTensor-180"><span class="linenos">180</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Failed to load a tensor&quot;</span><span class="p">)</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Failed to load a tensor over the network</p>
-</div>
-
-
-                            <div id="BadTensor.__init__" class="classattr">
-                                        <input id="BadTensor.__init__-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
-            
-        <span class="name">BadTensor</span><span class="signature pdoc-code condensed">()</span>
-
-                <label class="view-source-button" for="BadTensor.__init__-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#BadTensor.__init__"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="BadTensor.__init__-179"><a href="#BadTensor.__init__-179"><span class="linenos">179</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="BadTensor.__init__-180"><a href="#BadTensor.__init__-180"><span class="linenos">180</span></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;Failed to load a tensor&quot;</span><span class="p">)</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Construct a general Modemm error</p>
-
-<h6 id="parameters">Parameters</h6>
-
-<ul>
-<li><strong>info</strong>: </li>
-</ul>
-</div>
-
-
-                            </div>
-                            <div id="BadTensor.error_type" class="classattr">
-                                <div class="attr variable">
-            <span class="name">error_type</span>        =
-<span class="default_value">&#39;Bad Tensor&#39;</span>
-
-        
-    </div>
-    <a class="headerlink" href="#BadTensor.error_type"></a>
-    
-    
-
-                            </div>
-                            <div class="inherited">
-                                <h5>Inherited Members</h5>
-                                <dl>
-                                    <div><dt><a href="#ModemmError">ModemmError</a></dt>
-                                <dd id="BadTensor.info" class="variable"><a href="#ModemmError.info">info</a></dd>
-                <dd id="BadTensor.get_error" class="function"><a href="#ModemmError.get_error">get_error</a></dd>
 
             </div>
                                 </dl>

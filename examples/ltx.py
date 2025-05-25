@@ -33,32 +33,13 @@ np.save(prompt_file, prompt_embeds)
 prompt_file.seek(0)
 prompt_embeds = prompt_file.read()
 
-print("Requesting an empty latent")
-
-# Get an empty latent using the defaults
-
-params = {"stream": False}
-data = {"width": 1280, "height": 704, "frames": 161, "seed": 64723}
-latent = requests.get("http://127.0.0.1:14145/modemm/request/LTXLatent", params=params, json=data).content
-
-# Result is an error, print it
-if latent[0] == 123:
-    print(latent)
-    exit(0)
-
-#latent = io.BytesIO(latent)
-
-#latent = np.load(latent)
-
 
 print("Requesting a transformer run")
 
 # Pass the latents and prompt embeddings in order to run the model. The model passes out updated latents with the video encoded
 
-print(len(latent))
-
 params = {"stream": False}
-data = {"latents": base64.b64encode(latent).decode('UTF-8'), "prompt_embeds": base64.b64encode(prompt_embeds).decode('UTF-8')}
+data = {"prompt_embeds": base64.b64encode(prompt_embeds).decode('UTF-8')}
 latent = requests.get("http://127.0.0.1:14145/modemm/request/LTXVideo", params=params, json=data).content
 
 # Result is an error, print it

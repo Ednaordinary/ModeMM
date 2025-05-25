@@ -1,15 +1,12 @@
 from typing import Dict, Any, List, Union
 import gc
-import io
 import traceback
 
 import torch
-import numpy as np
 
 from ..base import ModemmModel, validate_kwargs, write_default_kwargs
 from ...errors import ModemmError
 from ...response import NPYTensor, QueuedResponse
-from ...util import np_save
 
 class CLIPModel(ModemmModel):
     """

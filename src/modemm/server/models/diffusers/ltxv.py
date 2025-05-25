@@ -9,9 +9,13 @@ import torch
 
 from ..base import ModemmModel, write_default_kwargs
 from ...response import QueuedResponse, EOS, Progress, NPYTensor
-from ...errors import ModemmError, BadLatentShapeError, T5MaxLengthError, BadTensor
+from .diff_errors import BadLatentShapeError, T5MaxLengthError, BadTensor
+from ...errors import ModemmError
 from ...util import np_load
 
+
+# {"name": "LTXLatent", "module": "modemm.server.models.diffusers.ltxv", "class":  "LTXEmptyLatent", "init_kwargs":  {}},
+# Empty latents for LTX are not supported right now.
 
 class LTXEmptyLatent(ModemmModel):
     """
@@ -63,16 +67,17 @@ class LTX096DVideoModel(ModemmModel):
     """
     A model wrapper for LTX Video 0.9.6 distilled
     """
-    accept_kwargs: Dict[str, Any] = {"prompt_embeds": str, "latents": str}
+    accept_kwargs: Dict[str, Any] = {"prompt_embeds": str, "height": int, "width": int, "frames": int}
     default_kwargs: Dict[str, Any] = {
         "width": 1216,
         "height": 704,
-        "num_frames": 141,
+        "frames": 141,
         "num_inference_steps": 8,
         "max_sequence_length": 512,
         "decode_timestep": 0.05,
         "guidance_scale": 1,
         "output_type": "latent",
+        "sigmas": [1.0, 0.95, 0.85, 0.5, 0.1, 0.001],
     }
     requires: List[str] = ["torch", "diffusers"]
     streamable: bool = True
@@ -120,7 +125,7 @@ class LTX096DVideoModel(ModemmModel):
     async def __call__(self, streamer: Union[QueuedResponse, None] = None, **kwargs) -> Union[str, Image, ModemmError]:
         kwargs = write_default_kwargs(self, kwargs)
         kwargs["prompt_embeds"] = base64.b64decode(kwargs["prompt_embeds"].encode('UTF-8'))
-        kwargs["latents"] = base64.b64decode(kwargs["latents"].encode('UTF-8'))
+        kwargs["num_frames"] = kwargs.pop("frames", 141)
         print(kwargs["latents"][0:10])
         if len(kwargs["prompt_embeds"]) > 4194432:
             error = T5MaxLengthError()
@@ -129,6 +134,7 @@ class LTX096DVideoModel(ModemmModel):
             tensor_io = io.BytesIO(kwargs["prompt_embeds"])
             tensor_io.seek(0)
             prompt_embeds = np_load(tensor_io, (1, 512, 4096))
+            del tensor_io
         except:
             error = BadTensor()
             print(traceback.format_exc())
@@ -140,29 +146,6 @@ class LTX096DVideoModel(ModemmModel):
             error = BadTensor()
             return self._return(error, streamer)
         kwargs["prompt_embeds"] = prompt_embeds
-        kwargs["latents"] = bytes(kwargs["latents"])
-        print(len(kwargs["latents"]))
-        if len(kwargs["latents"]) > 4731008:
-            error = BadLatentShapeError()
-            return self._return(error, streamer)
-        try:
-            tensor_io = io.BytesIO(kwargs["latents"])
-            tensor_io.seek(0)
-            latents = np_load(tensor_io, (1, 128, 21, 22, 40))
-        except:
-            error = BadTensor()
-            print(traceback.format_exc())
-            return self._return(error, streamer)
-        if latents is None:
-            error = BadTensor()
-            return self._return(error, streamer)
-        # (batch, 128, frames, height, width)
-        # batch is limited by np_load
-        print(prompt_embeds.shape)
-        if prompt_embeds.shape[1] != 128:
-            # idk not 128 though
-            error = BadLatentShapeError()
-            return self._return(error, streamer)
         if self.streamable and streamer is not None:
             self._stream(streamer, **kwargs)
         else:
