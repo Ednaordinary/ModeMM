@@ -8,7 +8,7 @@ from PIL import Image
 import torch
 
 from ..base import ModemmModel, write_default_kwargs
-from ...response import QueuedResponse, EOS, Progress, NPYTensor
+from ...response import QueuedResponse, EOS, Progress, NPYTensor, PILVideo
 from .diff_errors import BadLatentShapeError, T5MaxLengthError, BadTensor, BadAttnMask
 from ...errors import ModemmError, ArgRequiredError
 from ...util import np_load
@@ -123,11 +123,19 @@ class LTX096DVideoModel(ModemmModel):
             return False
 
     def _stream(self, streamer, **kwargs):
-        def callback(pipe, i, t, pipe_kwargs):
-            streamer.put(Progress(i, self.steps))
-            return pipe_kwargs
+        print("streaming")
+        try:
+            def callback(pipe, i, t, pipe_kwargs):
+                streamer.queue.put(Progress(i, self.steps))
+                return pipe_kwargs
 
-        output = self._model(**kwargs, callback=callback).frames
+            output = self._model(**kwargs, callback=callback).frames
+        except:
+            print(traceback.format_exc())
+            error = ModemmError("Failed during call")
+            streamer.queue.put(error)
+            streamer.queue.put(EOS)
+            return
 
         streamer.queue.put(NPYTensor(output))
 
@@ -177,18 +185,23 @@ class LTXVaeModel(ModemmModel):
     """
     A model wrapper for an LTX Vae
     """
-    accept_kwargs: Dict[str, Any] = {"prompt_embeds": bytes}
-    default_kwargs: Dict[str, Any] = {}
+    accept_kwargs: Dict[str, Any] = {"latents": str, "decode_timestep": float, "decode_scale": float}
+    default_kwargs: Dict[str, Any] = {
+        "decode_timestep": 0.05,
+        "decode_scale": None,
+    }
     requires: List[str] = ["torch", "diffusers"]
     streamable: bool = False
 
-    def __init__(self, path: str, steps: int):
+    def __init__(self, path: str):
         self.path = path
         self._model = None
+        self.video_processor = None
 
     def load(self, device="cuda") -> bool:
         try:
             from diffusers import AutoencoderKLLTXVideo
+            from diffusers.video_processor import VideoProcessor
             if not isinstance(self._model, AutoencoderKLLTXVideo):
                 self._model = AutoencoderKLLTXVideo.from_single_file(self.path, torch_dtype=torch.bfloat16)
             self._model.to(device)
@@ -197,6 +210,7 @@ class LTXVaeModel(ModemmModel):
             self._model.tile_sample_stride_height = 704
             self._model.tile_sample_stride_width = 704
             self._model.scheduler._shift = 150.0
+            self.video_processor = VideoProcessor(vae_scale_factor=self._model.spatial_compression_ratio)
         except Exception as e:
             return False
         else:
@@ -213,10 +227,64 @@ class LTXVaeModel(ModemmModel):
         except Exception as e:
             return False
 
+    @staticmethod
+    def _denormalize_latents(
+        latents: torch.Tensor, latents_mean: torch.Tensor, latents_std: torch.Tensor, scaling_factor: float = 1.0
+    ) -> torch.Tensor:
+        """
+        Denormalize latents across the channel dimension [B, C, F, H, W]
+        :param latents: Input latents
+        :param latents_mean: Latents mean
+        :param latents_std: Latents standard
+        :param scaling_factor: Latents scaling factor
+        :return: Denormalized latents
+        """
+        latents_mean = latents_mean.view(1, -1, 1, 1, 1).to(latents.device, latents.dtype)
+        latents_std = latents_std.view(1, -1, 1, 1, 1).to(latents.device, latents.dtype)
+        latents = latents * latents_std / scaling_factor + latents_mean
+        return latents
+
+    def _call(self, kwargs: dict) -> List[Image]:
+        latents = kwargs["latents"]
+        l_mean = self._model.latents_mean
+        l_std = self._model.latend_std
+        l_scale_factor = self._model.config.scaling_factor
+        latents = self._denormalize_latents(latents, l_mean, l_std, l_scale_factor)
+        latents = latents.to(torch.bfloat16)
+        timestep = None
+        # This only runs if the vae has timestep embedding (not distilled)
+        if self._model.config.timestep_conditioning:
+            noise = torch.randn(latents.shape, dtype=torch.bfloat16)
+            decode_timestep = kwargs["decode_timestep"]
+            decode_scale = kwargs["decode_scale"]
+            timestep = torch.tensor([decode_timestep], device="cuda", dtype=latents.dtype)
+            decode_scale = torch.tensor([decode_scale], device="cuda", dtype=latents.dtype)[:, None, None, None, None]
+            latents = (1 - decode_scale) * latents + decode_scale * noise
+        video = self._model.decode(latents, timestep, return_dict=False)[0]
+        video = self.video_processor.postprocess_video(video, output_type="pil")
+        return video
+
+
     async def __call__(self, streamer: Union[QueuedResponse, None] = None, **kwargs) -> Union[str, Image, ModemmError]:
         kwargs = write_default_kwargs(self, kwargs)
-        kwargs["prompt_embeds"] = bytes(kwargs["prompt_embeds"])
-        if self.streamable and streamer is not None:
-            self._stream(streamer, **kwargs)
-        else:
-            return self._return(self._model(**kwargs), streamer)
+        latents = bytes(kwargs["latents"])
+        print(len(kwargs["latents"]))
+        if len(kwargs["latents"]) > 4731008:
+            error = BadLatentShapeError()
+            return self._return(error, streamer)
+        try:
+            tensor_io = io.BytesIO(kwargs["latents"])
+            tensor_io.seek(0)
+            latents = np_load(tensor_io, (1, 128, 21, 22, 40))
+        except:
+            error = BadTensor()
+            print(traceback.format_exc())
+            return self._return(error, streamer)
+        if latents is None:
+            error = BadTensor()
+            return self._return(error, streamer)
+        if latents.shape[1] != 128:
+            error = BadLatentShapeError()
+            return self._return(error, streamer)
+        latents = torch.tensor(latents, dtype=torch.bfloat16).to("cuda")
+        return PILVideo(self._return(self._call(kwargs), streamer), 24)
