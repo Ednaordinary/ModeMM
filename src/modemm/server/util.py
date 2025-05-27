@@ -49,11 +49,12 @@ def kwarg_types_name(kwargs: dict):
 def np_save(file, array):
     """
     Save a numpy array to as a npy file (much faster than np.save())
-    :param file: The
-    :param array:
+    :param file: The file to save the array to
+    :param array: The array to save
     :return:
     """
     magic_string = b"\x93NUMPY\x01\x00v\x00"
+    array = np.ascontiguousarray(array)
     header = bytes(("{'descr': '" + array.dtype.descr[0][1] + "', 'fortran_order': False, 'shape': " + str(
         array.shape) + ", }").ljust(127 - len(magic_string)) + "\n", 'utf-8')
     if type(file) is str:

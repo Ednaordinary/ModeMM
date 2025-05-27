@@ -95,9 +95,9 @@ class LTX096DVideoModel(ModemmModel):
 
     async def load(self, device="cuda") -> bool:
         try:
-            from diffusers import LTXConditionPipeline
-            if not isinstance(self.model, LTXConditionPipeline):
-                self.model = LTXConditionPipeline.from_single_file(self.path, text_encoder=None, tokenizer=None,
+            from diffusers import LTXPipeline
+            if not isinstance(self.model, LTXPipeline):
+                self.model = LTXPipeline.from_single_file(self.path, text_encoder=None, tokenizer=None,
                                                                     vae=None, torch_dtype=torch.bfloat16)
                 self.model.vae = FakeLTXVae()
             self.model.to(device)
@@ -119,6 +119,27 @@ class LTX096DVideoModel(ModemmModel):
         except Exception as e:
             return False
 
+    @staticmethod
+    def _unpack_latents(
+        latents: torch.Tensor, num_frames: int, height: int, width: int, patch_size: int = 1, patch_size_t: int = 1
+    ) -> torch.Tensor:
+        """
+        # Packed latents of shape [B, S, D] (S is the effective video sequence length, D is the effective feature
+        dimensions) # are unpacked and reshaped into a video tensor of shape [B, C, F, H, W]. This is the inverse
+        operation of # what happens in the `_pack_latents` method. Method taken from diffusers
+        :param latents: The packed latents
+        :param num_frames: The latent frame count
+        :param height: The latent height
+        :param width:The latent width
+        :param patch_size: Spatial patch size
+        :param patch_size_t: Temporal patch size
+        :return: The unpacked latents
+        """
+        batch_size = latents.size(0)
+        latents = latents.reshape(batch_size, num_frames, height, width, -1, patch_size_t, patch_size, patch_size)
+        latents = latents.permute(0, 4, 1, 5, 2, 6, 3, 7).flatten(6, 7).flatten(4, 5).flatten(2, 3)
+        return latents
+
     def _stream(self, streamer, kwargs):
         print("streaming")
         try:
@@ -135,7 +156,17 @@ class LTX096DVideoModel(ModemmModel):
                 b._original_fwd = b.forward
                 b.forward = MethodType(transformer_wrapped_forward, b)
 
-            output = self.model(**kwargs).frames
+            latents = self.model(**kwargs).frames
+            print(kwargs.keys())
+            latents = self._unpack_latents(
+                latents,
+                (kwargs["num_frames"] - 1) // 8 + 1,
+                kwargs["height"] // 32,
+                kwargs["width"] // 32,
+                1,
+                1,
+            )
+            print(latents.shape)
         except:
             print(traceback.format_exc())
             error = ModemmError("Failed during call")
@@ -143,7 +174,7 @@ class LTX096DVideoModel(ModemmModel):
             streamer.queue.put(EOS)
             return
 
-        streamer.queue.put(NPYTensor(output))
+        streamer.queue.put(NPYTensor(latents))
 
         streamer.queue.put(EOS)
 
@@ -183,9 +214,17 @@ class LTX096DVideoModel(ModemmModel):
         if self.streamable and streamer is not None:
             self._stream(streamer, kwargs)
         else:
-            output = self.model(**kwargs).frames  # this is actually a latent! it is silly
-            output = NPYTensor(output)
-            return self._return(output, streamer)
+            latents = self.model(**kwargs).frames  # this is actually a latent! it is silly
+            latents = self._unpack_latents(
+                latents,
+                (kwargs["frames"] - 1) // 8 + 1,
+                kwargs["height"] // 32,
+                kwargs["width"] // 32,
+                1,
+                1,
+            )
+            latents = NPYTensor(latents)
+            return self._return(latents, streamer)
 
 
 class LTXVaeModel(ModemmModel):
@@ -240,6 +279,7 @@ class LTXVaeModel(ModemmModel):
     ) -> torch.Tensor:
         """
         Denormalize latents across the channel dimension [B, C, F, H, W]
+        Method taken from diffusers
         :param latents: Input latents
         :param latents_mean: Latents mean
         :param latents_std: Latents standard
@@ -256,17 +296,23 @@ class LTXVaeModel(ModemmModel):
         l_mean = self._model.latents_mean
         l_std = self._model.latents_std
         l_scale_factor = self._model.config.scaling_factor
-        latents = self._denormalize_latents(latents, l_mean, l_std, l_scale_factor)
+        latents = self._denormalize_latents(
+            latents,
+            l_mean,
+            l_std,
+            l_scale_factor
+        )
         latents = latents.to(torch.bfloat16)
         timestep = None
-        # This only runs if the vae has timestep embedding (not distilled)
+        # This only runs if the vae has timestep embedding (distilled)
         if self._model.config.timestep_conditioning:
-            noise = torch.randn(latents.shape, device="cuda", dtype=torch.bfloat16)
+            noise = torch.randn(latents.shape, device="cuda", dtype=latents.dtype)
             decode_timestep = kwargs["decode_timestep"]
             decode_scale = kwargs["decode_scale"] or decode_timestep
             timestep = torch.tensor([decode_timestep], device="cuda", dtype=latents.dtype)
             decode_scale = torch.tensor([decode_scale], device="cuda", dtype=latents.dtype)[:, None, None, None, None]
             latents = (1 - decode_scale) * latents + decode_scale * noise
+        print(latents.shape)
         video = self._model.decode(latents, timestep, return_dict=False)[0]
         video = self.video_processor.postprocess_video(video, output_type="pil")
         return video
@@ -275,13 +321,14 @@ class LTXVaeModel(ModemmModel):
     async def __call__(self, kwargs: dict, streamer: Union[QueuedResponse, None] = None) -> Union[str, Image, ModemmError]:
         kwargs = write_default_kwargs(self, kwargs)
         latents = base64.b64decode(kwargs["latents"].encode('UTF-8'))
+        print(len(latents))
         if len(latents) > 3852416:
             error = BadLatentShapeError()
             return self._return(error, streamer)
         try:
             tensor_io = io.BytesIO(latents)
             tensor_io.seek(0)
-            latents = np_load(tensor_io, (1, 128, 21, 22, 40))
+            latents = np_load(tensor_io, (1, 128, 18, 22, 38))
         except:
             error = BadTensor()
             print(traceback.format_exc())
@@ -290,7 +337,6 @@ class LTXVaeModel(ModemmModel):
             error = BadTensor()
             return self._return(error, streamer)
         if latents.shape[1] != 128:
-            print(latents.shape)
             error = BadLatentShapeError()
             return self._return(error, streamer)
         kwargs["latents"] = torch.tensor(latents, dtype=torch.bfloat16).to("cuda")

@@ -45,7 +45,7 @@ print("Requesting a transformer run")
 # Pass the latents and prompt embeddings in order to run the model. The model passes out updated latents with the video encoded
 
 params = {"stream": True}
-data = {"prompt_embeds": base64.b64encode(prompt_embeds).decode('UTF-8'), "attn_mask": attn_mask}
+data = {"prompt_embeds": base64.b64encode(prompt_embeds).decode('UTF-8'), "attn_mask": attn_mask, "height": 512, "width": 704}
 
 if params["stream"]:
     # Optionally, stream progress from the Modemm server
