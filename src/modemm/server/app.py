@@ -63,7 +63,6 @@ def build(args: argparse.Namespace) -> FastAPI:
         errors = validate_kwargs(config.registered["models"][model_id], kwargs)
         if errors:
             return {"state": "error", "error": errors.get_error()}
-        run = handler.run(model_id, stream=stream, kwargs=kwargs)
-        return run
+        return handler.run(model_id, stream=stream, kwargs=kwargs)
 
     return app

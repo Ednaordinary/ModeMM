@@ -21,12 +21,12 @@ class QueuedResponse:
         obj = self.queue.get()
         while obj is not EOS:
             if hasattr(obj, "to_json"):
-                yield ujson.dumps(obj.to_json()) + "\n"
+                yield ujson.dumps(obj.to_json())
             elif isinstance(obj, ModemmError):
                 obj = ujson.dumps({"state": "error", "error": obj.get_error()})
-                yield obj + "\n"
+                yield obj
             else:
-                yield str(obj) + "\n"
+                yield str(obj)
             obj = self.queue.get()
 
 

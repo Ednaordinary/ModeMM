@@ -1,4 +1,5 @@
 from typing import Dict, Any
+import traceback
 import threading
 import asyncio
 
@@ -6,7 +7,7 @@ from fastapi.responses import StreamingResponse
 
 from .config import ModemmConfigBase
 from .models.base import ModemmModel
-from .response import QueuedResponse
+from .response import QueuedResponse, EOS
 from .errors import ModemmError, ModelNotLoaded
 
 
@@ -67,7 +68,6 @@ class ModelHandlerBase:
             if self.loaded_models[model] <= 0:
                 asyncio.run_coroutine_threadsafe(self.configured_models[model].unload(),
                                                  loop=self.executor.loop)
-                print("unloading", model)
                 try:
                     del self.loaded_models[model]
                 except:
@@ -78,14 +78,34 @@ class ModelHandlerBase:
         else:
             return True
 
-    async def _run_stream(self, model, model_id, kwargs):
+    async def call_wrapper(self, model, kwargs, streamer=None):
+        """
+        It is a bad idea to break if something in the call breaks, so this function wraps call to provide debug and
+        keep the engine running
+        """
+        try:
+            out = await model(kwargs, streamer=streamer)
+        except:
+            print(traceback.format_exc())
+            error = ModemmError("Failed during call")
+            if streamer:
+                streamer.queue.put(error)
+                streamer.queue.put(EOS)
+            else:
+                return error
+        else:
+            if not streamer:
+                return out
+
+    def _run_stream(self, model, model_id, kwargs):
         streamer = QueuedResponse()
-        asyncio.run_coroutine_threadsafe(model(kwargs, streamer=streamer), loop=self.executor.loop)
+        asyncio.run_coroutine_threadsafe(self.call_wrapper(model, kwargs, streamer=streamer), loop=self.executor.loop)
         for i in streamer.wait():
             yield i
         # Eventually, allocation and deallocation should happen in two separate threads and/or event loops
         # For now, this blocks the requests completion until the model is done unloading
         self.deallocate(model_id)
+        return
 
     def run(self, model: str, stream, kwargs) -> Any:
         model_id = model
@@ -95,9 +115,9 @@ class ModelHandlerBase:
             return {"state": "error", "error": ModelNotLoaded(model_id).get_error()}
         model = self.configured_models[model_id]
         if stream and model.streamable:
-            return StreamingResponse(self._run_stream(model, kwargs, model_id))
+            return StreamingResponse(self._run_stream(model, model_id, kwargs))
         else:
-            result = asyncio.run_coroutine_threadsafe(model(kwargs), loop=self.executor.loop).result()
+            result = asyncio.run_coroutine_threadsafe(self.call_wrapper(model, kwargs), loop=self.executor.loop).result()
             if hasattr(result, "to_json"):
                 result = result.to_json()
             if isinstance(result, ModemmError):

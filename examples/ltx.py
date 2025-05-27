@@ -43,18 +43,20 @@ print("Requesting a transformer run")
 
 # Pass the latents and prompt embeddings in order to run the model. The model passes out updated latents with the video encoded
 
-params = {"stream": False}
+params = {"stream": True}
 data = {"prompt_embeds": base64.b64encode(prompt_embeds).decode('UTF-8'), "attn_mask": attn_mask}
 
 if params["stream"]:
     # Optionally, stream progress from the Modemm server
     session = requests.Session()
     with session.get("http://127.0.0.1:14145/modemm/request/LTXVideo", params=params, json=data, stream=True) as response:
-        for chunk in response.raw.stream():
+        for chunk in response.iter_content(chunk_size=None):
             if b"tensor" not in chunk:
                 print(chunk)
+            #print(chunk)
             # The latents are the last line streamed
-            latent = chunk
+            if chunk != b'':
+                latent = chunk
 else:
     latent = requests.get("http://127.0.0.1:14145/modemm/request/LTXVideo", params=params, json=data).content
 

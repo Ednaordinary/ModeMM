@@ -42,25 +42,21 @@ class LTXEmptyLatent(ModemmModel):
 
     async def __call__(self, kwargs: dict, streamer: Union[QueuedResponse, None] = None) -> Union[str, Image, ModemmError]:
         kwargs = write_default_kwargs(self, kwargs)
-        try:
-            height = kwargs["height"] // 32
-            width = kwargs["width"] // 32
-            print(height, width)
-            frames = (kwargs["frames"] - 1) // 8 + 1
-            if (height * width) > 880 or (height * width) < 1 or frames > 161:
-                error = BadLatentShapeError()
-                return self._return(error, streamer)
-            shape = (1, 128, frames, height, width)
-            generator = torch.Generator(device='cpu')
-            if kwargs["seed"]:
-                generator.manual_seed(kwargs["seed"])
-            latents = torch.randn(shape, generator=generator, dtype=torch.float16)
-            print(latents.shape)
-            result = NPYTensor(latents)
-            return self._return(result, streamer)
-        except:
-            error = ModemmError("Failed during call")
+        height = kwargs["height"] // 32
+        width = kwargs["width"] // 32
+        print(height, width)
+        frames = (kwargs["frames"] - 1) // 8 + 1
+        if (height * width) > 880 or (height * width) < 1 or frames > 161:
+            error = BadLatentShapeError()
             return self._return(error, streamer)
+        shape = (1, 128, frames, height, width)
+        generator = torch.Generator(device='cpu')
+        if kwargs["seed"]:
+            generator.manual_seed(kwargs["seed"])
+        latents = torch.randn(shape, generator=generator, dtype=torch.float16)
+        print(latents.shape)
+        result = NPYTensor(latents)
+        return self._return(result, streamer)
 
 
 class FakeLTXVae:
@@ -113,7 +109,7 @@ class LTX096DVideoModel(ModemmModel):
 
     async def unload(self) -> bool:
         try:
-            if hasattr(self, "_model"):
+            if hasattr(self, "model"):
                 del self.model
                 self.model = None
             gc.collect()
@@ -123,12 +119,25 @@ class LTX096DVideoModel(ModemmModel):
             return False
 
     def _stream(self, streamer, kwargs):
+        print("streaming")
         try:
-            def callback(pipe, i, t, pipe_kwargs):
-                streamer.queue.put(Progress(i, self.steps))
-                return pipe_kwargs
+            #def callback(pipe, i, t, pipe_kwargs):
+            #    streamer.queue.put(Progress(i, self.steps))
+            #    return pipe_kwargs
 
-            output = self.model(**kwargs, callback_on_step_end=callback).frames
+            i = 0
+
+            def transformer_wrapped_forward(self, *args, **kwargs):
+                nonlocal i
+                streamer.queue.put(Progress(i, self.steps*len(self.model.transformer.transformer_blocks)))
+                i += 1
+                return self._original_fwd(*args, **kwargs)
+
+            for i in self.model.transformer.transformer_blocks:
+                i._original_fwd = i.forward
+                i.forward = transformer_wrapped_forward
+
+            output = self.model(**kwargs).frames # callback_on_step_end=callback
         except:
             print(traceback.format_exc())
             error = ModemmError("Failed during call")
@@ -141,6 +150,7 @@ class LTX096DVideoModel(ModemmModel):
         streamer.queue.put(EOS)
 
     async def __call__(self, kwargs: dict, streamer: Union[QueuedResponse, None] = None) -> Union[str, Image, ModemmError]:
+        print("running call")
         kwargs = write_default_kwargs(self, kwargs)
         kwargs["prompt_embeds"] = base64.b64decode(kwargs["prompt_embeds"].encode('UTF-8'))
         kwargs["num_frames"] = kwargs.pop("frames", 141)
@@ -267,8 +277,7 @@ class LTXVaeModel(ModemmModel):
     async def __call__(self, kwargs: dict, streamer: Union[QueuedResponse, None] = None) -> Union[str, Image, ModemmError]:
         kwargs = write_default_kwargs(self, kwargs)
         latents = base64.b64decode(kwargs["latents"].encode('UTF-8'))
-        print(len(latents))
-        if len(kwargs["latents"]) > 3852416:
+        if len(latents) > 3852416:
             error = BadLatentShapeError()
             return self._return(error, streamer)
         try:
@@ -283,6 +292,7 @@ class LTXVaeModel(ModemmModel):
             error = BadTensor()
             return self._return(error, streamer)
         if latents.shape[1] != 128:
+            print(latents.shape)
             error = BadLatentShapeError()
             return self._return(error, streamer)
         latents = torch.tensor(latents, dtype=torch.bfloat16).to("cuda")
