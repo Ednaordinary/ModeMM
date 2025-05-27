@@ -94,17 +94,17 @@ class LTX096DVideoModel(ModemmModel):
     def __init__(self, path: str, steps: int):
         self.path = path
         self.steps = steps
-        self._model = None
+        self.model = None
 
     async def load(self, device="cuda") -> bool:
         try:
             from diffusers import LTXConditionPipeline
-            if not isinstance(self._model, LTXConditionPipeline):
-                self._model = LTXConditionPipeline.from_single_file(self.path, text_encoder=None, tokenizer=None,
+            if not isinstance(self.model, LTXConditionPipeline):
+                self.model = LTXConditionPipeline.from_single_file(self.path, text_encoder=None, tokenizer=None,
                                                                     vae=None, torch_dtype=torch.bfloat16)
-                self._model.vae = FakeLTXVae()
-            self._model.to(device)
-            self._model.scheduler._shift = 150.0
+                self.model.vae = FakeLTXVae()
+            self.model.to(device)
+            self.model.scheduler._shift = 150.0
         except Exception as e:
             print(traceback.format_exc())
             return False
@@ -114,8 +114,8 @@ class LTX096DVideoModel(ModemmModel):
     async def unload(self) -> bool:
         try:
             if hasattr(self, "_model"):
-                del self._model
-                self._model = None
+                del self.model
+                self.model = None
             gc.collect()
             import torch
             torch.cuda.empty_cache()
@@ -123,14 +123,12 @@ class LTX096DVideoModel(ModemmModel):
             return False
 
     def _stream(self, streamer, kwargs):
-        print(self.__dict__)
         try:
             def callback(pipe, i, t, pipe_kwargs):
                 streamer.queue.put(Progress(i, self.steps))
                 return pipe_kwargs
-            print(self._model)
 
-            output = self._model(**kwargs, callback=callback).frames
+            output = self.model(**kwargs, callback_on_step_end=callback).frames
         except:
             print(traceback.format_exc())
             error = ModemmError("Failed during call")
@@ -143,7 +141,6 @@ class LTX096DVideoModel(ModemmModel):
         streamer.queue.put(EOS)
 
     async def __call__(self, kwargs: dict, streamer: Union[QueuedResponse, None] = None) -> Union[str, Image, ModemmError]:
-        print("call:", self.__dict__)
         kwargs = write_default_kwargs(self, kwargs)
         kwargs["prompt_embeds"] = base64.b64decode(kwargs["prompt_embeds"].encode('UTF-8'))
         kwargs["num_frames"] = kwargs.pop("frames", 141)
@@ -178,7 +175,7 @@ class LTX096DVideoModel(ModemmModel):
         if self.streamable and streamer is not None:
             self._stream(streamer, kwargs)
         else:
-            output = self._model(**kwargs).frames  # this is actually a latent! it is silly
+            output = self.model(**kwargs).frames  # this is actually a latent! it is silly
             output = NPYTensor(output)
             return self._return(output, streamer)
 
@@ -269,13 +266,13 @@ class LTXVaeModel(ModemmModel):
 
     async def __call__(self, kwargs: dict, streamer: Union[QueuedResponse, None] = None) -> Union[str, Image, ModemmError]:
         kwargs = write_default_kwargs(self, kwargs)
-        latents = bytes(kwargs["latents"])
-        print(len(kwargs["latents"]))
-        if len(kwargs["latents"]) > 4731008:
+        latents = base64.b64decode(kwargs["latents"].encode('UTF-8'))
+        print(len(latents))
+        if len(kwargs["latents"]) > 3852416:
             error = BadLatentShapeError()
             return self._return(error, streamer)
         try:
-            tensor_io = io.BytesIO(kwargs["latents"])
+            tensor_io = io.BytesIO(latents)
             tensor_io.seek(0)
             latents = np_load(tensor_io, (1, 128, 21, 22, 40))
         except:

@@ -7,7 +7,7 @@ from fastapi.responses import StreamingResponse
 from .config import ModemmConfigBase
 from .models.base import ModemmModel
 from .response import QueuedResponse
-from .errors import ModemmError
+from .errors import ModemmError, ModelNotLoaded
 
 
 class ModelExecutor:
@@ -67,6 +67,7 @@ class ModelHandlerBase:
             if self.loaded_models[model] <= 0:
                 asyncio.run_coroutine_threadsafe(self.configured_models[model].unload(),
                                                  loop=self.executor.loop)
+                print("unloading", model)
                 try:
                     del self.loaded_models[model]
                 except:
@@ -77,24 +78,29 @@ class ModelHandlerBase:
         else:
             return True
 
-    async def _run_stream(self, model, kwargs):
-        print("_run_stream:", model.__dict__)
+    async def _run_stream(self, model, model_id, kwargs):
         streamer = QueuedResponse()
         asyncio.run_coroutine_threadsafe(model(kwargs, streamer=streamer), loop=self.executor.loop)
         for i in streamer.wait():
             yield i
+        # Eventually, allocation and deallocation should happen in two separate threads and/or event loops
+        # For now, this blocks the requests completion until the model is done unloading
+        self.deallocate(model_id)
 
     def run(self, model: str, stream, kwargs) -> Any:
-        model_name = model
-        model = self.configured_models[model]
-        print("run:", model.__dict__)
+        model_id = model
+        loaded = self.allocate(model_id)
+        if not loaded:
+            self.deallocate(model_id)
+            return {"state": "error", "error": ModelNotLoaded(model_id).get_error()}
+        model = self.configured_models[model_id]
         if stream and model.streamable:
-            return StreamingResponse(self._run_stream(model, kwargs))
+            return StreamingResponse(self._run_stream(model, kwargs, model_id))
         else:
             result = asyncio.run_coroutine_threadsafe(model(kwargs), loop=self.executor.loop).result()
             if hasattr(result, "to_json"):
                 result = result.to_json()
             if isinstance(result, ModemmError):
                 result = {"state": "error", "error": result.get_error()}
-            self.deallocate(model_name)
+            self.deallocate(model_id)
             return result

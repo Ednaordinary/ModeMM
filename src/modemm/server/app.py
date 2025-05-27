@@ -63,12 +63,7 @@ def build(args: argparse.Namespace) -> FastAPI:
         errors = validate_kwargs(config.registered["models"][model_id], kwargs)
         if errors:
             return {"state": "error", "error": errors.get_error()}
-        loaded = handler.allocate(model_id)
-        if not loaded:
-            handler.deallocate(model_id)
-            return {"state": "error", "error": ModelNotLoaded(model_id).get_error()}
         run = handler.run(model_id, stream=stream, kwargs=kwargs)
-        handler.deallocate(model_id)
         return run
 
     return app
