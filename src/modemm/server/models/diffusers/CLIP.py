@@ -50,7 +50,7 @@ class CLIPModel(ModemmModel):
         except Exception as e:
             return False
 
-    async def __call__(self, streamer: Union[QueuedResponse, None] = None, **kwargs) -> Union[ModemmError, NPYTensor]:
+    async def __call__(self, kwargs: dict, streamer: Union[QueuedResponse, None] = None) -> Union[ModemmError, NPYTensor]:
         errors = validate_kwargs(self, kwargs)
         if errors:
             return self._return(errors, streamer)

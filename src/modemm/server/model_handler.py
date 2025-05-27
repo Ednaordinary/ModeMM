@@ -77,19 +77,21 @@ class ModelHandlerBase:
         else:
             return True
 
-    def _run_stream(self, model, kwargs):
+    async def _run_stream(self, model, kwargs):
+        print("_run_stream:", model.__dict__)
         streamer = QueuedResponse()
-        asyncio.run_coroutine_threadsafe(model(**kwargs, streamer=streamer), loop=self.executor.loop)
+        asyncio.run_coroutine_threadsafe(model(kwargs, streamer=streamer), loop=self.executor.loop)
         for i in streamer.wait():
             yield i
 
     def run(self, model: str, stream, kwargs) -> Any:
         model_name = model
         model = self.configured_models[model]
+        print("run:", model.__dict__)
         if stream and model.streamable:
             return StreamingResponse(self._run_stream(model, kwargs))
         else:
-            result = asyncio.run_coroutine_threadsafe(model(**kwargs), loop=self.executor.loop).result()
+            result = asyncio.run_coroutine_threadsafe(model(kwargs), loop=self.executor.loop).result()
             if hasattr(result, "to_json"):
                 result = result.to_json()
             if isinstance(result, ModemmError):

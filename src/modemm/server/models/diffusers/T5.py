@@ -51,7 +51,7 @@ class T5Model(ModemmModel):
         except Exception as e:
             return False
 
-    async def __call__(self, streamer: Union[QueuedResponse, None] = None, **kwargs) -> Union[ModemmError, NPYTensor]:
+    async def __call__(self, kwargs: dict, streamer: Union[QueuedResponse, None] = None) -> Union[ModemmError, NPYTensor]:
         kwargs = write_default_kwargs(self, kwargs)
         if kwargs["max_length"] > 512:
             return T5MaxLengthError()

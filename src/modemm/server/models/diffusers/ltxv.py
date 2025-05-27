@@ -40,7 +40,7 @@ class LTXEmptyLatent(ModemmModel):
     async def unload(self) -> bool:
         return True
 
-    async def __call__(self, streamer: Union[QueuedResponse, None] = None, **kwargs) -> Union[str, Image, ModemmError]:
+    async def __call__(self, kwargs: dict, streamer: Union[QueuedResponse, None] = None) -> Union[str, Image, ModemmError]:
         kwargs = write_default_kwargs(self, kwargs)
         try:
             height = kwargs["height"] // 32
@@ -122,12 +122,13 @@ class LTX096DVideoModel(ModemmModel):
         except Exception as e:
             return False
 
-    def _stream(self, streamer, **kwargs):
-        print("streaming")
+    def _stream(self, streamer, kwargs):
+        print(self.__dict__)
         try:
             def callback(pipe, i, t, pipe_kwargs):
                 streamer.queue.put(Progress(i, self.steps))
                 return pipe_kwargs
+            print(self._model)
 
             output = self._model(**kwargs, callback=callback).frames
         except:
@@ -141,7 +142,8 @@ class LTX096DVideoModel(ModemmModel):
 
         streamer.queue.put(EOS)
 
-    async def __call__(self, streamer: Union[QueuedResponse, None] = None, **kwargs) -> Union[str, Image, ModemmError]:
+    async def __call__(self, kwargs: dict, streamer: Union[QueuedResponse, None] = None) -> Union[str, Image, ModemmError]:
+        print("call:", self.__dict__)
         kwargs = write_default_kwargs(self, kwargs)
         kwargs["prompt_embeds"] = base64.b64decode(kwargs["prompt_embeds"].encode('UTF-8'))
         kwargs["num_frames"] = kwargs.pop("frames", 141)
@@ -174,7 +176,7 @@ class LTX096DVideoModel(ModemmModel):
         kwargs["prompt_attention_mask"] = torch.tensor(kwargs["prompt_attention_mask"]).unsqueeze(0).to("cuda",
                                                                                                         dtype=torch.bfloat16)
         if self.streamable and streamer is not None:
-            self._stream(streamer, **kwargs)
+            self._stream(streamer, kwargs)
         else:
             output = self._model(**kwargs).frames  # this is actually a latent! it is silly
             output = NPYTensor(output)
@@ -198,7 +200,7 @@ class LTXVaeModel(ModemmModel):
         self._model = None
         self.video_processor = None
 
-    def load(self, device="cuda") -> bool:
+    async def load(self, device="cuda") -> bool:
         try:
             from diffusers import AutoencoderKLLTXVideo
             from diffusers.video_processor import VideoProcessor
@@ -209,9 +211,9 @@ class LTXVaeModel(ModemmModel):
             self._model.use_framewise_decoding = True
             self._model.tile_sample_stride_height = 704
             self._model.tile_sample_stride_width = 704
-            self._model.scheduler._shift = 150.0
             self.video_processor = VideoProcessor(vae_scale_factor=self._model.spatial_compression_ratio)
         except Exception as e:
+            print(traceback.format_exc())
             return False
         else:
             return True
@@ -265,7 +267,7 @@ class LTXVaeModel(ModemmModel):
         return video
 
 
-    async def __call__(self, streamer: Union[QueuedResponse, None] = None, **kwargs) -> Union[str, Image, ModemmError]:
+    async def __call__(self, kwargs: dict, streamer: Union[QueuedResponse, None] = None) -> Union[str, Image, ModemmError]:
         kwargs = write_default_kwargs(self, kwargs)
         latents = bytes(kwargs["latents"])
         print(len(kwargs["latents"]))

@@ -86,7 +86,7 @@ class ModemmModel:
         else:
             return obj
 
-    async def __call__(self, streamer: Union[QueuedResponse, None] = None, **kwargs) -> Union[str, Image, ModemmError]:
+    async def __call__(self, kwargs: dict, streamer: Union[QueuedResponse, None] = None) -> Union[str, Image, ModemmError]:
         kwargs = write_default_kwargs(self, kwargs)
         if self.streamable and streamer is not None:
             for i in self._model.stream(**kwargs):
