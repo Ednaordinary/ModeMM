@@ -1,5 +1,6 @@
 import traceback
 from typing import Dict, Any, List, Union
+from types import MethodType
 import base64
 import gc
 import io
@@ -121,23 +122,20 @@ class LTX096DVideoModel(ModemmModel):
     def _stream(self, streamer, kwargs):
         print("streaming")
         try:
-            #def callback(pipe, i, t, pipe_kwargs):
-            #    streamer.queue.put(Progress(i, self.steps))
-            #    return pipe_kwargs
 
             i = 0
 
-            def transformer_wrapped_forward(self, *args, **kwargs):
+            def transformer_wrapped_forward(block_self, *args, **kwargs):
                 nonlocal i
                 streamer.queue.put(Progress(i, self.steps*len(self.model.transformer.transformer_blocks)))
                 i += 1
-                return self._original_fwd(*args, **kwargs)
+                return block_self._original_fwd(*args, **kwargs)
 
-            for i in self.model.transformer.transformer_blocks:
-                i._original_fwd = i.forward
-                i.forward = transformer_wrapped_forward
+            for b in self.model.transformer.transformer_blocks:
+                b._original_fwd = b.forward
+                b.forward = MethodType(transformer_wrapped_forward, b)
 
-            output = self.model(**kwargs).frames # callback_on_step_end=callback
+            output = self.model(**kwargs).frames
         except:
             print(traceback.format_exc())
             error = ModemmError("Failed during call")
@@ -214,10 +212,10 @@ class LTXVaeModel(ModemmModel):
             if not isinstance(self._model, AutoencoderKLLTXVideo):
                 self._model = AutoencoderKLLTXVideo.from_single_file(self.path, torch_dtype=torch.bfloat16)
             self._model.to(device)
-            self._model.enable_tiling()
+            #self._model.enable_tiling()
             self._model.use_framewise_decoding = True
-            self._model.tile_sample_stride_height = 704
-            self._model.tile_sample_stride_width = 704
+            #self._model.tile_sample_stride_height = 704
+            #self._model.tile_sample_stride_width = 704
             self.video_processor = VideoProcessor(vae_scale_factor=self._model.spatial_compression_ratio)
         except Exception as e:
             print(traceback.format_exc())
@@ -256,16 +254,16 @@ class LTXVaeModel(ModemmModel):
     def _call(self, kwargs: dict) -> List[Image]:
         latents = kwargs["latents"]
         l_mean = self._model.latents_mean
-        l_std = self._model.latend_std
+        l_std = self._model.latents_std
         l_scale_factor = self._model.config.scaling_factor
         latents = self._denormalize_latents(latents, l_mean, l_std, l_scale_factor)
         latents = latents.to(torch.bfloat16)
         timestep = None
         # This only runs if the vae has timestep embedding (not distilled)
         if self._model.config.timestep_conditioning:
-            noise = torch.randn(latents.shape, dtype=torch.bfloat16)
+            noise = torch.randn(latents.shape, device="cuda", dtype=torch.bfloat16)
             decode_timestep = kwargs["decode_timestep"]
-            decode_scale = kwargs["decode_scale"]
+            decode_scale = kwargs["decode_scale"] or decode_timestep
             timestep = torch.tensor([decode_timestep], device="cuda", dtype=latents.dtype)
             decode_scale = torch.tensor([decode_scale], device="cuda", dtype=latents.dtype)[:, None, None, None, None]
             latents = (1 - decode_scale) * latents + decode_scale * noise
@@ -295,5 +293,5 @@ class LTXVaeModel(ModemmModel):
             print(latents.shape)
             error = BadLatentShapeError()
             return self._return(error, streamer)
-        latents = torch.tensor(latents, dtype=torch.bfloat16).to("cuda")
+        kwargs["latents"] = torch.tensor(latents, dtype=torch.bfloat16).to("cuda")
         return PILVideo(self._return(self._call(kwargs), streamer), 24)
